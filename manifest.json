@@ -1,26 +1,26 @@
 {
   "name": "Maintenance APP - KSC",
   "short_name": "MANTAP-KSC",
-  "start_url": "/MANTAP_Ver.001/index.html",
-  "scope": "/MANTAP_Ver.001/",
+  "start_url": "/MANTAP/index.html",
+  "scope": "/MANTAP/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#4285f4",
   "icons": [
     {
-      "src": "https://lh3.googleusercontent.com/d/1reLEUrANH4em3FClvwAhH59rLN1rx9xl=s192?.ico",
+      "src": "https://lh3.googleusercontent.com/d/1d5nqmdS0tQh3gGQaGn2Cm-PdOue8dz6V=s192?.ico",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "https://lh3.googleusercontent.com/d/1QtvGb-tHqeGuvCEUi39cGLgdLAuVrfpP=s192?.ico",
+      "src": "https://lh3.googleusercontent.com/d/1d5nqmdS0tQh3gGQaGn2Cm-PdOue8dz6V=s192?.ico",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "https://lh3.googleusercontent.com/d/1QtvGb-tHqeGuvCEUi39cGLgdLAuVrfpP=s512?.ico",
+      "src": "https://lh3.googleusercontent.com/d/1SEU6SxoP1ASqKx6ZvECrp2idpwN63bVG=s512?.ico",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
