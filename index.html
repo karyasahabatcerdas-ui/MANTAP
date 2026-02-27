@@ -30,6 +30,7 @@
   sandbox="allow-forms allow-scripts allow-same-origin allow-popups allow-modals allow-downloads allow-top-navigation-by-user-activation"
   style="width:100%; height:100vh; border:none;">
 </iframe>
+<script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
       navigator.serviceWorker.register('sw.js') // Memanggil file fisik
