@@ -3,9 +3,25 @@
 <head>
     <base target="_top">
     <meta charset="utf-8">
-    <meta name="mobile-web-app-capable" content="yes">   
+    <!-- Untuk Chrome Android & Safari iOS -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MANTAP-KSC">
+    <!-- Viewport tunggal & responsif -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-    <title>MANTAP</title>    
+    <meta http-equiv="Permissions-Policy" content="camera=*, microphone=*, geolocation=*"> 
+    <!-- Warna bar status (Pilih satu warna saja, misal Hijau) -->
+    <meta name="theme-color" content="#27ae60">  
+    <!-- Library Internal (QR Scanner) https://app.unpkg.com/html5-qrcode@2.3.8/files/html5-qrcode.js -->
+    <script src="html5-qrcode.js"></script>
+    <!-- Library Internal (pengganti pop-up sweetalert2 ver 11) DIDAPAT DARI https://cdn.jsdelivr.net/npm/sweetalert2@11.26.18/dist/sweetalert2.all.min.js-->
+    <script src="sweetalert2.all.min.js"></script>
+
+    <title>MANTAP-KSC</title>    
+     <!-- Ikon iPhone/iOS -->
+    <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/d/1QtvGb-tHqeGuvCEUi39cGLgdLAuVrfpP">
+    <!-- Font Awesome (Versi terbaru saja) lokal sumber :  -->  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <!-- Manifest agar bisa di-install & Fullscreen Native -->
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="style.css">
