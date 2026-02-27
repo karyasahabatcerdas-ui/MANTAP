@@ -88,11 +88,11 @@
 
 /* Responsif Mobile Portrait */
     @media (max-width: 600px) {
-      .leftbar {
+      .sidebar-container {
         width: 200px;
       }
 
-      .leftbar.collapsed {
+      .sidebar-container.collapsed {
         width: 50px;
       }
 
