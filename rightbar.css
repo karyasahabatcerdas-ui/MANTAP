@@ -23,7 +23,7 @@
 }
 
 /* --- CONTAINER UTAMA --- */
-#main-content {
+.crightbar {
   flex: 1;
   min-width: 0;
   padding: 25px;
@@ -34,7 +34,7 @@
 }
 
 /* --- HEADER GAHAR REFINED --- */
-#main-content header {
+.crightbar header {
   position: sticky;
   top: 0;
   z-index: 100;
@@ -52,7 +52,7 @@
 }
 
 /* Efek Semburat RGB di bawah Header */
-#main-content header::after {
+.crightbar header::after {
   content: "";
   position: absolute;
   bottom: -2px;
