@@ -23,5 +23,5 @@ async function loadComponent(elementId, filePath) {
 
 // Jalankan fungsi saat halaman dibuka
 document.addEventListener("DOMContentLoaded", () => {
-    loadComponent('sidebar-placeholder', 'sidebar.html');
+    loadComponent('sidebar-placeholder', 'leftbar.html');
 });
