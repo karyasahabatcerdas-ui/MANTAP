@@ -9,3 +9,19 @@
         });
     });
   }
+
+  // Fungsi untuk memuat komponen HTML
+async function loadComponent(elementId, filePath) {
+    try {
+        const response = await fetch(filePath);
+        const html = await response.text();
+        document.getElementById(elementId).innerHTML = html;
+    } catch (error) {
+        console.error('Gagal memuat komponen:', filePath, error);
+    }
+}
+
+// Jalankan fungsi saat halaman dibuka
+document.addEventListener("DOMContentLoaded", () => {
+    loadComponent('sidebar-placeholder', 'sidebar.html');
+});

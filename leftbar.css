@@ -1,0 +1,87 @@
+:root {
+    --sidebar-bg: #2c3e50;
+    --sidebar-hover: #34495e;
+    --text-color: #ecf0f1;
+    --accent-color: #3498db;
+    --admin-color: #e67e22;
+    --sys-color: #e74c3c;
+    --transition: 0.3s ease;
+}
+
+/* Container Utama */
+.sidebar-container {
+    width: 250px;
+    height: 100vh;
+    background-color: var(--sidebar-bg);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    transition: width var(--transition);
+    overflow-x: hidden;
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+/* Mode Ciut (Collapsed) */
+.sidebar-container.collapsed {
+    width: 70px;
+}
+
+/* Item Menu */
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 25px;
+    cursor: pointer;
+    transition: background var(--transition);
+    white-space: nowrap;
+}
+
+.menu-item:hover {
+    background-color: var(--sidebar-hover);
+    border-left: 4px solid var(--accent-color);
+}
+
+.menu-item i {
+    width: 25px;
+    font-size: 1.2rem;
+    margin-right: 15px;
+    text-align: center;
+}
+
+/* Badges */
+.badge-admin, .badge-sys {
+    font-size: 0.6rem;
+    padding: 2px 4px;
+    border-radius: 4px;
+    margin-left: 5px;
+    text-transform: uppercase;
+}
+
+.badge-admin { background: var(--admin-color); }
+.badge-sys { background: var(--sys-color); }
+
+/* Profil */
+.profile-img-container {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 2px solid var(--accent-color);
+    margin: 10px auto;
+}
+
+/* Navigasi Bawah */
+.bottom-nav {
+    margin-top: auto; /* Memaksa menu ini ke paling bawah */
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.btn-logout:hover {
+    background-color: #c0392b !important;
+}
+
+/* Sembunyikan Label saat Collapsed */
+.collapsed .nav-label, .collapsed .sidebar-header-title {
+    display: none;
+}
