@@ -1,0 +1,466 @@
+<div id="rightbar"></div>
+        <header>
+            <span id="headerUser">Selamat Datang, Señor</span>
+            <!-- Tombol Logout atau profil bisa di sini -->
+        </header>
+
+             <!-- [UI BLOCK: HALAMAN HISTORY ACTIVITY - REVISI GOLD EDITION] -->
+            <div id="page_history" class="page hidden">
+                
+                <h3><i class="fas fa-history"></i> Activity History</h3>
+
+                <!-- FILTER BARIS 1: STATUS & ID JADWAL -->
+                <div class="action-bar-log">
+                    <!-- Filter Status -->
+                    <select id="filterStatusLog" onchange="applyHistoryFilter()" class="select-custom flex-1">
+                    <option value="all">🔍 SEMUA STATUS</option>
+                    <option value="selesai">✅ SELESAI</option>
+                    <option value="pending">⏳ PENDING</option>
+                    </select>
+
+                    <!-- Filter ID Jadwal Dinamis -->
+                    <select id="filterJadwalLog" onchange="applyHistoryFilter()" class="select-custom flex-1">
+                    <option value="">📅 MEMUAT JADWAL...</option>
+                    </select>
+                </div>
+
+                <!-- FILTER BARIS 2: TOMBOL AKSI & SEARCH -->
+                <div class="action-bar-log" style="margin-top: -10px;">
+                    <!-- TOMBOL MULAI MAINTENANCE (Deep Orange Matte) -->
+                    <button onclick="startMaintenanceMode()" class="btn-timbul btn-maintenance flex-1">
+                    <i class="fas fa-play-circle"></i> MULAI MAINTENANCE
+                    </button>
+
+                    <!-- TOMBOL GLOBAL SEARCH (GOLD / AMBER NEON) -->
+                    <div class="search-wrapper-neon flex-1">
+                    <i class="fas fa-search icon-search-gold"></i>
+                    <input type="text" id="cari_history" placeholder="Ketik kata kunci..." onkeyup="filterGlobalOpen(this, 'tablehistory')" class="input-neon-gold">
+                    </div>
+                </div>
+
+                <!-- TABEL HISTORY -->
+                <div class="table-responsive-aset">
+                    <table id="tablehistory" class="tabel-main-content">
+                    <thead>
+                        <tr>
+                        <th style="width: 80px; min-width: 60px;">ID LOG/ WAKTU</th>
+                        <th style="width: 80px; min-width: 60px;">PETUGAS/ ASET/ ID Jadwal</th>
+                        <th class="text-center" style="width: 120px; min-width: 100px;">AKSI</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyBody">
+                        <tr>
+                        <td colspan="3" class="text-loading">
+                            <i class="fa-solid fa-spinner fa-spin"></i> Memuat riwayat aktivitas...
+                        </td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+
+        <!-- [UI BLOCK: HALAMAN LIHAT JADWAL - REVISI GAHAR] -->
+        <div id="page_jadwal" class="page hidden">
+            <h3><i class="fas fa-calendar-alt"></i> Lihat Jadwal Maintenance</h3>
+
+            <div class="action-bar-log sticky-bar" style="display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; align-items: center;">
+                
+                <select id="sortJadwal" onchange="loadJad()" class="select-custom" style="flex: 1; min-width: 120px;">
+                    <option value="newest">🕒 Terbaru</option>
+                    <option value="oldest">⌛ Terlama</option>
+                    <option value="next_month">⏩ 1 Bln Depan</option>
+                    <option value="last_month">⏪ 1 Bln Blkg</option>
+                </select>
+
+                <select id="filterType" onchange="loadJad()" class="select-custom" style="flex: 1; min-width: 120px;">
+                    <option value="">📦 Semua Tipe</option>
+                </select>
+
+                <select id="filterState" onchange="loadJad()" class="select-custom" style="flex: 1; min-width: 100px;">
+                    <option value="">🔘 Status</option>
+                    <option value="Open" class="text-open">Open</option>
+                    <option value="Pending" class="text-pending">Pending</option>
+                    <option value="Close" class="text-close">Close</option>
+                </select>
+
+                <div class="search-wrapper-neon" style="flex: 2; min-width: 280px; width: 100%;">
+                    <i class="fas fa-search icon-search"></i>
+                    <input type="text" id="cari_jadwal" placeholder="Cari unit atau ID asset..." onkeyup="loadJad();" class="input-neon-gold" style="width: 100%;">
+                </div>
+            </div>
+
+            <!-- [UI TABEL LIHAT JADWAL] -->
+            <div class="table-responsive-aset">
+                <table id="tablelihatJadwalMain" class="tabel-main-content">
+                <thead>
+                    <tr>
+                    <th style="width: 40px; min-width: 25px;">MAINT ID</th>
+                    <th style="width: 40px; min-width: 25px;">UNIT ASET</th>
+                    <th style="width: 40px; min-width: 25px;">PLAN DATE <br><small>ID JADWAL </th>
+                    <!--
+                    <th class="text-center" style="width: 40px; min-width: 35px;">STATE</th>
+                    -->
+                    <th class="text-center" style="width: 100px; min-width: 50px;">AKSI</th>
+                    </tr>
+                </thead>
+                <tbody id="jadwalBody">
+                    <tr>
+                    <td colspan="5" class="text-loading">
+                        <i class="fa-solid fa-spinner fa-spin"></i> Memuat jadwal maintenance...
+                    </td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <!-- [UI BLOCK: HALAMAN KELOLA JADWAL - REVISI CLEAN CLASS] -->
+        <div id="page_kelola" class="page hidden">
+            <h3><i class="fas fa-calendar-check"></i> Jadwal Maintenance</h3>
+            
+                <div class="action-bar-log sticky-bar" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 10px;">
+                
+                    <button onclick="openMaintModal()" class="btn-timbul btn-refresh" style="flex: 1; min-width: 100px;">
+                        <i class="fas fa-plus-circle"></i> EDIT
+                    </button>
+
+                    <button onclick="exportToExcel()" class="btn-timbul btn-backup" style="flex: 1; min-width: 100px;">
+                        <i class="fas fa-file-excel"></i> EXPORT
+                    </button>
+
+                    <button onclick="document.getElementById('modalImport').style.display='flex'" class="btn-timbul btn-import" style="flex: 1; min-width: 100px;">
+                        <i class="fas fa-file-import"></i> IMPORT
+                    </button>
+
+                    <div class="search-wrapper-neon" style="flex: 3; min-width: 250px;">
+                        <i class="fas fa-search icon-search"></i>
+                        <input type="text" id="cari_kelola_jadwal" placeholder="Cari jadwal..." onkeyup="filterGlobalOpen(this, 'tableJadwalMain')" class="input-neon-gold" style="width: 100%;">
+                    </div>
+                </div>
+
+            <!-- [UI TABEL KELOLA JADWAL] -->
+            <div class="table-responsive-aset">
+                <table id="tableJadwalMain" class="tabel-main-content">
+                <thead>
+                    <tr>
+                    <th style="width: 40px; min-width: 25px;">MAINT ID</th>
+                    <th style="width: 40px; min-width: 25px;">UNIT ASET</th>
+                    <th style="width: 40px; min-width: 25px;">PLAN DATE <br><small>ID JADWAL</small> </th>
+                    <th class="text-center" style="width: 100px; min-width: 110px;">STATE/ AKSI</th>
+                    </tr>
+                </thead>
+                <tbody id="kelolaBody">
+                    <tr>
+                    <td colspan="5" class="text-loading">
+                        <i class="fa-solid fa-spinner fa-spin"></i> Sinkronisasi jadwal...
+                    </td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <!-- [UI BLOCK: MANAJEMEN USER - REVISI CLEAN CLASS] -->
+        <div id="page_m_user" class="page hidden">
+            <h3><i class="fas fa-users-cog"></i> Manajemen User </h3>
+            
+            <div class="action-bar-log">
+                <!-- Menggunakan class btn-timbul yang sudah kita definisikan sebelumnya -->
+                <button onclick="openAddUserModal()" class="btn-timbul btn-refresh">
+                <i class="fa-solid fa-person-circle-plus fa-xl"></i> TAMBAH
+                </button>
+
+                <button onclick="downloadCSV()" class="btn-timbul btn-backup">
+                <i class="fa-solid fa-person-arrow-up-from-line fa-xl"></i> EXPORT CSV
+                </button>
+
+                <button onclick="doBulkAction('aktif')" class="btn-timbul btn-aktif-neon">
+                <i class="fa-solid fa-person-circle-check fa-xl"></i> AKTIFKAN
+                </button>
+
+                <button onclick="doBulkAction('nonaktif')" class="btn-timbul btn-nonaktif-neon">
+                <i class="fa-solid fa-person-circle-xmark fa-xl"></i> NONAKTIFKAN
+                </button>
+
+                <button onclick="doBulkDelete()" class="btn-timbul btn-hapus">
+                <i class="fa-solid fa-person-circle-minus fa-xl"></i> HAPUS
+                </button>
+            </div>
+
+            <div class="table-responsive-aset">
+                <table id="userTableMain" class="tabel-main-content">
+                <thead>
+                    <tr>
+                    <th style="width: 25px; text-align: center;">
+                        <input type="checkbox" id="selectAll" onclick="toggleSelectAll()">
+                    </th>
+                    <th style="width: 40px; min-width: 25px;">USER INFO</th>
+                    <th style="width: 100px; min-width: 80px;">LOG LOGIN</th>
+                    <th style="width: 70px; min-width: 50px; text-align: center;">AKSI</th>
+                    </tr>
+                </thead>
+                <tbody id="userListBody">
+                    <tr>
+                    <td colspan="5" style="text-align:center; padding: 40px; opacity: 0.5;">
+                        <i class="fa-solid fa-spinner fa-spin"></i> Sinkronisasi database user...
+                    </td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
+        </div>
+
+
+
+
+        <!-- [UI BLOCK: HALAMAN KELOLA ASET - REVISI GAHAR] -->
+        <div id="page_aset" class="page hidden">
+            <h3><i class="fas fa-boxes"></i> Kelola Asset </h3>
+
+            <!-- Container Button Action (Sekarang pakai class action-bar-log agar selaras) -->
+            <div class="action-bar-log">
+            <button onclick="openAddAssetModal()" class="btn-timbul btn-refresh">
+            <i class="fa fa-plus-circle"></i> ASET BARU
+            </button>
+
+            <button id="btnBulkQR" onclick="bulkUpdateQR()" class="btn-timbul btn-backup">
+            <i class="fa-solid fa-qrcode"></i> QR BULK GENERATE
+            </button>
+
+            <button onclick="openGlobalSearch()" class="btn-timbul" style="background: #3d2b0d;"> <!-- Warna Amber Deep -->
+            <i class="fas fa-search"></i> MASTER SEARCH
+            </button>
+
+            <button id="btnBulkDelete" onclick="doBulkDeleteAsset()" class="btn-timbul btn-hapus">
+            <i class="fas fa-trash-alt"></i> HAPUS TERPILIH
+                </button>
+            </div>
+
+            <!-- Bagian Filter Dropdown (Sekarang Glassmorphism) -->
+            <div class="filter-container-aset">
+                <label class="label-neon">PILIH TIPE ASET</label>
+                <select id="assetTypeSelect" onchange="loadAssetData(this.value)" class="select-custom">
+                <option value="">-- Pilih Tipe Aset --</option>
+                </select>
+            </div>
+
+            <!-- Pembungkus Tabel Responsif -->
+            <div class="table-responsive-aset">
+                <table id="assetTableMain" class="tabel-main-content">
+                <thead>
+                    <tr>
+                    <th style="width: 25px; min-width: 20px; text-align: center;">
+                        <input type="checkbox" id="checkAllAsset" onclick="toggleAllAssets()">
+                    </th>
+                    <th style="width: 40px; min-width: 35px;">ID/ NAMA ASET/ STATUS</th>
+                    <th style="width: 90px; min-width: 80px;">LOKASI</th>
+                    <th style="width: 80px; min-width: 50px; text-align: center;">AKSI</th>
+                    </tr>
+                </thead>
+                <tbody id="assetBody">
+                    <tr>
+                    <td colspan="6" style="text-align:center; padding: 40px; opacity: 0.5;">
+                        <i class="fa-solid fa-spinner fa-spin"></i> Memuat data aset...
+                    </td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- [UI BLOCK: HALAMAN AUDIT LOG SYSTEM] -->
+        <div id="page_log_book" class="page hidden">
+            <h3><i class="fa-solid fa-clock-rotate-left"></i> Audit Log System </h3>
+
+            <!-- Tombol Action dengan Efek Timbul 3D -->
+            <div class="action-bar-log" style="margin-bottom: 25px; display: flex; gap: 15px;">
+                <button onclick="loadAuditLogs()" class="btn-timbul btn-refresh">
+                <i class="fa-solid fa-arrows-rotate"></i> REFRESH LOG
+                </button>
+
+                <button onclick="backupLogSekarang()" class="btn-timbul btn-backup">
+                <i class="fa-solid fa-box-archive"></i> BACKUP LOG
+                </button>
+
+                <button onclick="hapusLog()" class="btn-timbul btn-hapus">
+                <i class="fa-solid fa-eraser"></i> PURGE LOG
+                </button>
+            </div>
+
+            <!-- Pembungkus Tabel Responsif -->
+            <div class="table-responsive-aset">
+                <table id="logBookTable" class="tabel-main-content">
+                <thead>
+                    <tr>
+                    <th style="width: 60px; min-width: 40px;">WAKTU</th>
+                    <th style="width: 60px; min-width: 40px;">PIC / ADMIN</th>
+                    <th style="width: 100px; min-width: 80px;" >AKTIVITAS / DETAIL PERUBAHAN</th>
+                    </tr>
+                </thead>
+                <!-- ID logTableBody WAJIB ADA untuk JavaScript Render -->
+                <tbody id="logTableBody">
+                    <tr>
+                    <td colspan="3" style="text-align:center; padding: 40px; opacity: 0.5;">
+                        <i class="fa-solid fa-spinner fa-spin"></i> Klik refresh untuk memuat data log...
+                    </td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- [UI BLOCK: HALAMAN LIHAT ASET] -->
+        <div id="page_lihat_aset" class="page hidden">
+            <h3><i class="fa-solid fa-magnifying-glass"></i> Lihat Data Aset </h3>
+            
+            <!-- Master Search Button (Neon Glow Style) -->
+            <div class="search-container-header">
+                <button onclick="openGlobalSearch()" class="btn-action btn-gold">
+                <i class="fa-solid fa-database"></i> MASTER SEARCH (SEMUA ASET)
+                </button>
+            </div>
+
+            <!-- Filter Card (Ganti background putih jadi Midnight Slate) -->
+            <div class="filter-container-aset">
+                <label class="label-filter-tiny">PILIH KATEGORI / TIPE ASET</label>
+                <select id="viewAssetTypeSelect" onchange="loadAssetDataView(this.value)" class="select-custom">
+                <option value="">-- Pilih Tipe Aset --</option>
+                </select>
+            </div>
+
+            <!-- Pembungkus Tabel Responsif -->
+            <div class="table-responsive-aset">
+                <table id="viewAssetTableMain" class="tabel-main-content">
+                <thead id="viewAssetHeader">
+                    <tr>
+                    <th style="width: 25px; min-width: 20px;">ID Aset</th>
+                    <th style="width: 40px; min-width: 35px;">Nama Aset</th>
+                    <th style="width: 90px; min-width: 60px;">Lokasi</th>
+                    <th style="width: 80px; min-width: 50px; text-align: center;">Detail</th>
+                    </tr>
+                </thead>
+                <tbody id="viewAssetBody">
+                    <tr>
+                    <td colspan="4" style="text-align:center; padding: 40px; opacity: 0.5;">
+                        <i class="fa-solid fa-arrow-up-long"></i> Pilih tipe aset untuk memuat data...
+                    </td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- [UI BLOCK: HALAMAN PROFILE] -->
+        <div id="page_setting" class="page hidden">
+            <div class="modal-content-profile">
+                <h3><i class="fas fa-user-cog"></i> Pengaturan Profil</h3>
+                
+                <div class="profile-photo-wrapper">
+                <img id="set_display_photo" src="https://ui-avatars.com" class="avatar-neon">
+                <input type="file" id="user_profile_upload" accept="image/*" style="display:none" onchange="uploadOwnPhoto(this)">
+                <p class="label-neon-small" onclick="document.getElementById('user_profile_upload').click()">KLIK FOTO UNTUK UBAH</p>
+                </div>
+
+                <div class="modal-field-neon">
+                <label class="label-neon">USERNAME</label>
+                <input type="text" id="set_user" readonly class="input-neon readonly-neon">
+                </div>
+
+                <div class="modal-field-neon">
+                <label class="label-neon">PASSWORD BARU</label>
+                <input type="password" id="set_pass" placeholder="Kosongkan jika tidak diubah" class="input-neon">
+                </div>
+
+                <div class="form-row-neon modal-field-neon">
+                <div style="flex:1;">
+                    <label class="label-neon">ROLE</label>
+                    <input type="text" id="set_role" readonly class="input-neon readonly-neon">
+                </div>
+                <div style="flex:1;">
+                    <label class="label-neon">STATUS</label>
+                    <input type="text" id="set_status" readonly class="input-neon readonly-neon">
+                </div>
+                </div>
+
+                <div class="modal-field-neon">
+                <label class="label-neon">EMAIL ADDRESS</label>
+                <input type="email" id="set_email" class="input-neon">
+                </div>
+
+                <div class="modal-field-neon">
+                <label class="label-neon">NOMOR TELEPON</label>
+                <input type="text" id="set_phone" class="input-neon">
+                </div>
+
+                <div class="modal-field-neon">
+                <label class="label-neon">LOGIN ATTEMPTS</label>
+                <div class="form-row-neon">
+                    <input type="text" id="set_attempts" readonly class="input-neon readonly-neon" style="flex:1;">
+                    <button disabled class="btn-timbul btn-disabled" style="padding: 5px 10px; font-size: 10px;">RESET</button>
+                </div>
+                </div>
+
+                <button id="btnsaveprofile" onclick="saveProf()" class="btn-timbul btn-refresh" style="width:100%; margin-top:10px; justify-content:center;">
+                <i class="fa fa-floppy-o"></i> SIMPAN PERUBAHAN
+                </button>
+            </div>
+        </div>
+
+        <!-- [UI BLOCK: HALAMAN DATABASE MANAGER - SERVER MODE] -->
+        <div id="page_db_manager" class="page hidden">
+            <h3><i class="fas fa-server"></i> Database & Schema Manager</h3>
+
+            <!-- Barisan Tombol Status & Tools (Gaya Industrial) -->
+            <div class="action-bar-log">
+                <button id="db_connection_status" onclick="checkDBStatus()" class="btn-timbul btn-db-gold">
+                <i class="fa-solid fa-database fa-lg"></i> DB STATUS 
+                </button>
+
+                <button onclick="inspectDatabase()" class="btn-timbul btn-db-bronze">
+                <i class="fa-solid fa-list-check fa-lg"></i> INSPECT DB 
+                </button>
+
+                <button onclick="loadDBComparison()" class="btn-timbul btn-db-bronze">
+                <i class="fa-solid fa-code-compare fa-lg"></i> COMPARISON DB
+                </button>
+            </div>
+
+            <!-- Form Tambah Tipe Aset Baru (Panel Glassmorphism) -->
+            <div class="filter-container-aset">
+                <h4 class="label-neon"><i class="fas fa-plus-circle"></i> TAMBAH TIPE ASET BARU</h4>
+                <div class="form-row-neon">
+                <input type="text" id="new_type_id" placeholder="ID (Misal: L)" class="input-neon-gold flex-1">
+                <input type="text" id="new_type_name" placeholder="Nama Tipe (Misal: Laptop)" class="input-neon-gold flex-3">
+                <button onclick="addNewTypeAsset()" class="btn-timbul btn-refresh">
+                    <i class="fas fa-plus"></i> SIMPAN
+                </button>
+                </div>
+            </div>
+
+            <!-- Tabel Registry Database -->
+            <div class="table-responsive-aset">
+                <table id="dbTableMain" class="tabel-main-content">
+                <thead>
+                    <tr>
+                    <th style="width: 35px; min-width: 25px;">ID</th>
+                    <th style="width: 50px; min-width: 40px;">NAMA TIPE / NAMA SHEET</th>
+                    <th style="width: 35px; min-width: 24px;"class="text-center">STATUS ACTIVE</th>
+                    <th style="width: 55px; min-width: 45px;"class="text-center" style="width: 120px;">AKSI</th>
+                    </tr>
+                </thead>
+                <tbody id="dbTableBody">
+                    <tr>
+                    <td colspan="4" class="text-loading">
+                        <i class="fa-solid fa-spinner fa-spin"></i> Menghubungkan ke database server...
+                    </td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
+        </div>
+
+</div>

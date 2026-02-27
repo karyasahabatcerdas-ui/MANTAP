@@ -1,0 +1,150 @@
+:root {
+  /* Surface Colors */
+  --bg-main: #0f172a;           /* Midnight Slate */
+  --bg-card: #1e293b;           /* Lighter Slate */
+  --bg-input: rgba(15, 23, 42, 0.8);
+  
+  /* Brand Colors */
+  --neon-blue: #38bdf8;         /* Primary Neon */
+  --neon-gold: #fbbf24;         /* Amber/Gold */
+  --neon-green: #22c55e;        /* Emerald */
+  --neon-red: #ef4444;          /* Danger/Cancel */
+  --neon-purple: #7c3aed;       /* Import/Special */
+  
+  /* Border & Glass */
+  --border-glass: rgba(56, 189, 248, 0.15);
+  --border-dim: #334155;
+  --glass-blur: blur(10px);
+  
+  /* Text Colors */
+  --text-bright: #f8fafc;
+  --text-dim: #94a3b8;
+  --text-muted: #64748b;
+}
+
+/* --- CONTAINER UTAMA --- */
+#main-content {
+  flex: 1;
+  min-width: 0;
+  padding: 25px;
+  background: var(--bg-main);
+  box-shadow: inset 10px 0 20px -10px rgba(0, 0, 0, 0.5);
+  overflow-y: auto;
+  color: var(--text-bright);
+}
+
+/* --- HEADER GAHAR REFINED --- */
+#main-content header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(30, 41, 59, 0.7) !important;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  padding: 15px 25px !important;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid var(--border-glass);
+  border-radius: 12px;
+  margin-bottom: 25px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Efek Semburat RGB di bawah Header */
+#main-content header::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 10%;
+  width: 80%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--neon-blue), var(--neon-purple), var(--neon-blue), transparent);
+  filter: blur(8px);
+  opacity: 0.5;
+}
+
+/* --- JUDUL HALAMAN (H3) DENGAN RGB ROTATE --- */
+.page h3 {
+  position: relative;
+  background: var(--bg-card);
+  color: var(--text-bright) !important;
+  font-size: 1.2rem;
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 25px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 1;
+}
+
+.page h3::before {
+  content: "";
+  position: absolute;
+  inset: -1.5px;
+  z-index: -2;
+  background: conic-gradient(from 0deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+  border-radius: 9px;
+  animation: h3-rotate 4s linear infinite;
+}
+
+.page h3::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  background: var(--bg-card);
+  border-radius: 7px;
+  z-index: -1;
+}
+
+/* --- STICKY BAR ACTION --- */
+.sticky-bar {
+  position: sticky;
+  top: 85px; /* Di bawah header */
+  z-index: 90;
+  background: var(--bg-main);
+  padding: 10px 0 20px 0;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.table-responsive-aset {
+  background: var(--bg-main);
+  border: 1px solid var(--border-dim);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.tabel-main-content {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: transparent;
+}
+
+.tabel-main-content thead th {
+  background: var(--bg-card) !important;
+  color: var(--neon-blue);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 15px;
+  border-bottom: 2px solid var(--border-dim);
+}
+
+.tabel-main-content td {
+  background: var(--bg-main) !important;
+  color: var(--text-bright) !important;
+  font-size: 12px;
+  padding: 12px 15px;
+  border-bottom: 1px solid rgba(51, 65, 85, 0.3);
+}
+
+.tabel-main-content tbody tr:hover td {
+  background: var(--bg-card) !important;
+  color: var(--neon-blue) !important;
+  text-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+}
