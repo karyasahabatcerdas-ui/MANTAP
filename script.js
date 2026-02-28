@@ -24,4 +24,5 @@ async function loadComponent(elementId, filePath) {
 // Jalankan fungsi saat halaman dibuka
 document.addEventListener("DOMContentLoaded", () => {
     loadComponent('leftbar-placeholder', 'leftbar.html');
+    loadComponent('rightbar-placeholder', 'rightbar.html');
 });
