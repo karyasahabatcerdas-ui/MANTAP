@@ -31,3 +31,33 @@
     overflow-y: auto;       /* Hanya area ini yang scroll */
     padding: 25px;
 }
+
+/* Container pembungkus utama */
+.cmain-content {
+  display: flex;
+  width: 100%;
+  transition: all 0.3s ease; /* Transisi halus saat berubah ukuran */
+}
+
+/* Style Default Leftbar (Besar) */
+.leftbar-container {
+  width: 260px; /* Lebar awal */
+  flex-shrink: 0; /* Jangan biarkan dia gepeng */
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  background: var(--bg-card);
+  border-right: 1px solid var(--border-dim);
+}
+
+/* Style Leftbar Saat Mengecil */
+.leftbar-container.collapsed {
+  width: 70px; /* Lebar saat mengecil */
+}
+
+/* Style Inner Content (Rightbar) */
+.inner-content {
+  flex-grow: 1; /* KUNCI: Dia otomatis mengisi sisa ruang */
+  min-width: 0;  /* Mencegah tabel meluber keluar layar */
+  padding: 25px;
+  overflow-y: auto;
+}
