@@ -1,5 +1,16 @@
 // Script Toggle leftbar
 function toggleleftbar() {
+  // Mengambil elemen berdasarkan class
+  const side = document.querySelector(".leftbar-container");
+  const btn = document.getElementById("btn-toggle");
+  
+  side.classList.toggle("collapsed");
+
+  const isCollapsed = side.classList.contains("collapsed");
+  btn.innerText = isCollapsed ? ">>>" : "<<<";
+}
+/**
+function toggleleftbar() {
   const side = document.getElementById("leftbar");
   const btn = document.getElementById("btn-toggle");
   // Memicu class collapsed (Visual mengecil)
@@ -13,4 +24,5 @@ function toggleleftbar() {
   } else {
     btn.innerText = "<<<";
   }
-} 
+}
+*/
