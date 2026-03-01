@@ -227,7 +227,7 @@ select option {
 
 /* --- INPUT NYA (DIBAWAH IKON) --- */
 .input-neon-gold {
-  width: 100%;
+  width: 100px;
   padding: 0.75rem 1rem 0.75rem 2.8rem !important; /* Kiri diberi 2.8rem (45px) agar teks tidak menabrak ikon */
   background: var(--bg-input) !important;
   border: 1px solid rgba(251, 191, 36, 0.3) !important; /* Warna Amber/Gold tipis */
@@ -251,6 +251,31 @@ select option {
   text-shadow: 0 0 8px var(--neon-gold);
 }
 
+/* --- INPUT NYA (DIBAWAH IKON) --- */
+.input-neon-biasa {
+  width: 100px;
+  padding: 0.75rem 1rem 0.75rem 2.8rem !important; /* Kiri diberi 2.8rem (45px) agar teks tidak menabrak ikon */
+  background: var(--bg-input) !important;
+  border: 1px solid rgba(36, 154, 251, 0.3) !important; /* Warna Amber/Gold tipis */
+  border-radius: 8px;
+  color: var(--text-bright) !important;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+/* --- EFEK SAAT SEARCH AKTIF (FOCUS) --- */
+.input-neon-biasa:focus {
+  border-color: var(--neon-blue) !important;
+  box-shadow: 0 0 15px rgba(36, 154, 251, 0.2);
+  background: var(--bg-card) !important;
+}
+
+/* Animasi Ikon saat Focus (Opsional) */
+.input-neon-biasa:focus + i, 
+.search-wrapper-neon:focus-within i {
+  color: #ffffff;
+  text-shadow: 0 0 8px var(--neon-biasa);
+}
 /* --- 2. GAYA TOMBOL (BUTTONS) --- */
 .btn-base {
   padding: 0.625rem 1.25rem;

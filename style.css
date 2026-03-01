@@ -23,6 +23,7 @@
   --neon-red: #ef4444;          /* Danger/Cancel */  /* Untuk Logout */ 
   --neon-purple: #7c3aed;       /* Import/Special */
   --neon-purple-sys: #a855f7;       /* KHUSU Untuk badge Sys */
+  --neon-biasa: #6794d4;          /* Warna Netral untuk Input biasa */
   
   /* Border & Glass */
   --border-glass: rgba(56, 189, 248, 0.15);
