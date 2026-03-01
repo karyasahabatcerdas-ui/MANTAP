@@ -112,12 +112,46 @@
 
 /* --- LOGOUT (BOTTOM) --- */
 .bottom-nav {
-  margin-top: auto;
+  margin-top: auto; /* Memaksa ke paling bawah */
   border-top: 1px solid var(--border-dim);
-  padding-bottom: 1.25rem;
+  padding: 1rem 0; /* Memberi ruang setelah garis pembatas */
 }
 
-.btn-logout { color: var(--neon-red) !important; }
+.btn-logout {
+  /* Dasar warna: Merah solid */
+  background: var(--neon-red) !important; 
+  color: #ffffff !important; /* Tulisan Putih */
+  margin: 0.5rem 1rem; /* Memberi jarak dari tepi sidebar */
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2);
+}
+
+/* Mengatur icon di dalam tombol logout agar putih juga */
+.btn-logout i {
+  color: #ffffff !important;
+}
+
+.btn-logout:hover {
+  /* Saat hover: Lebih menyala & teks menebal */
+  background: #ff3131 !important; /* Merah yang lebih terang */
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+  font-weight: 800; /* Menebal */
+  transform: translateY(-2px); /* Efek sedikit terangkat */
+}
+
+/* Penyesuaian saat Sidebar Mengecil (Collapsed) */
+.leftbar-container.collapsed .btn-logout {
+  margin: 0.5rem; /* Margin lebih kecil agar muat */
+  padding: 0.75rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.leftbar-container.collapsed .btn-logout span {
+  display: none; /* Sembunyikan tulisan "Logout" */
+}
 
 /* --- LOGIKA COLLAPSED --- */
 .leftbar-container.collapsed .leftbar-header-title,
