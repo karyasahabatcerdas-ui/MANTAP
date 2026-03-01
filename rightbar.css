@@ -231,6 +231,22 @@ select option {
   box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
 }
 
+/* Tombol Merah (Delete/Cancel) */
+.btn-danger {
+  background: rgba(161, 98, 4, 0.15);
+  color: var(--neon-gold);
+  border: 1px solid var(--neon-gold);
+}
+
+.btn-danger:hover {
+  background: var(--neon-gold);
+  color: #fff;
+  box-shadow: 0 0 20px rgb(233, 150, 26);
+}
+
+
+
+
 /* --- 3. FORM GROUP (JARAK ANTAR INPUT) --- */
 .form-group {
   margin-bottom: 1.25rem;
