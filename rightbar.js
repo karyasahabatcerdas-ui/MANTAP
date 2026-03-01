@@ -51,6 +51,10 @@ function startMaintenanceMode() {
         }
     });
 
+    modal.style.setProperty('display', 'block', 'important');
+    modal.style.setProperty('z-index', '99999', 'important');
+    modal.style.setProperty('background', 'red', 'important'); // Jika jadi merah, berarti dia muncul!
+
     // 3. Tampilkan Modal
     modal.style.display = 'block';
     
@@ -58,7 +62,7 @@ function startMaintenanceMode() {
     console.log("🛠️ Maintenance Mode: Aktif. Menunggu validasi Unit ID...");
     console.log("Z-Index Terdeteksi:", computedStyle.zIndex);
     console.log("Display Terdeteksi:", computedStyle.display);
-    
+
     // Optional: Auto-scroll ke atas jika modal sangat panjang
     modal.scrollTop = 0;
 }
