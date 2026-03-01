@@ -123,15 +123,15 @@
             
                 <div class="action-bar-log sticky-bar" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 10px;">
                 
-                    <button onclick="openMaintModal()" class="btn-std btn-blue" style="flex: 1; min-width: 100px;">
+                    <button onclick="openMaintModal()" class="btn-base btn-blue" style="flex: 1;">
                         <i class="fas fa-plus-circle"></i> EDIT
                     </button>
 
-                    <button onclick="exportToExcel()" class="btn-std btn-green" style="flex: 1; min-width: 100px;">
+                    <button onclick="exportToExcel()" class="btn-base btn-green" style="flex: 1; ">
                         <i class="fas fa-file-excel"></i> EXPORT
                     </button>
 
-                    <button onclick="document.getElementById('modalImport').style.display='flex'" class="btn-std btn-purple" style="flex: 1; min-width: 100px;">
+                    <button onclick="document.getElementById('modalImport').style.display='flex'" class="btn-base btn-purple" style="flex: 1;">
                         <i class="fas fa-file-import"></i> IMPORT
                     </button>
 
@@ -169,24 +169,24 @@
             <h3><i class="fas fa-users-cog"></i> Manajemen User </h3>
             
             <div class="action-bar-log">
-                <!-- Menggunakan class btn-std yang sudah kita definisikan sebelumnya -->
-                <button onclick="openAddUserModal()" class="btn-std btn-blue">
+                <!-- Menggunakan class btn-base yang sudah kita definisikan sebelumnya -->
+                <button onclick="openAddUserModal()" class="btn-base btn-blue">
                 <i class="fa-solid fa-person-circle-plus fa-xl"></i> TAMBAH
                 </button>
 
-                <button onclick="downloadCSV()" class="btn-std btn-green">
+                <button onclick="downloadCSV()" class="btn-base btn-green">
                 <i class="fa-solid fa-person-arrow-up-from-line fa-xl"></i> EXPORT CSV
                 </button>
 
-                <button onclick="doBulkAction('aktif')" class="btn-std btn-gold">
+                <button onclick="doBulkAction('aktif')" class="btn-base btn-gold">
                 <i class="fa-solid fa-person-circle-check fa-xl"></i> AKTIFKAN
                 </button>
 
-                <button onclick="doBulkAction('nonaktif')" class="btn-std btn-purple">
+                <button onclick="doBulkAction('nonaktif')" class="btn-base btn-purple">
                 <i class="fa-solid fa-person-circle-xmark fa-xl"></i> NONAKTIFKAN
                 </button>
 
-                <button onclick="doBulkDelete()" class="btn-std btn-red">
+                <button onclick="doBulkDelete()" class="btn-base btn-red">
                 <i class="fa-solid fa-person-circle-minus fa-xl"></i> HAPUS
                 </button>
             </div>
@@ -223,19 +223,19 @@
 
             <!-- Container Button Action (Sekarang pakai class action-bar-log agar selaras) -->
             <div class="action-bar-log">
-            <button onclick="openAddAssetModal()" class="btn-timbul btn-refresh">
+            <button onclick="openAddAssetModal()" class="btn-base btn-blue">
             <i class="fa fa-plus-circle"></i> ASET BARU
             </button>
 
-            <button id="btnBulkQR" onclick="bulkUpdateQR()" class="btn-timbul btn-backup">
+            <button id="btnBulkQR" onclick="bulkUpdateQR()" class="btn-base btn-gold">
             <i class="fa-solid fa-qrcode"></i> QR BULK GENERATE
             </button>
 
-            <button onclick="openGlobalSearch()" class="btn-timbul" style="background: #3d2b0d;"> <!-- Warna Amber Deep -->
+            <button onclick="openGlobalSearch()" class="btn-base" style="background: #3d2b0d;"> <!-- Warna Amber Deep -->
             <i class="fas fa-search"></i> MASTER SEARCH
             </button>
 
-            <button id="btnBulkDelete" onclick="doBulkDeleteAsset()" class="btn-timbul btn-hapus">
+            <button id="btnBulkDelete" onclick="doBulkDeleteAsset()" class="btn-base btn-red">
             <i class="fas fa-trash-alt"></i> HAPUS TERPILIH
                 </button>
             </div>
@@ -278,15 +278,15 @@
 
             <!-- Tombol Action dengan Efek Timbul 3D -->
             <div class="action-bar-log" style="margin-bottom: 25px; display: flex; gap: 15px;">
-                <button onclick="loadAuditLogs()" class="btn-timbul btn-refresh">
+                <button onclick="loadAuditLogs()" class="btn-base btn-blue btn-refresh">
                 <i class="fa-solid fa-arrows-rotate"></i> REFRESH LOG
                 </button>
 
-                <button onclick="backupLogSekarang()" class="btn-timbul btn-backup">
+                <button onclick="backupLogSekarang()" class="btn-base btn-gold" style="background: #b8860b;">
                 <i class="fa-solid fa-box-archive"></i> BACKUP LOG
                 </button>
 
-                <button onclick="hapusLog()" class="btn-timbul btn-hapus">
+                <button onclick="hapusLog()" class="btn-base btn-red">
                 <i class="fa-solid fa-eraser"></i> PURGE LOG
                 </button>
             </div>
@@ -319,7 +319,7 @@
             
             <!-- Master Search Button (Neon Glow Style) -->
             <div class="search-container-header">
-                <button onclick="openGlobalSearch()" class="btn-action btn-gold">
+                <button onclick="openGlobalSearch()" class="btn-base btn-gold">
                 <i class="fa-solid fa-database"></i> MASTER SEARCH (SEMUA ASET)
                 </button>
             </div>
@@ -400,11 +400,11 @@
                 <label class="label-neon">LOGIN ATTEMPTS</label>
                 <div class="form-row-neon">
                     <input type="text" id="set_attempts" readonly class="input-neon readonly-neon" style="flex:1;">
-                    <button disabled class="btn-timbul btn-disabled" style="padding: 5px 10px; font-size: 10px;">RESET</button>
+                    <button disabled class="btn-base btn-gold" style="padding: 5px 10px; font-size: 10px;">RESET</button>
                 </div>
                 </div>
 
-                <button id="btnsaveprofile" onclick="saveProf()" class="btn-timbul btn-refresh" style="width:100%; margin-top:10px; justify-content:center;">
+                <button id="btnsaveprofile" onclick="saveProf()" class="btn-base btn-blue" style="width:100%; margin-top:10px; justify-content:center;">
                 <i class="fa fa-floppy-o"></i> SIMPAN PERUBAHAN
                 </button>
             </div>
@@ -416,15 +416,15 @@
 
             <!-- Barisan Tombol Status & Tools (Gaya Industrial) -->
             <div class="action-bar-log">
-                <button id="db_connection_status" onclick="checkDBStatus()" class="btn-timbul btn-db-gold">
+                <button id="db_connection_status" onclick="checkDBStatus()" class="btn-base btn-gold">
                 <i class="fa-solid fa-database fa-lg"></i> DB STATUS 
                 </button>
 
-                <button onclick="inspectDatabase()" class="btn-timbul btn-db-bronze">
+                <button onclick="inspectDatabase()" class="btn-base btn-gold">
                 <i class="fa-solid fa-list-check fa-lg"></i> INSPECT DB 
                 </button>
 
-                <button onclick="loadDBComparison()" class="btn-timbul btn-db-bronze">
+                <button onclick="loadDBComparison()" class="btn-base btn-gold">
                 <i class="fa-solid fa-code-compare fa-lg"></i> COMPARISON DB
                 </button>
             </div>
@@ -435,7 +435,7 @@
                 <div class="form-row-neon">
                 <input type="text" id="new_type_id" placeholder="ID (Misal: L)" class="input-neon-gold flex-1">
                 <input type="text" id="new_type_name" placeholder="Nama Tipe (Misal: Laptop)" class="input-neon-gold flex-3">
-                <button onclick="addNewTypeAsset()" class="btn-timbul btn-refresh">
+                <button onclick="addNewTypeAsset()" class="btn-base btn-blue">
                     <i class="fas fa-plus"></i> SIMPAN
                 </button>
                 </div>
