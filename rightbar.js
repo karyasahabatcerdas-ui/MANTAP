@@ -51,9 +51,6 @@ function startMaintenanceMode() {
         }
     });
 
-    modal.style.setProperty('display', 'block', 'important');
-    modal.style.setProperty('z-index', '99999', 'important');
-    modal.style.setProperty('background', 'red', 'important'); // Jika jadi merah, berarti dia muncul!
 
     // 3. Tampilkan Modal
     modal.style.display = 'block';
