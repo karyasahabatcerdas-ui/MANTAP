@@ -374,8 +374,6 @@ select option {
 }
 
 
-
-
 /* --- 3. FORM GROUP (JARAK ANTAR INPUT) --- */
 .form-group {
   margin-bottom: 1.25rem;
@@ -406,4 +404,79 @@ select option {
   border-radius: 12px;
   border: 1px solid var(--border-dim);
   margin-bottom: 2rem;
+}
+/*css untuk halaman profile user (rightbar)*/
+/* Container Utama Profile */
+.modal-content-profile {
+    max-width: 800px;
+    margin: 0 auto;
+    background: var(--bg-card);
+    padding: 2rem;
+    border-radius: 15px;
+    border: 1px solid var(--border-dim);
+}
+
+/* Photo Section */
+.profile-photo-wrapper {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.avatar-neon {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid var(--neon-blue);
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+/* Grid Layout untuk Form */
+.form-grid-profile {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Membagi 2 kolom sama rata */
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+/* Memaksa elemen label tetap di atas input */
+.input-group-unit {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.input-full {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+}
+
+.full-width {
+    grid-column: span 2; /* Mengambil 2 kolom penuh */
+}
+
+/* Footer & Button */
+.profile-footer {
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid var(--border-dim);
+    padding-top: 20px;
+}
+
+.btn-large {
+    width: 100%;
+    justify-content: center;
+    padding: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .form-grid-profile {
+        grid-template-columns: 1fr; /* Jadi 1 kolom di HP */
+    }
+    .full-width {
+        grid-column: span 1;
+    }
 }

@@ -7,13 +7,13 @@
              <!-- [UI BLOCK: HALAMAN HISTORY ACTIVITY - REVISI GOLD EDITION] -->
             <div id="page_history" class="page hidden">
                 
-                <h3><i class="fas fa-history"></i> Activity History</h3>
+                <h3><i class="fa-solid fa-history"></i> Activity History</h3>
 
                 <!-- FILTER BARIS 1: STATUS & ID JADWAL -->
                 <div class="rightbar-action-bar">
                     <!-- TOMBOL MULAI MAINTENANCE (Deep Orange Matte) -->
                     <button onclick="startMaintenanceMode()" class="btn-base btn-gold">
-                    <i class="fas fa-play-circle"></i> MULAI MAINTENANCE
+                    <i class="fa-solid fa-play-circle"></i> MULAI MAINTENANCE
                     </button>
 
                     <!-- Filter Status -->
@@ -30,7 +30,7 @@
                     
                     <!-- TOMBOL GLOBAL SEARCH (GOLD / AMBER NEON) -->
                     <div class="search-wrapper-neon input-pendek">
-                        <i class="fas fa-search icon-search-gold"></i>
+                        <i class="fa-solid fa-search icon-search-gold"></i>
                         <input type="text" id="cari_history" placeholder="Ketik kata kunci..." onkeyup="filterGlobalOpen(this, 'tablehistory')" class="input-neon-gold">
                     </div>
                 </div>
@@ -60,7 +60,7 @@
 
         <!-- [UI BLOCK: HALAMAN LIHAT JADWAL - REVISI GAHAR] -->
         <div id="page_jadwal" class="page hidden">
-            <h3><i class="fas fa-calendar-alt"></i> Lihat Jadwal Maintenance</h3>
+            <h3><i class="fa-solid fa-calendar-alt"></i> Lihat Jadwal Maintenance</h3>
 
             <div class="rightbar-action-bar"> 
            
@@ -83,7 +83,7 @@
                 </select>
 
                 <div class="search-wrapper-neon" >
-                    <i class="fas fa-search icon-search"></i>
+                    <i class="fa-solid fa-search icon-search"></i>
                     <input type="text" id="cari_jadwal" placeholder="Cari unit atau ID asset..." onkeyup="loadJad();" class="input-neon-gold input-sedang" style="width: 100%;">
                 </div>    
             </div>
@@ -116,24 +116,24 @@
 
         <!-- [UI BLOCK: HALAMAN KELOLA JADWAL - REVISI CLEAN CLASS] -->
         <div id="page_kelola" class="page hidden">
-            <h3><i class="fas fa-calendar-check"></i> Jadwal Maintenance</h3>
+            <h3><i class="fa-solid fa-calendar-check"></i> Jadwal Maintenance</h3>
             
                 <div class="rightbar-action-bar">
                 
                     <button onclick="openMaintModal()" class="btn-base btn-blue" >
-                        <i class="fas fa-plus-circle"></i> EDIT
+                        <i class="fa-solid fa-plus-circle"></i> EDIT
                     </button>
 
                     <button onclick="exportToExcel()" class="btn-base btn-green" >
-                        <i class="fas fa-file-excel"></i> EXPORT
+                        <i class="fa-solid fa-file-excel"></i> EXPORT
                     </button>
 
                     <button onclick="document.getElementById('modalImport').style.display='flex'" class="btn-base btn-purple" >
-                         <i class="fas fa-file-import"></i> IMPORT
+                         <i class="fa-solid fa-file-import"></i> IMPORT
                     </button>
 
                     <div class="search-wrapper-neon" style="flex: 3; min-width: 250px;">
-                        <i class="fas fa-search icon-search"></i>
+                        <i class="fa-solid fa-search icon-search"></i>
                         <input type="text" id="cari_kelola_jadwal" placeholder="Cari jadwal..." onkeyup="filterGlobalOpen(this, 'tableJadwalMain')" class="input-neon-gold input-sedang">
                     </div>
                 </div>
@@ -163,7 +163,7 @@
 
         <!-- [UI BLOCK: MANAJEMEN USER - REVISI CLEAN CLASS] -->
         <div id="page_m_user" class="page hidden">
-            <h3><i class="fas fa-users-cog"></i> Manajemen User </h3>
+            <h3><i class="fa-solid fa-users-cog"></i> Manajemen User </h3>
             
             <div class="rightbar-action-bar">
                 <!-- Menggunakan class btn-base yang sudah kita definisikan sebelumnya -->
@@ -216,7 +216,7 @@
 
         <!-- [UI BLOCK: HALAMAN KELOLA ASET - REVISI GAHAR] -->
         <div id="page_aset" class="page hidden">
-            <h3><i class="fas fa-boxes"></i> Kelola Asset </h3>
+            <h3><i class="fa-solid fa-boxes"></i> Kelola Asset </h3>
 
             <!-- Container Button Action (Sekarang pakai class rightbar-action-bar agar selaras) -->
             <div class="rightbar-action-bar">
@@ -235,11 +235,11 @@
                 </button>
 
                 <button onclick="openGlobalSearch()" class="btn-base btn-gold">
-                <i class="fas fa-search"></i> MASTER SEARCH
+                <i class="fa-solid fa-search"></i> MASTER SEARCH
                 </button>
 
                 <button id="btnBulkDelete" onclick="doBulkDeleteAsset()" class="btn-base btn-red">
-                <i class="fas fa-trash-alt"></i> HAPUS TERPILIH
+                <i class="fa-solid fa-trash-alt"></i> HAPUS TERPILIH
                 </button>
             </div>
 
@@ -322,7 +322,7 @@
                 </select>
                 </div>
                 <button onclick="openGlobalSearch()" class="btn-base btn-gold input-sedang">
-                 <i class="fas fa-search"></i> MASTER SEARCH
+                 <i class="fa-solid fa-search"></i> MASTER SEARCH
                 </button>
             </div>
 
@@ -351,54 +351,61 @@
         <!-- [UI BLOCK: HALAMAN PROFILE] -->
         <div id="page_setting" class="page hidden">
             <div class="modal-content-profile">
-                <h3><i class="fas fa-user-cog"></i> Pengaturan Profil</h3>
+                <h3><i class="fa-solid fa-user-cog"></i> Pengaturan Profil</h3>
                 
                 <div class="profile-photo-wrapper">
-                <img id="set_display_photo" src="https://ui-avatars.com" class="avatar-neon">
-                <input type="file" id="user_profile_upload" accept="image/*" style="display:none" onchange="uploadOwnPhoto(this)">
-                <p class="label-neon-small" onclick="document.getElementById('user_profile_upload').click()">KLIK FOTO UNTUK UBAH</p>
+                    <img id="set_display_photo" src="https://ui-avatars.com" class="avatar-neon">
+                    <input type="file" id="user_profile_upload" accept="image/*" style="display:none" onchange="uploadOwnPhoto(this)">
+                    <p class="label-neon-small" onclick="document.getElementById('user_profile_upload').click()">
+                        <i class="fa-solid fa-camera"></i> KLIK FOTO UNTUK UBAH
+                    </p>
                 </div>
 
-                <div class="rightbar-action-bar">
-                <label class="label-neon">USERNAME</label>
-                <input type="text" id="set_user" readonly class="input-neon readonly-neon input-pendek">
+                <div class="form-grid-profile">
+                    <div class="input-group-unit">
+                        <label class="label-neon">USERNAME</label>
+                        <input type="text" id="set_user" readonly class="input-neon-biasa readonly-neon input-full">
+                    </div>
 
-                <label class="label-neon">PASSWORD BARU</label>
-                <input type="password" id="set_pass" placeholder="Kosongkan jika tidak diubah" class="input-neon-biasa input-pendek">
+                    <div class="input-group-unit">
+                        <label class="label-neon">PASSWORD BARU</label>
+                        <input type="password" id="set_pass" placeholder="Kosongkan jika tidak diubah" class="input-neon-biasa input-full">
+                    </div>
+
+                    <div class="input-group-unit">
+                        <label class="label-neon">ROLE</label>
+                        <input type="text" id="set_role" readonly class="input-neon-biasa readonly-neon input-full">
+                    </div>
+
+                    <div class="input-group-unit">
+                        <label class="label-neon">STATUS</label>
+                        <input type="text" id="set_status" readonly class="input-neon-biasa readonly-neon input-full">
+                    </div>
+
+                    <div class="input-group-unit">
+                        <label class="label-neon">EMAIL ADDRESS</label>
+                        <input type="email" id="set_email" class="input-neon-biasa input-full">
+                    </div>
+
+                    <div class="input-group-unit">
+                        <label class="label-neon">NOMOR TELEPON</label>
+                        <input type="text" id="set_phone" class="input-neon-biasa input-full">
+                    </div>
+                    
+                    <div class="input-group-unit full-width">
+                        <label class="label-neon">LOGIN ATTEMPTS</label>
+                        <div class="form-row-neon">
+                            <input type="text" id="set_attempts" readonly class="input-neon-biasa readonly-neon" style="flex:1">
+                            <button disabled class="btn-base btn-gold">RESET</button>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="rightbar-action-bar">
-                <div>
-                    <label class="label-neon">ROLE</label>
-                    <input type="text" id="set_role" readonly class="input-neon-biasa readonly-neon input-pendek">
+                <div class="profile-footer">
+                    <button id="btnsaveprofile" onclick="saveProf()" class="btn-base btn-blue btn-large">
+                        <i class="fa-solid fa-floppy-disk"></i> SIMPAN PERUBAHAN
+                    </button>
                 </div>
-                <div>
-                    <label class="label-neon">STATUS</label>
-                    <input type="text" id="set_status" readonly class="input-neon-biasa readonly-neon input-pendek">
-                </div>
-                </div>
-
-                <div class="rightbar-action-bar">
-                <label class="label-neon">EMAIL ADDRESS</label>
-                <input type="email" id="set_email" class="input-neon-biasa input-pendek">
-                </div>
-
-                <div class="rightbar-action-bar">
-                <label class="label-neon">NOMOR TELEPON</label>
-                <input type="text" id="set_phone" class="input-neon-biasa input-pendek">
-                </div>
-
-                <div class="rightbar-action-bar">
-                <label class="label-neon">LOGIN ATTEMPTS</label>
-                <div class="form-row-neon">
-                    <input type="text" id="set_attempts" readonly class="input-neon-biasa readonly-neon input-pendek">
-                    <button disabled class="btn-base btn-gold " >RESET</button>
-                </div>
-                </div>
-
-                <button id="btnsaveprofile" onclick="saveProf()" class="btn-base btn-blue input-sedang" >
-                <i class="fa-solid fa-floppy-o"></i> SIMPAN PERUBAHAN
-                </button>
             </div>
         </div>
 
