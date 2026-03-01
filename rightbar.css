@@ -235,6 +235,7 @@ select option {
   color: var(--text-bright) !important;
   outline: none;
   transition: all 0.3s ease;
+  flex: none;
 }
 
 /* --- EFEK SAAT SEARCH AKTIF (FOCUS) --- */
@@ -261,6 +262,7 @@ select option {
   color: var(--text-bright) !important;
   outline: none;
   transition: all 0.3s ease;
+  flex:none;
 }
 
 /* --- EFEK SAAT SEARCH AKTIF (FOCUS) --- */
