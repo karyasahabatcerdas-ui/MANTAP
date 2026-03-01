@@ -1,6 +1,6 @@
 <div id="rightbar" class="crightbar"></div>
         <header>
-            <span id="headerUser">Selamat Datang, Señor</span>
+            <span id="headerUser" class="crightbar-header">Selamat Datang, Señor</span>
             <!-- Tombol Logout atau profil bisa di sini -->
         </header>
 
@@ -11,6 +11,11 @@
 
                 <!-- FILTER BARIS 1: STATUS & ID JADWAL -->
                 <div class="rightbar-action-bar">
+                    <!-- TOMBOL MULAI MAINTENANCE (Deep Orange Matte) -->
+                    <button onclick="startMaintenanceMode()" class="btn-base btn-gold">
+                    <i class="fas fa-play-circle"></i> MULAI MAINTENANCE
+                    </button>
+
                     <!-- Filter Status -->
                     <select id="filterStatusLog" onchange="applyHistoryFilter()" class="flex">
                     <option value="all">🔍 SEMUA STATUS</option>
@@ -22,11 +27,6 @@
                     <select id="filterJadwalLog" onchange="applyHistoryFilter()" class="flex">
                     <option value="">📅 MEMUAT JADWAL...</option>
                     </select>
-
-                    <!-- TOMBOL MULAI MAINTENANCE (Deep Orange Matte) -->
-                    <button onclick="startMaintenanceMode()" class="btn-base btn-gold">
-                    <i class="fas fa-play-circle"></i> MULAI MAINTENANCE
-                    </button>
 
                     <!-- TOMBOL GLOBAL SEARCH (GOLD / AMBER NEON) -->
                     <div class="search-wrapper-neon flex-1">
