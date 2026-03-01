@@ -27,7 +27,7 @@
                 <!-- FILTER BARIS 2: TOMBOL AKSI & SEARCH -->
                 <div class="action-bar-log" style="margin-top: -10px;">
                     <!-- TOMBOL MULAI MAINTENANCE (Deep Orange Matte) -->
-                    <button onclick="startMaintenanceMode()" class="btn-base btn-maintenance flex-1">
+                    <button onclick="startMaintenanceMode()" class="btn-base btn-gold flex-1">
                     <i class="fas fa-play-circle"></i> MULAI MAINTENANCE
                     </button>
 
@@ -123,15 +123,15 @@
             
                 <div class="action-bar-log sticky-bar" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 10px;">
                 
-                    <button onclick="openMaintModal()" class="btn-timbul btn-refresh" style="flex: 1; min-width: 100px;">
+                    <button onclick="openMaintModal()" class="btn-std btn-blue" style="flex: 1; min-width: 100px;">
                         <i class="fas fa-plus-circle"></i> EDIT
                     </button>
 
-                    <button onclick="exportToExcel()" class="btn-timbul btn-backup" style="flex: 1; min-width: 100px;">
+                    <button onclick="exportToExcel()" class="btn-std btn-green" style="flex: 1; min-width: 100px;">
                         <i class="fas fa-file-excel"></i> EXPORT
                     </button>
 
-                    <button onclick="document.getElementById('modalImport').style.display='flex'" class="btn-timbul btn-import" style="flex: 1; min-width: 100px;">
+                    <button onclick="document.getElementById('modalImport').style.display='flex'" class="btn-std btn-purple" style="flex: 1; min-width: 100px;">
                         <i class="fas fa-file-import"></i> IMPORT
                     </button>
 
@@ -169,24 +169,24 @@
             <h3><i class="fas fa-users-cog"></i> Manajemen User </h3>
             
             <div class="action-bar-log">
-                <!-- Menggunakan class btn-timbul yang sudah kita definisikan sebelumnya -->
-                <button onclick="openAddUserModal()" class="btn-timbul btn-refresh">
+                <!-- Menggunakan class btn-std yang sudah kita definisikan sebelumnya -->
+                <button onclick="openAddUserModal()" class="btn-std btn-blue">
                 <i class="fa-solid fa-person-circle-plus fa-xl"></i> TAMBAH
                 </button>
 
-                <button onclick="downloadCSV()" class="btn-timbul btn-backup">
+                <button onclick="downloadCSV()" class="btn-std btn-green">
                 <i class="fa-solid fa-person-arrow-up-from-line fa-xl"></i> EXPORT CSV
                 </button>
 
-                <button onclick="doBulkAction('aktif')" class="btn-timbul btn-aktif-neon">
+                <button onclick="doBulkAction('aktif')" class="btn-std btn-gold">
                 <i class="fa-solid fa-person-circle-check fa-xl"></i> AKTIFKAN
                 </button>
 
-                <button onclick="doBulkAction('nonaktif')" class="btn-timbul btn-nonaktif-neon">
+                <button onclick="doBulkAction('nonaktif')" class="btn-std btn-purple">
                 <i class="fa-solid fa-person-circle-xmark fa-xl"></i> NONAKTIFKAN
                 </button>
 
-                <button onclick="doBulkDelete()" class="btn-timbul btn-hapus">
+                <button onclick="doBulkDelete()" class="btn-std btn-red">
                 <i class="fa-solid fa-person-circle-minus fa-xl"></i> HAPUS
                 </button>
             </div>
