@@ -221,6 +221,7 @@ select option {
 .search-wrapper-neon {
   position: relative; /* Wajib: Agar ikon bisa menempel relatif ke sini */
   display: flex;
+  flex: 1; /* Agar dia otomatis mengisi ruang yang tersedia */
   align-items: center;
   width: 100%;
 }
