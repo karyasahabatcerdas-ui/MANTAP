@@ -29,9 +29,9 @@
                     </select>
 
                     <!-- TOMBOL GLOBAL SEARCH (GOLD / AMBER NEON) -->
-                    <div class="search-wrapper-neon flex-1">
+                    <div class="search-wrapper-neon input-pendek">
                     <i class="fas fa-search icon-search-gold"></i>
-                    <input type="text" id="cari_history" placeholder="Ketik kata kunci..." onkeyup="filterGlobalOpen(this, 'tablehistory')" class="input-neon-gold input-panjang">
+                    <input type="text" id="cari_history" placeholder="Ketik kata kunci..." onkeyup="filterGlobalOpen(this, 'tablehistory')" class="input-neon-gold input-sedang">
                     </div>
                 </div>
 
@@ -83,7 +83,7 @@
 
                 <div class="search-wrapper-neon" style="flex: 2; min-width: 280px; width: 100%;">
                     <i class="fas fa-search icon-search"></i>
-                    <input type="text" id="cari_jadwal" placeholder="Cari unit atau ID asset..." onkeyup="loadJad();" class="input-neon-gold input-panjang" style="width: 100%;">
+                    <input type="text" id="cari_jadwal" placeholder="Cari unit atau ID asset..." onkeyup="loadJad();" class="input-neon-gold input-sedang" style="width: 100%;">
                 </div>
             </div>
 
@@ -133,7 +133,7 @@
 
                     <div class="search-wrapper-neon" style="flex: 3; min-width: 250px;">
                         <i class="fas fa-search icon-search"></i>
-                        <input type="text" id="cari_kelola_jadwal" placeholder="Cari jadwal..." onkeyup="filterGlobalOpen(this, 'tableJadwalMain')" class="input-neon-gold input-panjang">
+                        <input type="text" id="cari_kelola_jadwal" placeholder="Cari jadwal..." onkeyup="filterGlobalOpen(this, 'tableJadwalMain')" class="input-neon-gold input-sedang">
                     </div>
                 </div>
 
@@ -314,7 +314,7 @@
             
             <!-- Master Search Button (Neon Glow Style) -->
             <div class="rightbar-action-bar input-pendek">
-                <button onclick="openGlobalSearch()" class="btn-base btn-gold input-panjang">
+                <button onclick="openGlobalSearch()" class="btn-base btn-gold input-sedang">
                  <i class="fas fa-search"></i> MASTER SEARCH
                 </button>
                 <select id="viewAssetTypeSelect" onchange="loadAssetDataView(this.value)">
@@ -392,7 +392,7 @@
                 </div>
                 </div>
 
-                <button id="btnsaveprofile" onclick="saveProf()" class="btn-base btn-blue input-panjang" >
+                <button id="btnsaveprofile" onclick="saveProf()" class="btn-base btn-blue input-sedang" >
                 <i class="fa-solid fa-floppy-o"></i> SIMPAN PERUBAHAN
                 </button>
             </div>
