@@ -80,6 +80,15 @@
   100% { filter: hue-rotate(360deg); }
 }
 
+.rightbar-action-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+  align-items: center;
+}
+
+
 /* --- TABEL GAHAR (Clean & Solid) --- */
 .table-responsive-aset {
   background: var(--bg-main);

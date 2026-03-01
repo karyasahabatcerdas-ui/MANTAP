@@ -10,7 +10,7 @@
                 <h3><i class="fas fa-history"></i> Activity History</h3>
 
                 <!-- FILTER BARIS 1: STATUS & ID JADWAL -->
-                <div class="action-bar-log sticky-bar" style="display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; align-items: center;">
+                <div class="rightbar-action-bar">
                     <!-- Filter Status -->
                     <select id="filterStatusLog" onchange="applyHistoryFilter()" class="select-custom flex-1">
                     <option value="all">🔍 SEMUA STATUS</option>
@@ -62,8 +62,7 @@
         <div id="page_jadwal" class="page hidden">
             <h3><i class="fas fa-calendar-alt"></i> Lihat Jadwal Maintenance</h3>
 
-            <div class="action-bar-log sticky-bar" style="display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; align-items: center;">
-                
+            <div class="rightbar-action-bar">                
                 <select id="sortJadwal" onchange="loadJad()" class="select-custom" style="flex: 1; min-width: 120px;">
                     <option value="newest">🕒 Terbaru</option>
                     <option value="oldest">⌛ Terlama</option>
@@ -118,7 +117,7 @@
         <div id="page_kelola" class="page hidden">
             <h3><i class="fas fa-calendar-check"></i> Jadwal Maintenance</h3>
             
-                <div class="action-bar-log sticky-bar" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 10px;">
+                <div class="rightbar-action-bar">
                 
                     <button onclick="openMaintModal()" class="btn-base btn-blue flex-1" >
                         <i class="fas fa-plus-circle"></i> EDIT
@@ -165,7 +164,7 @@
         <div id="page_m_user" class="page hidden">
             <h3><i class="fas fa-users-cog"></i> Manajemen User </h3>
             
-            <div class="action-bar-log">
+            <div class="rightbar-action-bar">
                 <!-- Menggunakan class btn-base yang sudah kita definisikan sebelumnya -->
                 <button onclick="openAddUserModal()" class="btn-base btn-blue flex-1">
                 <i class="fa-solid fa-person-circle-plus fa-xl"></i> TAMBAH
@@ -218,8 +217,8 @@
         <div id="page_aset" class="page hidden">
             <h3><i class="fas fa-boxes"></i> Kelola Asset </h3>
 
-            <!-- Container Button Action (Sekarang pakai class action-bar-log agar selaras) -->
-            <div class="action-bar-log">
+            <!-- Container Button Action (Sekarang pakai class rightbar-action-bar agar selaras) -->
+            <div class="rightbar-action-bar">
             <button onclick="openAddAssetModal()" class="btn-base btn-blue flex-1">
             <i class="fa fa-plus-circle"></i> ASET BARU
             </button>
@@ -274,7 +273,7 @@
             <h3><i class="fa-solid fa-clock-rotate-left"></i> Audit Log System </h3>
 
             <!-- Tombol Action dengan Efek Timbul 3D -->
-            <div class="action-bar-log" style="margin-bottom: 25px; display: flex; gap: 15px;">
+            <div class="rightbar-action-bar" >
                 <button onclick="loadAuditLogs()" class="btn-base btn-blue flex-1">
                 <i class="fa-solid fa-arrows-rotate"></i> REFRESH LOG
                 </button>
@@ -315,14 +314,11 @@
             <h3><i class="fa-solid fa-magnifying-glass"></i> Lihat Data Aset </h3>
             
             <!-- Master Search Button (Neon Glow Style) -->
-            <div class="search-container-header">
+            <div class="rightbar-action-bar">
                 <button onclick="openGlobalSearch()" class="btn-base btn-gold flex-1">
                 <i class="fa-solid fa-database"></i> MASTER SEARCH (SEMUA ASET)
                 </button>
-            </div>
 
-            <!-- Filter Card (Ganti background putih jadi Midnight Slate) -->
-            <div class="filter-container-aset">
                 <label class="label-filter-tiny">PILIH KATEGORI / TIPE ASET</label>
                 <select id="viewAssetTypeSelect" onchange="loadAssetDataView(this.value)" class="select-custom">
                 <option value="">-- Pilih Tipe Aset --</option>
@@ -412,7 +408,7 @@
             <h3><i class="fas fa-server"></i> Database & Schema Manager</h3>
 
             <!-- Barisan Tombol Status & Tools (Gaya Industrial) -->
-            <div class="action-bar-log">
+            <div class="rightbar-action-bar">
                 <button id="db_connection_status" onclick="checkDBStatus()" class="btn-base btn-gold flex-1">
                 <i class="fa-solid fa-database fa-lg"></i> DB STATUS 
                 </button>
