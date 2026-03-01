@@ -12,7 +12,7 @@
                 <!-- FILTER BARIS 1: STATUS & ID JADWAL -->
                 <div class="rightbar-action-bar">
                     <!-- TOMBOL MULAI MAINTENANCE (Deep Orange Matte) -->
-                    <button onclick="startMaintenanceMode()" class="btn-base btn-gold flex:1;">
+                    <button onclick="startMaintenanceMode()" class="btn-base btn-gold">
                     <i class="fas fa-play-circle"></i> MULAI MAINTENANCE
                     </button>
 
@@ -31,7 +31,7 @@
                     <!-- TOMBOL GLOBAL SEARCH (GOLD / AMBER NEON) -->
                     <div class="search-wrapper-neon flex-1">
                     <i class="fas fa-search icon-search-gold"></i>
-                    <input type="text" id="cari_history" placeholder="Ketik kata kunci..." onkeyup="filterGlobalOpen(this, 'tablehistory')" class="input-neon-gold" style="width: 100%;">
+                    <input type="text" id="cari_history" placeholder="Ketik kata kunci..." onkeyup="filterGlobalOpen(this, 'tablehistory')" class="input-neon-gold input-panjang">
                     </div>
                 </div>
 
@@ -70,11 +70,11 @@
                     <option value="last_month">⏪ 1 Bln Blkg</option>
                 </select>
 
-                <select id="filterType" onchange="loadJad()" class="select-custom" style="flex: 1; min-width: 120px;">
+                <select id="filterType" onchange="loadJad()" class="input-pendek">
                     <option value="">📦 Semua Tipe</option>
                 </select>
 
-                <select id="filterState" onchange="loadJad()" class="select-custom" style="flex: 1; min-width: 100px;">
+                <select id="filterState" onchange="loadJad()" class="input-pendek">
                     <option value="">🔘 Status</option>
                     <option value="Open" class="text-open">Open</option>
                     <option value="Pending" class="text-pending">Pending</option>
@@ -83,7 +83,7 @@
 
                 <div class="search-wrapper-neon" style="flex: 2; min-width: 280px; width: 100%;">
                     <i class="fas fa-search icon-search"></i>
-                    <input type="text" id="cari_jadwal" placeholder="Cari unit atau ID asset..." onkeyup="loadJad();" class="input-neon-gold" style="width: 100%;">
+                    <input type="text" id="cari_jadwal" placeholder="Cari unit atau ID asset..." onkeyup="loadJad();" class="input-neon-gold input-panjang" style="width: 100%;">
                 </div>
             </div>
 
@@ -119,21 +119,21 @@
             
                 <div class="rightbar-action-bar">
                 
-                    <button onclick="openMaintModal()" class="btn-base btn-blue flex-1" >
+                    <button onclick="openMaintModal()" class="btn-base btn-blue" >
                         <i class="fas fa-plus-circle"></i> EDIT
                     </button>
 
-                    <button onclick="exportToExcel()" class="btn-base btn-green flex-1" >
+                    <button onclick="exportToExcel()" class="btn-base btn-green" >
                         <i class="fas fa-file-excel"></i> EXPORT
                     </button>
 
-                    <button onclick="document.getElementById('modalImport').style.display='flex'" class="btn-base btn-purple flex-1" >
+                    <button onclick="document.getElementById('modalImport').style.display='flex'" class="btn-base btn-purple" >
                          <i class="fas fa-file-import"></i> IMPORT
                     </button>
 
                     <div class="search-wrapper-neon" style="flex: 3; min-width: 250px;">
                         <i class="fas fa-search icon-search"></i>
-                        <input type="text" id="cari_kelola_jadwal" placeholder="Cari jadwal..." onkeyup="filterGlobalOpen(this, 'tableJadwalMain')" class="input-neon-gold" style="width: 100%;">
+                        <input type="text" id="cari_kelola_jadwal" placeholder="Cari jadwal..." onkeyup="filterGlobalOpen(this, 'tableJadwalMain')" class="input-neon-gold input-panjang">
                     </div>
                 </div>
 
@@ -166,23 +166,23 @@
             
             <div class="rightbar-action-bar">
                 <!-- Menggunakan class btn-base yang sudah kita definisikan sebelumnya -->
-                <button onclick="openAddUserModal()" class="btn-base btn-blue flex-1">
+                <button onclick="openAddUserModal()" class="btn-base btn-blue">
                 <i class="fa-solid fa-person-circle-plus fa-xl"></i> TAMBAH
                 </button>
 
-                <button onclick="downloadCSV()" class="btn-base btn-green flex-1">
+                <button onclick="downloadCSV()" class="btn-base btn-green">
                 <i class="fa-solid fa-person-arrow-up-from-line fa-xl"></i> EXPORT CSV
                 </button>
 
-                <button onclick="doBulkAction('aktif')" class="btn-base btn-gold flex-1">
+                <button onclick="doBulkAction('aktif')" class="btn-base btn-gold">
                 <i class="fa-solid fa-person-circle-check fa-xl"></i> AKTIFKAN
                 </button>
 
-                <button onclick="doBulkAction('nonaktif')" class="btn-base btn-purple flex-1">
+                <button onclick="doBulkAction('nonaktif')" class="btn-base btn-purple">
                 <i class="fa-solid fa-person-circle-xmark fa-xl"></i> NONAKTIFKAN
                 </button>
 
-                <button onclick="doBulkDelete()" class="btn-base btn-red flex-1">
+                <button onclick="doBulkDelete()" class="btn-base btn-red">
                 <i class="fa-solid fa-person-circle-minus fa-xl"></i> HAPUS
                 </button>
             </div>
@@ -219,26 +219,26 @@
 
             <!-- Container Button Action (Sekarang pakai class rightbar-action-bar agar selaras) -->
             <div class="rightbar-action-bar">
-            <button onclick="openAddAssetModal()" class="btn-base btn-blue flex-1">
+            <button onclick="openAddAssetModal()" class="btn-base btn-blue">
             <i class="fa fa-plus-circle"></i> ASET BARU
             </button>
 
-            <button id="btnBulkQR" onclick="bulkUpdateQR()" class="btn-base btn-gold flex-1">
+            <button id="btnBulkQR" onclick="bulkUpdateQR()" class="btn-base btn-purple">
             <i class="fa-solid fa-qrcode"></i> QR BULK GENERATE
             </button>
 
-            <button onclick="openGlobalSearch()" class="btn-base flex-1">
+            <button onclick="openGlobalSearch()" class="btn-base btn-gold">
             <i class="fas fa-search"></i> MASTER SEARCH
             </button>
 
-            <button id="btnBulkDelete" onclick="doBulkDeleteAsset()" class="btn-base btn-red flex-1">
+            <button id="btnBulkDelete" onclick="doBulkDeleteAsset()" class="btn-base btn-red">
             <i class="fas fa-trash-alt"></i> HAPUS TERPILIH
                 </button>
             </div>
 
             <!-- Bagian Filter Dropdown (Sekarang Glassmorphism) -->
             <div class="filter-container-aset">
-                <select id="assetTypeSelect" onchange="loadAssetData(this.value)" class="select-custom">
+                <select id="assetTypeSelect" onchange="loadAssetData(this.value)" class="input-panjang">
                 <option value="">-- Pilih Tipe Aset --</option>
                 </select>
             </div>
@@ -273,15 +273,15 @@
 
             <!-- Tombol Action dengan Efek Timbul 3D -->
             <div class="rightbar-action-bar" >
-                <button onclick="loadAuditLogs()" class="btn-base btn-blue flex-1">
+                <button onclick="loadAuditLogs()" class="btn-base btn-blue">
                 <i class="fa-solid fa-arrows-rotate"></i> REFRESH LOG
                 </button>
 
-                <button onclick="backupLogSekarang()" class="btn-base btn-gold flex-1">
+                <button onclick="backupLogSekarang()" class="btn-base btn-gold">
                 <i class="fa-solid fa-box-archive"></i> BACKUP LOG
                 </button>
 
-                <button onclick="hapusLog()" class="btn-base btn-red flex-1">
+                <button onclick="hapusLog()" class="btn-base btn-red">
                 <i class="fa-solid fa-eraser"></i> PURGE LOG
                 </button>
             </div>
@@ -314,10 +314,10 @@
             
             <!-- Master Search Button (Neon Glow Style) -->
             <div class="rightbar-action-bar">
-                <button onclick="openGlobalSearch()" class="btn-base btn-gold flex-1">
+                <button onclick="openGlobalSearch()" class="btn-base btn-gold">
                 <i class="fa-solid fa-database"></i> MASTER SEARCH (SEMUA ASET)
                 </button>
-                <select id="viewAssetTypeSelect" onchange="loadAssetDataView(this.value)" class="select-custom">
+                <select id="viewAssetTypeSelect" onchange="loadAssetDataView(this.value)" class="input-panjang">
                 <option value="">-- Pilih Tipe Aset --</option>
                 </select>
             </div>
@@ -394,8 +394,8 @@
                 </div>
                 </div>
 
-                <button id="btnsaveprofile" onclick="saveProf()" class="btn-base btn-blue flex-1" style="width:100%; margin-top:10px; justify-content:center;">
-                <i class="fa fa-floppy-o"></i> SIMPAN PERUBAHAN
+                <button id="btnsaveprofile" onclick="saveProf()" class="btn-base btn-blue input-panjang" >
+                <i class="fa-solid fa-floppy-o"></i> SIMPAN PERUBAHAN
                 </button>
             </div>
         </div>
