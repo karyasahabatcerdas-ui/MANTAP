@@ -7,16 +7,21 @@
   background: var(--bg-main); /* Pastikan gelap agar kontras */
 
   /* NAIKKAN KE ANGKA TERTINGGI DI BAWAH LOGIN DAN SWAL2 KERAMAT */
-  z-index: 10000;
+  z-index: 1000;
   overflow-y: auto;
     padding: 0;
     margin: 0;
 }
 
+
 .maint-container {
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
+    width: 100%;
+    max-width: 500px; /* Batas lebar agar tidak terlalu melar di PC */
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh; /* Pastikan dia mengambil tinggi layar */
+    position: relative;
+    z-index: 11000; /* Harus lebih tinggi sedikit dari overlay-nya */
 }
 
 /* TOP NAVIGATION */
