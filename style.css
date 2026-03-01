@@ -13,7 +13,7 @@
 :root {
     /* Surface Colors */   /* --- UNTUK RIGHTBAR DAN LEFTBAR --- */
   --bg-main: #0f172a;           /* Midnight Slate */  /* Latar Belakang Utama */
-  --bg-card: #1e293b;           /* Lighter Slate */  /* Warna Sidebar & Card */
+  --bg-card: #1e293b;           /* Lighter Slate */  /* Warna leftbar & Card */
   --bg-input: rgba(15, 23, 42, 0.8);
   
   /* Brand Colors */
@@ -25,7 +25,7 @@
   
   /* Border & Glass */
   --border-glass: rgba(56, 189, 248, 0.15);
-  --border-dim: #334155;      /* Garis Pemisah Sidebar & Rightbar */
+  --border-dim: #334155;      /* Garis Pemisah leftbar & Rightbar */
   --glass-blur: blur(10px);
   
   /* Text Colors */
@@ -42,7 +42,7 @@
   --sys-color: #e74c3c;
   --transition: 0.3s ease;
   
-  /* --- KHUSUS SIDEBAR (TAMBAHAN) --- */
+  /* --- KHUSUS LEFTBAR (TAMBAHAN) --- */
   --leftbar-width: 6.25rem; /* 260px jika font html 16-berlau untuk semua*/
   --leftbar-collapsed-width:  4.375rem; /* 70px */
   --neon-purple: #a855f7;       /* KHUSU Untuk badge Sys */  
@@ -105,13 +105,13 @@ html {
 
 /* --- RESPONSIVE MOBILE OPTIMIZATION --- */
 @media (max-width: 600px) {
-    /* 1. Lebar Sidebar di HP lebih ramping */
-    .sidebar-container {
+    /* 1. Lebar Leftbar di HP lebih ramping */
+    .leftbar-container {
         width: 180px; 
     }
 
     /* 2. Saat mengecil di HP, buat sangat minimalis (hanya ikon kecil) */
-    .sidebar-container.collapsed {
+    .leftbar-container.collapsed {
         width: 60px;
     }
 

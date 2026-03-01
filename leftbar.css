@@ -1,11 +1,11 @@
 /* ==========================================================================
-   CSS SIDEBAR (LEFTBAR) - UPDATED WITH REM & H3 DYNAMICS
+   CSS LEFTBAR - UPDATED WITH REM & H3 DYNAMICS
    ========================================================================== 
 */
 
 /* --- CONTAINER UTAMA SIDEBAR --- */
 .leftbar-container {
-  width: var(--sidebar-width);
+  width: var(--leftbar-width);
   height: 100vh;
   background: var(--bg-card);
   border-right: 1px solid var(--border-dim);
@@ -19,7 +19,7 @@
 }
 
 .leftbar-container.collapsed {
-  width: var(--sidebar-collapsed-width);
+  width: var(--leftbar-collapsed-width);
 }
 
 /* --- HEADER & PROFIL (Perbaikan H3) --- */
@@ -40,7 +40,7 @@
 }
 
 /* LOGIKA KHUSUS: Saat Collapsed, H3 mengecil drastis sebelum menghilang */
-.leftbar-container.collapsed .sidebar-header-title {
+.leftbar-container.collapsed .leftbar-header-title {
   font-size: 0.5rem; 
   opacity: 0;
   display: none;
@@ -111,7 +111,7 @@
     }
 
     /* Memastikan H3 di mobile tidak terlalu besar */
-    .sidebar-header-title {
+    .leftbar-header-title {
         font-size: 0.75rem; 
     }
 
