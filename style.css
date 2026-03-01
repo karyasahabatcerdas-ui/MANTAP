@@ -22,6 +22,7 @@
   --neon-green: #22c55e;        /* Emerald */
   --neon-red: #ef4444;          /* Danger/Cancel */  /* Untuk Logout */ 
   --neon-purple: #7c3aed;       /* Import/Special */
+  --neon-purple-sys: #a855f7;       /* KHUSU Untuk badge Sys */
   
   /* Border & Glass */
   --border-glass: rgba(56, 189, 248, 0.15);
@@ -43,9 +44,9 @@
   --transition: 0.3s ease;
   
   /* --- KHUSUS LEFTBAR (TAMBAHAN) --- */
-  --leftbar-width: 6.25rem; /* 260px jika font html 16-berlau untuk semua*/
-  --leftbar-collapsed-width:  4.375rem; /* 70px */
-  --neon-purple: #a855f7;       /* KHUSU Untuk badge Sys */  
+  --leftbar-width: 6.75rem; /* rumusnya sekitar = 260px jika font html dibuat 16 untuk semua*/
+  --leftbar-collapsed-width:  4.25rem; /* 70px */
+    
 
 }
 

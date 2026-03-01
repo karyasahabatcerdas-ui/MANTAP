@@ -100,8 +100,8 @@
 }
 
 /* --- BADGES --- */
-.badge-admin { background: var(--neon-gold); color: #000; }
-.badge-sys { background: var(--neon-purple); color: #fff; }
+.badge-admin { background: var(--neon-red); color:  #fde55f; }
+.badge-sys { background: var(--neon-purple-sys); color: #fff; }
 .badge-admin, .badge-sys {
   font-size: 0.563rem;
   padding: 1px 4px;
