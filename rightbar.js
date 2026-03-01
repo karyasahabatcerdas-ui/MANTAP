@@ -9,11 +9,7 @@ tempPhotos = { PB: [], PO: [], PA: [], PC: [] }; // Menyimpan foto sementara seb
 update_man_status = false; // Menandakan apakah sedang dalam mode UPDATE (Pending) atau INPUT Baru
 
 
-/**================================
- * [FUNGSI CLIENT: START MAINTENANCE MODE]
- * Membuka modal dan mengunci semua input sampai data aset tervalidasi
- * ================================
- */
+
 /**==============================
  * [FUNGSI CLIENT: START MAINTENANCE MODE]
  * Membuka modal dan mengunci semua input sampai data aset tervalidasi
@@ -59,6 +55,7 @@ function startMaintenanceMode() {
     
     // 4. Logika Otomatis: Langsung arahkan ke Scanner atau Pencarian Manual
     console.log("🛠️ Maintenance Mode: Aktif. Menunggu validasi Unit ID...");
+    console.log("Z-Index Modal:", modal.style.zIndex);
     
     // Optional: Auto-scroll ke atas jika modal sangat panjang
     modal.scrollTop = 0;
