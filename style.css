@@ -127,4 +127,8 @@ html {
         width: 45px;
         height: 45px;
     }
+    .tambah-db{
+        flex-direction: column;
+        gap: 5px;
+    }
 }

@@ -276,6 +276,15 @@ select option {
   color: #ffffff;
   text-shadow: 0 0 8px var(--neon-biasa);
 }
+
+/* --- INPUT UTNUK CREATE DATABASE --- */
+.tambah-db{
+  display: flex; 
+  flex-direction: row; 
+  align-items: center; 
+  gap: 10px;
+}
+
 /* --- 2. GAYA TOMBOL (BUTTONS) --- */
 .btn-base {
   padding: 0.625rem 1.25rem;
