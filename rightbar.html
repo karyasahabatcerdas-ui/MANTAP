@@ -18,8 +18,8 @@
 
                     <!-- TOMBOL GLOBAL SEARCH (GOLD / AMBER NEON) -->
                     <div class="search-wrapper-neon input-pendek">
-                    <i class="fas fa-search icon-search-gold"></i>
-                    <input type="text" id="cari_history" placeholder="Ketik kata kunci..." onkeyup="filterGlobalOpen(this, 'tablehistory')" class="input-neon-gold input-sedang">
+                        <i class="fas fa-search icon-search-gold"></i>
+                        <input type="text" id="cari_history" placeholder="Ketik kata kunci..." onkeyup="filterGlobalOpen(this, 'tablehistory')" class="input-neon-gold">
                     </div>
 
                     <!-- Filter Status -->
@@ -218,28 +218,27 @@
 
             <!-- Container Button Action (Sekarang pakai class rightbar-action-bar agar selaras) -->
             <div class="rightbar-action-bar">
-            <button onclick="openAddAssetModal()" class="btn-base btn-blue">
-            <i class="fa fa-plus-circle"></i> ASET BARU
-            </button>
+                <!-- Bagian Filter Dropdown (Sekarang Glassmorphism) -->
+                <div class="filter-container-aset input-pendek">
+                    <select id="assetTypeSelect" onchange="loadAssetData(this.value)" >
+                    <option value="">-- Pilih Tipe Aset --</option>
+                    </select>
+                </div>
+                <button onclick="openAddAssetModal()" class="btn-base btn-blue">
+                <i class="fa fa-plus-circle"></i> ASET BARU
+                </button>
 
-            <button id="btnBulkQR" onclick="bulkUpdateQR()" class="btn-base btn-purple">
-            <i class="fa-solid fa-qrcode"></i> QR BULK GENERATE
-            </button>
+                <button id="btnBulkQR" onclick="bulkUpdateQR()" class="btn-base btn-purple">
+                <i class="fa-solid fa-qrcode"></i> QR BULK GENERATE
+                </button>
 
-            <button onclick="openGlobalSearch()" class="btn-base btn-gold">
-            <i class="fas fa-search"></i> MASTER SEARCH
-            </button>
+                <button onclick="openGlobalSearch()" class="btn-base btn-gold">
+                <i class="fas fa-search"></i> MASTER SEARCH
+                </button>
 
-            <button id="btnBulkDelete" onclick="doBulkDeleteAsset()" class="btn-base btn-red">
-            <i class="fas fa-trash-alt"></i> HAPUS TERPILIH
-            </button>
-
-            <!-- Bagian Filter Dropdown (Sekarang Glassmorphism) -->
-            <div class="filter-container-aset input-pendek">
-                <select id="assetTypeSelect" onchange="loadAssetData(this.value)" >
-                <option value="">-- Pilih Tipe Aset --</option>
-                </select>
-            </div>
+                <button id="btnBulkDelete" onclick="doBulkDeleteAsset()" class="btn-base btn-red">
+                <i class="fas fa-trash-alt"></i> HAPUS TERPILIH
+                </button>
             </div>
 
 
@@ -314,14 +313,15 @@
             <h3><i class="fa-solid fa-magnifying-glass"></i> Lihat Data Aset </h3>
             
             <!-- Master Search Button (Neon Glow Style) -->
-            <div class="rightbar-action-bar input-pendek">
+            <div class="rightbar-action-bar">
+                <div class="input-pendek">
                 <select id="viewAssetTypeSelect" onchange="loadAssetDataView(this.value)">
                 <option value="">-- Pilih Tipe Aset --</option>
                 </select>
+                </div>
                 <button onclick="openGlobalSearch()" class="btn-base btn-gold input-sedang">
                  <i class="fas fa-search"></i> MASTER SEARCH
                 </button>
-
             </div>
 
             <!-- Pembungkus Tabel Responsif -->
