@@ -53,6 +53,9 @@ function startMaintenanceMode() {
 
 
     // 3. Tampilkan Modal
+    modal.style.pointerEvents = "auto"; // Pastikan modal bisa diinteraksi (untuk tombol close)
+    modal.style.opacity = "1"; // Pastikan modal terlihat jelas 
+    modal.style.display = 'flex'; // Tampilkan modal dengan flex untuk responsif
     modal.style.display = 'block';
     
     // 4. Logika Otomatis: Langsung arahkan ke Scanner atau Pencarian Manual
