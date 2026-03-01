@@ -170,6 +170,13 @@ input:focus, select:focus {
   background: var(--bg-card) !important;
 }
 
+.input-pendek{
+  width: 150px;
+}
+.input-sedang{
+  width: 250px;
+}
+
 /* Memberi warna pada opsi di dalam Select */
 select option {
   background: var(--bg-card);

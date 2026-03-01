@@ -44,7 +44,7 @@
   --transition: 0.3s ease;
   
   /* --- KHUSUS LEFTBAR (TAMBAHAN) --- */
-  --leftbar-width: 8.0rem; /* rumusnya sekitar = 260px jika font html dibuat 16 untuk semua*/
+  --leftbar-width: 10.0rem; /* rumusnya sekitar = 260px jika font html dibuat 16 untuk semua*/
   --leftbar-collapsed-width:  3.5rem; /* 70px */
     
 
