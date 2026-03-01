@@ -16,6 +16,12 @@
                     <i class="fas fa-play-circle"></i> MULAI MAINTENANCE
                     </button>
 
+                    <!-- TOMBOL GLOBAL SEARCH (GOLD / AMBER NEON) -->
+                    <div class="search-wrapper-neon input-pendek">
+                    <i class="fas fa-search icon-search-gold"></i>
+                    <input type="text" id="cari_history" placeholder="Ketik kata kunci..." onkeyup="filterGlobalOpen(this, 'tablehistory')" class="input-neon-gold input-sedang">
+                    </div>
+
                     <!-- Filter Status -->
                     <select id="filterStatusLog" onchange="applyHistoryFilter()" class="input-pendek">
                     <option value="all">🔍 SEMUA STATUS</option>
@@ -27,12 +33,6 @@
                     <select id="filterJadwalLog" onchange="applyHistoryFilter()" class="input-pendek">
                     <option value="">📅 MEMUAT JADWAL...</option>
                     </select>
-
-                    <!-- TOMBOL GLOBAL SEARCH (GOLD / AMBER NEON) -->
-                    <div class="search-wrapper-neon input-pendek">
-                    <i class="fas fa-search icon-search-gold"></i>
-                    <input type="text" id="cari_history" placeholder="Ketik kata kunci..." onkeyup="filterGlobalOpen(this, 'tablehistory')" class="input-neon-gold input-sedang">
-                    </div>
                 </div>
 
                 <!-- TABEL HISTORY -->
@@ -62,7 +62,11 @@
         <div id="page_jadwal" class="page hidden">
             <h3><i class="fas fa-calendar-alt"></i> Lihat Jadwal Maintenance</h3>
 
-            <div class="rightbar-action-bar">                
+            <div class="rightbar-action-bar"> 
+                <div class="search-wrapper-neon" style="flex: 2; min-width: 280px; width: 100%;">
+                    <i class="fas fa-search icon-search"></i>
+                    <input type="text" id="cari_jadwal" placeholder="Cari unit atau ID asset..." onkeyup="loadJad();" class="input-neon-gold input-sedang" style="width: 100%;">
+                </div>               
                 <select id="sortJadwal" onchange="loadJad()" class="input-pendek">
                     <option value="newest">🕒 Terbaru</option>
                     <option value="oldest">⌛ Terlama</option>
@@ -80,11 +84,6 @@
                     <option value="Pending" class="text-pending">Pending</option>
                     <option value="Close" class="text-close">Close</option>
                 </select>
-
-                <div class="search-wrapper-neon" style="flex: 2; min-width: 280px; width: 100%;">
-                    <i class="fas fa-search icon-search"></i>
-                    <input type="text" id="cari_jadwal" placeholder="Cari unit atau ID asset..." onkeyup="loadJad();" class="input-neon-gold input-sedang" style="width: 100%;">
-                </div>
             </div>
 
             <!-- [UI TABEL LIHAT JADWAL] -->
@@ -233,8 +232,7 @@
 
             <button id="btnBulkDelete" onclick="doBulkDeleteAsset()" class="btn-base btn-red">
             <i class="fas fa-trash-alt"></i> HAPUS TERPILIH
-                </button>
-            </div>
+            </button>
 
             <!-- Bagian Filter Dropdown (Sekarang Glassmorphism) -->
             <div class="filter-container-aset input-pendek">
@@ -242,6 +240,9 @@
                 <option value="">-- Pilih Tipe Aset --</option>
                 </select>
             </div>
+            </div>
+
+
 
             <!-- Pembungkus Tabel Responsif -->
             <div class="table-responsive-aset">
@@ -314,12 +315,13 @@
             
             <!-- Master Search Button (Neon Glow Style) -->
             <div class="rightbar-action-bar input-pendek">
-                <button onclick="openGlobalSearch()" class="btn-base btn-gold input-sedang">
-                 <i class="fas fa-search"></i> MASTER SEARCH
-                </button>
                 <select id="viewAssetTypeSelect" onchange="loadAssetDataView(this.value)">
                 <option value="">-- Pilih Tipe Aset --</option>
                 </select>
+                <button onclick="openGlobalSearch()" class="btn-base btn-gold input-sedang">
+                 <i class="fas fa-search"></i> MASTER SEARCH
+                </button>
+
             </div>
 
             <!-- Pembungkus Tabel Responsif -->
