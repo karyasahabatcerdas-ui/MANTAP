@@ -21,7 +21,7 @@
     padding: 20px;
     min-height: 100vh; /* Pastikan dia mengambil tinggi layar */
     position: relative;
-    z-index: 11000; /* Harus lebih tinggi sedikit dari overlay-nya */
+    z-index: 2000; /* Harus lebih tinggi sedikit dari overlay-nya */
 }
 
 /* TOP NAVIGATION */
