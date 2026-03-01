@@ -45,7 +45,7 @@
   /* --- KHUSUS SIDEBAR (TAMBAHAN) --- */
   --sidebar-width: 260px;
   --sidebar-collapsed-width: 70px;
-  --neon-purple: #a855f7;       /* KHUSUS Untuk badge Sys */  
+  --neon-purple: #a855f7;       /* KHUSU Untuk badge Sys */  
 
 
 }
@@ -59,20 +59,14 @@
     overflow: hidden;       /* Mencegah scroll double di luar */
 }
 
-#leftbar-placeholder {
-    flex-shrink: 0;         /* Sidebar tidak boleh gepeng */
-    width: 260px;           /* Sesuaikan dengan lebar sidebar kamu */
-    height: 100%;
-    border-right: 1px solid var(--border-dim);
-}
-
 /* Tambahkan pembungkus untuk teks/tabel agar area ini yang bisa di-scroll */
+/* Style Inner Content (Rightbar) */
 .inner-content {
-    flex-grow: 1;           /* Ambil sisa ruang */
-    overflow-y: auto;       /* Hanya area ini yang scroll */
-    padding: 25px;
+  flex-grow: 1; /* KUNCI: Dia otomatis mengisi sisa ruang */
+  min-width: 0;  /* Mencegah tabel meluber keluar layar */
+  padding: 25px;
+  overflow-y: auto;
 }
-
 
 /* Style Default Leftbar (Besar) */
 .leftbar-container {
@@ -89,19 +83,6 @@
   width: 70px; /* Lebar saat mengecil */
 }
 
-/* Style Inner Content (Rightbar) */
-.inner-content {
-  flex-grow: 1; /* KUNCI: Dia otomatis mengisi sisa ruang */
-  min-width: 0;  /* Mencegah tabel meluber keluar layar */
-  padding: 25px;
-  overflow-y: auto;
-}
-
-#leftbar {
-  background: var(--bg-card);        /* Mengikuti warna card rightbar */
-  border-right: 1px solid var(--border-dim); /* Garis pembatas yang sama tipisnya */
-  color: var(--text-bright);
-}
 
 .menu-item i {
   color: var(--neon-blue);           /* Ikon berwarna biru neon khas aplikasi Anda */
@@ -115,4 +96,28 @@
 .badge-admin {
   background: var(--neon-gold);      /* Badge admin berwarna emas neon */
   color: #000;                       /* Teks hitam agar kontras di atas emas */
+}
+
+/* --- RESPONSIVE MOBILE OPTIMIZATION --- */
+@media (max-width: 600px) {
+    /* 1. Lebar Sidebar di HP lebih ramping */
+    .sidebar-container {
+        width: 180px; 
+    }
+
+    /* 2. Saat mengecil di HP, buat sangat minimalis (hanya ikon kecil) */
+    .sidebar-container.collapsed {
+        width: 60px;
+    }
+
+    /* 3. Atur Padding di Rightbar (Main Content) agar tidak sempit */
+    .inner-content {
+        padding: 15px !important;
+    }
+
+    /* 4. Kecilkan ukuran Profile Image agar tidak makan tempat di HP */
+    .profile-img-container {
+        width: 45px;
+        height: 45px;
+    }
 }
