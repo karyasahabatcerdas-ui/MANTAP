@@ -111,46 +111,56 @@
 }
 
 /* --- LOGOUT (BOTTOM) --- */
+/* --- LOGOUT (BOTTOM) --- */
 .bottom-nav {
-  margin-top: auto; /* Memaksa ke paling bawah */
+  margin-top: auto;
   border-top: 1px solid var(--border-dim);
-  padding: 1rem 0; /* Memberi ruang setelah garis pembatas */
+  padding: 0.5rem 0;
 }
 
+/* Base: Sama persis dengan .menu-item */
 .btn-logout {
-  /* Dasar warna: Merah solid */
-  background: var(--neon-red) !important; 
-  color: #ffffff !important; /* Tulisan Putih */
-  margin: 0.5rem 1rem; /* Memberi jarak dari tepi sidebar */
-  border-radius: 8px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2);
-}
-
-/* Mengatur icon di dalam tombol logout agar putih juga */
-.btn-logout i {
-  color: #ffffff !important;
-}
-
-.btn-logout:hover {
-  /* Saat hover: Lebih menyala & teks menebal */
-  background: #ff3131 !important; /* Merah yang lebih terang */
-  box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
-  font-weight: 800; /* Menebal */
-  transform: translateY(-2px); /* Efek sedikit terangkat */
-}
-
-/* Penyesuaian saat Sidebar Mengecil (Collapsed) */
-.leftbar-container.collapsed .btn-logout {
-  margin: 0.5rem; /* Margin lebih kecil agar muat */
-  padding: 0.75rem 0;
   display: flex;
+  align-items: center;
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  color: var(--text-dim); /* Warna teks awal sama dengan menu lain */
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  gap: 0.938rem;
+}
+
+/* Icon Logout awal mengikuti warna menu lain atau merah redup */
+.btn-logout i {
+  font-size: 1.125rem;
+  width: 1.563rem;
+  text-align: center;
+  color: var(--neon-red); /* Icon dibuat merah agar tetap ada penanda */
+  transition: 0.3s;
+}
+
+/* --- PERILAKU SAAT SENTUH (HOVER) --- */
+.btn-logout:hover {
+  background: var(--neon-red) !important; /* Latar berubah merah solid */
+  color: #ffffff !important;              /* Teks jadi putih bersih */
+  font-weight: 800;                       /* Teks menebal sesuai request */
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+}
+
+/* Pastikan icon juga jadi putih saat hover */
+.btn-logout:hover i {
+  color: #ffffff !important;
+  text-shadow: none;
+}
+
+/* --- LOGIKA SAAT COLLAPSED --- */
+.leftbar-container.collapsed .btn-logout {
   justify-content: center;
+  padding: 0.938rem 0;
 }
 
 .leftbar-container.collapsed .btn-logout span {
-  display: none; /* Sembunyikan tulisan "Logout" */
+  display: none;
 }
 
 /* --- LOGIKA COLLAPSED --- */
