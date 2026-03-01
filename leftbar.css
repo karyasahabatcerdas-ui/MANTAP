@@ -43,7 +43,8 @@
 .leftbar-container.collapsed .sidebar-header-title {
   font-size: 0.5rem; 
   opacity: 0;
-  display: none; 
+  display: none;
+  align-items: center;
 }
 
 .profile-img-container {
