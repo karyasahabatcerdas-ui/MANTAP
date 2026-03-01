@@ -1,86 +1,137 @@
-/* --- OVERLAY & CONTAINER --- */
+/* ============================================================
+   MODAL MAINTENANCE WORKER - INDUSTRIAL NEON THEME
+   ============================================================ */
+
+/* 1. OVERLAY (BACKGROUND FULL SCREEN) */
 .modal-maint-overlay {
     display: none;
     position: fixed;
     top: 0; left: 0;
     width: 100vw; height: 100vh;
-    background: var(--bg-main);
-    z-index: 1000; /* Rendah sesuai instruksi */
+    background: var(--bg-main); /* Mengikuti tema gelap aplikasi */
+    z-index: 1000; /* Hirarki di bawah Login/Swal sesuai instruksi */
     overflow-y: auto;
     padding: 0;
     margin: 0;
 }
 
+/* 2. CONTAINER (PEMBUNGKUS KONTEN) */
 .maint-container {
     width: 100%;
-    max-width: 500px;
+    max-width: 500px; /* Standar lebar form mobile-friendly */
     margin: 0 auto;
-    padding: 15px; /* Jarak pas untuk kanan-kiri HP */
+    padding: 15px; /* Jarak aman kanan-kiri agar tidak nempel kaca HP */
     min-height: 100vh;
     position: relative;
-    z-index: 1100; 
-    box-sizing: border-box; /* Mencegah meluber */
+    z-index: 1100;
+    box-sizing: border-box;
 }
 
-/* --- HEADER INFO (GABUNGAN UNIT, JADWAL, DLL) --- */
+/* 3. NAVIGATION (SCAN & CLOSE BUTTONS) */
+.maint-top-nav {
+    display: flex; 
+    gap: 10px; 
+    margin-bottom: 20px;
+}
+
+.btn-maint-tool {
+    flex: 1; 
+    padding: 14px 10px;
+    border-radius: 10px; 
+    border: none;
+    color: #fff; 
+    font-size: 11px;
+    font-weight: bold; 
+    cursor: pointer;
+    background: #2c3e50; 
+    transition: 0.3s;
+}
+.btn-maint-tool:hover { 
+    background: #34495e; 
+    box-shadow: 0 0 10px rgba(255,255,255,0.1); 
+}
+
+.btn-close-maint {
+    background: #ef4444; 
+    color: white; 
+    border: none; 
+    padding: 0 15px; 
+    border-radius: 10px; 
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* 4. HEADER INFO CARD (IDENTITAS UNIT) */
 .maint-header-info {
     background: var(--bg-card);
-    padding: 15px;
+    padding: 15px; 
     border-radius: 12px;
     border-left: 4px solid var(--neon-gold);
     margin-bottom: 20px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
-.header-main-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 15px;
+.info-grid-main {
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 12px; 
+    margin-bottom: 12px;
 }
 
-.header-box {
-    background: rgba(0,0,0,0.2);
-    padding: 10px;
+.info-box-highlight { 
+    background: rgba(0,0,0,0.2); 
+    padding: 8px; 
+    border-radius: 8px; 
+}
+
+.select-maint-neon {
+    width: 100%; 
+    padding: 8px; 
     border-radius: 8px;
+    background: #1a202c; 
+    color: #fff; 
+    border: 1px solid var(--neon-gold);
+    font-size: 12px;
+    outline: none;
 }
 
-.header-box small {
-    display: block;
-    font-size: 10px;
-    color: var(--neon-gold);
-    text-transform: uppercase;
-    margin-bottom: 4px;
-}
-
-.header-box span {
-    font-weight: bold;
-    font-size: 1.1rem;
-    color: #fff;
-    display: block;
-}
-
-.header-sub-row {
+.info-grid-details {
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 8px; 
     font-size: 12px;
     color: var(--text-dim);
-    line-height: 1.6;
-    border-top: 1px solid rgba(255,255,255,0.05);
-    padding-top: 10px;
 }
 
-.header-sub-row p {
-    margin: 3px 0;
+.info-grid-details label { 
+    color: var(--neon-gold); 
+    font-weight: bold;
+    margin-right: 5px; 
 }
 
-.header-sub-row strong {
-    color: var(--neon-gold);
-    margin-right: 5px;
+/* 5. NOTES & TEXTAREA */
+.maint-section {
+    margin-bottom: 20px;
 }
 
-/* --- PHOTO SECTION (STACK VERTIKAL) --- */
+.textarea-maint {
+    width: 100%; 
+    height: 100px; 
+    padding: 12px;
+    background: #1a202c; 
+    border: 1px solid var(--border-dim);
+    border-radius: 10px; 
+    color: #fff; 
+    resize: none; 
+    box-sizing: border-box; 
+    margin-top: 8px;
+    font-size: 13px;
+}
+
+/* 6. PHOTO SECTION (STACK VERTICAL) */
 .photo-stack-maint {
     display: flex;
-    flex-direction: column; /* 4 Baris ke bawah */
+    flex-direction: column; /* MEMAKSA 4 BARIS KE BAWAH */
     gap: 15px;
     margin-bottom: 30px;
 }
@@ -92,85 +143,76 @@
 }
 
 .photo-btn-large {
-    background: #2c3e50;
+    background: #2c3e50; 
     border: 2px dashed #4a5568;
-    border-radius: 12px;
-    padding: 25px 15px; /* Lebih nyaman ditekan jempol */
+    border-radius: 12px; 
+    padding: 25px 15px; 
     text-align: center;
-    color: #a0aec0;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    color: #a0aec0; 
+    cursor: pointer; 
+    transition: 0.3s;
     width: 100%;
     box-sizing: border-box;
 }
-
-.photo-btn-large:hover {
-    border-color: var(--neon-blue);
-    background: #34495e;
-    color: #fff;
+.photo-btn-large:hover { 
+    border-color: var(--neon-blue); 
+    color: #fff; 
+    background: #34495e; 
 }
 
-.thumb-container {
+/* AREA UNTUK HASIL FOTO (THUMBNAILS) */
+.thumb-area-maint {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Tetap 3 kolom untuk hasil foto */
+    grid-template-columns: repeat(3, 1fr); /* Hasil foto berjajar 3 kesamping */
     gap: 8px;
+    margin-top: 5px;
 }
 
-/* --- NAVIGATION & OTHERS (REFINED) --- */
-.maint-top-nav {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.btn-maint-tool {
-    flex: 1;
-    padding: 14px 10px;
-    border-radius: 10px;
-    border: none;
-    color: #fff;
-    font-size: 11px;
-    font-weight: bold;
-    cursor: pointer;
-    background: #2c3e50;
-}
-
-.btn-close-maint {
-    background: #ef4444;
-    color: white;
-    border: none;
-    padding: 0 15px;
-    border-radius: 10px;
-    font-weight: bold;
-}
-
-.textarea-maint {
+.thumb-area-maint img {
     width: 100%;
-    height: 100px;
-    padding: 12px;
-    background: #1a202c;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    border-radius: 5px;
     border: 1px solid var(--border-dim);
-    border-radius: 10px;
-    color: #fff;
-    resize: none;
-    box-sizing: border-box;
-    margin-top: 8px;
 }
 
-.select-maint-neon {
-    width: 100%;
-    padding: 8px;
-    border-radius: 6px;
-    background: #1a202c;
-    color: #fff;
-    border: 1px solid var(--neon-gold);
-    font-size: 12px;
-}
-
-/* FOOTER ACTION */
+/* 7. FOOTER ACTION BUTTONS */
 .maint-footer { 
     display: grid; 
     grid-template-columns: 1fr 1.5fr; 
-    gap: 12px;
-    padding-bottom: 30px; /* Jarak agar tidak mepet dasar layar */
+    gap: 12px; 
+    padding-bottom: 40px; /* Jarak extra agar tidak tertutup bar navigasi HP */
+}
+
+.btn-maint-action {
+    padding: 18px; 
+    border-radius: 10px; 
+    border: none;
+    font-weight: 800; 
+    color: white; 
+    cursor: pointer;
+    font-size: 13px;
+    transition: 0.2s;
+}
+
+.btn-pending { background: #d97706; } /* Orange Brown */
+.btn-finish { background: #059669; }  /* Emerald Green */
+
+.btn-maint-action:active {
+    transform: scale(0.95);
+}
+
+/* 8. LABELS */
+.section-label { 
+    font-size: 11px; 
+    font-weight: bold; 
+    color: var(--text-dim); 
+    text-transform: uppercase;
+}
+
+.section-label-icon { 
+    font-size: 11px; 
+    font-weight: bold; 
+    color: var(--neon-gold); 
+    margin: 20px 0 10px 0; 
 }
