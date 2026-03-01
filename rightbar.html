@@ -63,10 +63,7 @@
             <h3><i class="fas fa-calendar-alt"></i> Lihat Jadwal Maintenance</h3>
 
             <div class="rightbar-action-bar"> 
-                <div class="search-wrapper-neon" style="flex: 2; min-width: 280px; width: 100%;">
-                    <i class="fas fa-search icon-search"></i>
-                    <input type="text" id="cari_jadwal" placeholder="Cari unit atau ID asset..." onkeyup="loadJad();" class="input-neon-gold input-sedang" style="width: 100%;">
-                </div>               
+           
                 <select id="sortJadwal" onchange="loadJad()" class="input-pendek">
                     <option value="newest">🕒 Terbaru</option>
                     <option value="oldest">⌛ Terlama</option>
@@ -84,6 +81,11 @@
                     <option value="Pending" class="text-pending">Pending</option>
                     <option value="Close" class="text-close">Close</option>
                 </select>
+
+                <div class="search-wrapper-neon" >
+                    <i class="fas fa-search icon-search"></i>
+                    <input type="text" id="cari_jadwal" placeholder="Cari unit atau ID asset..." onkeyup="loadJad();" class="input-neon-gold input-sedang" style="width: 100%;">
+                </div>    
             </div>
 
             <!-- [UI TABEL LIHAT JADWAL] -->
