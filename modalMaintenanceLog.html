@@ -4,16 +4,16 @@
     <div class="maint-top-nav">
       <canvas id="photoCanvas" style="display:none;"></canvas>
       <button onclick="openCustomScanner();" class="btn-maint-tool btn-scan">
-        <i class="fas fa-qrcode"></i> SCAN QR UNIT
+        <i class="fa-solid fa-qrcode"></i> SCAN QR UNIT
       </button> 
       <div id="qr-reader-dummy" style="display:none;"></div>
       <button onclick="openGlobalSearch(); window.isMaintMode=true;" class="btn-maint-tool btn-manual">
-        <i class="fas fa-list"></i> PILIH MANUAL
+        <i class="fa-solid fa-list"></i> PILIH MANUAL
       </button>      
     </div>
 
     <div class="maint-title-bar">
-      <h3><i class="fas fa-tools"></i> MAINTENANCE WORKER</h3>
+      <h3><i class="fa-solid fa-tools"></i> MAINTENANCE WORKER</h3>
       <button onclick="closeMaintenanceMode()" class="btn-close-maint">BATAL</button>
     </div>
 
@@ -48,29 +48,29 @@
       <textarea id="log_pekerjaan" placeholder="Tuliskan detail perbaikan..." class="textarea-maint"></textarea>
     </div>
 
-    <p class="section-label-icon"><i class="fas fa-camera-retro"></i> DOKUMENTASI FOTO (MAKS 5MB)</p>
+    <p class="section-label-icon"><i class="fa-solid fa-camera-retro"></i> DOKUMENTASI FOTO (MAKS 5MB)</p>
     <div class="photo-grid-maint">
       <div class="photo-btn-large" id="btn_PB" onclick="capturePhoto('PB')">
-        <div id="prev_PB"><i class="fas fa-camera"></i><br>BEFORE (PB)</div>
+        <div id="prev_PB"><i class="fa-solid fa-camera"></i><br>BEFORE (PB)</div>
       </div>
       <div class="photo-btn-large" id="btn_PO" onclick="capturePhoto('PO')">
-        <div id="prev_PO"><i class="fas fa-tools"></i><br>ON WORK (PO)</div>
+        <div id="prev_PO"><i class="fa-solid fa-tools"></i><br>ON WORK (PO)</div>
       </div>
       <div class="photo-btn-large" id="btn_PA" onclick="capturePhoto('PA')">
-        <div id="prev_PA"><i class="fas fa-check-double"></i><br>AFTER (PA)</div>
+        <div id="prev_PA"><i class="fa-solid fa-check-double"></i><br>AFTER (PA)</div>
       </div>
       <div class="photo-btn-large" id="btn_PC" onclick="capturePhoto('PC')">
-        <div id="prev_PC"><i class="fas fa-clipboard-list"></i><br>CHECKSHEET</div>
+        <div id="prev_PC"><i class="fa-solid fa-clipboard-list"></i><br>CHECKSHEET</div>
       </div>
       <input type="file" id="logPhotoInput" accept="image/*" style="display:none" onchange="handleLogPhotoSelect(this)">
     </div>
 
     <div class="maint-footer">
       <button id="btnLogPending" onclick="saveLog('Pending')" class="btn-maint-action btn-pending">
-        <i class="fas fa-pause"></i> PENDING
+        <i class="fa-solid fa-pause"></i> PENDING
       </button>
       <button id="btnLogSelesai" onclick="saveLog('Selesai')" class="btn-maint-action btn-finish">
-        <i class="fas fa-check-circle"></i> SELESAI
+        <i class="fa-solid fa-check-circle"></i> SELESAI
       </button>
     </div>
 

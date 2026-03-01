@@ -25,4 +25,5 @@ async function loadComponent(elementId, filePath) {
 document.addEventListener("DOMContentLoaded", () => {
     loadComponent('leftbar-placeholder', 'leftbar.html');
     loadComponent('rightbar-placeholder', 'rightbar.html');
+    loadComponent('modalmaintenancelog-placeholder', 'modalMaintenanceLog.html');
 });
