@@ -237,8 +237,8 @@
             </div>
 
             <!-- Bagian Filter Dropdown (Sekarang Glassmorphism) -->
-            <div class="filter-container-aset">
-                <select id="assetTypeSelect" onchange="loadAssetData(this.value)" class="input-panjang">
+            <div class="filter-container-aset input-pendek">
+                <select id="assetTypeSelect" onchange="loadAssetData(this.value)" >
                 <option value="">-- Pilih Tipe Aset --</option>
                 </select>
             </div>
@@ -313,11 +313,11 @@
             <h3><i class="fa-solid fa-magnifying-glass"></i> Lihat Data Aset </h3>
             
             <!-- Master Search Button (Neon Glow Style) -->
-            <div class="rightbar-action-bar">
+            <div class="rightbar-action-bar input-pendek">
                 <button onclick="openGlobalSearch()" class="btn-base btn-gold input-panjang">
                  <i class="fas fa-search"></i> MASTER SEARCH
                 </button>
-                <select id="viewAssetTypeSelect" onchange="loadAssetDataView(this.value)" class="input-panjang">
+                <select id="viewAssetTypeSelect" onchange="loadAssetDataView(this.value)">
                 <option value="">-- Pilih Tipe Aset --</option>
                 </select>
             </div>
@@ -358,9 +358,7 @@
                 <div class="modal-field-neon">
                 <label class="label-neon">USERNAME</label>
                 <input type="text" id="set_user" readonly class="input-neon-gold readonly-neon input-pendek">
-                </div>
 
-                <div class="modal-field-neon">
                 <label class="label-neon">PASSWORD BARU</label>
                 <input type="password" id="set_pass" placeholder="Kosongkan jika tidak diubah" class="input-neon-gold input-pendek">
                 </div>
