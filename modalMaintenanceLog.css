@@ -4,7 +4,7 @@
   position: fixed;
   top: 0; left: 0;
   width: 100vw; height: 100vh;
-  background: var(--bg-main, #0f172a); /* Pastikan gelap agar kontras */
+  background: var(--bg-main); /* Pastikan gelap agar kontras */
 
   /* NAIKKAN KE ANGKA TERTINGGI DI BAWAH LOGIN DAN SWAL2 KERAMAT */
   z-index: 10000;
