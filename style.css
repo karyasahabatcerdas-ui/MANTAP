@@ -43,11 +43,15 @@
   --transition: 0.3s ease;
   
   /* --- KHUSUS SIDEBAR (TAMBAHAN) --- */
-  --sidebar-width: 260px;
-  --sidebar-collapsed-width: 70px;
+  --leftbar-width: 260px;
+  --leftbar-collapsed-width: 70px;
   --neon-purple: #a855f7;       /* KHUSU Untuk badge Sys */  
 
+}
 
+html {
+  font-size: 16px; /* Atau biarkan default browser */
+  scroll-behavior: smooth;
 }
 
 /* Update CSS untuk class cmain-content */
@@ -70,7 +74,7 @@
 
 /* Style Default Leftbar (Besar) */
 .leftbar-container {
-  width: 260px; /* Lebar awal */
+  width: --leftbar-width; /* Lebar awal */
   flex-shrink: 0; /* Jangan biarkan dia gepeng */
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
@@ -80,7 +84,7 @@
 
 /* Style Leftbar Saat Mengecil */
 .leftbar-container.collapsed {
-  width: 70px; /* Lebar saat mengecil */
+  width: --leftbar-collapsed-width; /* Lebar saat mengecil */
 }
 
 
