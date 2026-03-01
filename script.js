@@ -23,7 +23,8 @@ async function loadComponent(elementId, filePath) {
 
 // Jalankan fungsi saat halaman dibuka
 document.addEventListener("DOMContentLoaded", () => {
+    loadComponent('modalMaintenanceLog-placeholder', 'modalMaintenanceLog.html');
     loadComponent('leftbar-placeholder', 'leftbar.html');
     loadComponent('rightbar-placeholder', 'rightbar.html');
-    loadComponent('modalMaintenanceLog-placeholder', 'modalMaintenanceLog.html');
+
 });
