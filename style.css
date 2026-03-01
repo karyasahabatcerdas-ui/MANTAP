@@ -50,7 +50,7 @@
 }
 
 html {
-  font-size: 16px; /* Atau biarkan default browser */
+  /*font-size: 16px; /* Atau biarkan default browser */
   scroll-behavior: smooth;
 }
 
@@ -74,7 +74,7 @@ html {
 
 /* Style Default Leftbar (Besar) */
 .leftbar-container {
-  width: --leftbar-width; /* Lebar awal */
+  width: var(--leftbar-width); /* Lebar awal */
   flex-shrink: 0; /* Jangan biarkan dia gepeng */
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
@@ -84,7 +84,7 @@ html {
 
 /* Style Leftbar Saat Mengecil */
 .leftbar-container.collapsed {
-  width: --leftbar-collapsed-width; /* Lebar saat mengecil */
+  width: var(--leftbar-collapsed-width); /* Lebar saat mengecil */
 }
 
 
