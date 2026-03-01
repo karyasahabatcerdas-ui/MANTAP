@@ -1,102 +1,210 @@
-:root {
-    --sidebar-bg: #2c3e50;
-    --sidebar-hover: #34495e;
-    --text-color: #ecf0f1;
-    --accent-color: #3498db;
-    --admin-color: #e67e22;
-    --sys-color: #e74c3c;
-    --transition: 0.3s ease;
+/* ==========================================================================
+   CSS SIDEBAR (LEFTBAR) - INDUSTRIAL STEALTH VERSION
+   Note: Beberapa variabel diambil dari sistem :root Rightbar
+   ========================================================================== 
+*/
+
+/* :root  di pusat style.css*/
+
+
+
+/* --- CONTAINER UTAMA SIDEBAR --- */
+.leftbar-container {
+  width: var(--sidebar-width);
+  height: 100vh;
+  background: var(--bg-card);
+  border-right: 1px solid var(--border-dim);
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow-x: hidden;
+  z-index: 1000;
+  box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3);
 }
 
-/* Container Utama */
-.sidebar-container {
-    width: 250px;
-    height: 100vh;
-    background-color: var(--sidebar-bg);
-    color: var(--text-color);
-    display: flex;
-    flex-direction: column;
-    transition: width var(--transition);
-    overflow-x: hidden;
-    position: fixed;
-    left: 0;
-    top: 0;
+/* --- STATE: COLLAPSED (Mengecil) --- */
+.leftbar-container.collapsed {
+  width: var(--sidebar-collapsed-width);
 }
 
-/* Mode Ciut (Collapsed) */
-.sidebar-container.collapsed {
-    width: 70px;
+/* --- TOMBOL TOGGLE (UI Atas) --- */
+.btn-ui-toggle {
+  background: transparent;
+  border: none;
+  color: var(--neon-blue);
+  padding: 15px;
+  cursor: pointer;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-align: right;
+  transition: 0.3s;
+  outline: none;
 }
 
-/* Item Menu */
+.btn-ui-toggle:hover {
+  text-shadow: 0 0 8px var(--neon-blue);
+  transform: translateX(3px);
+}
+
+/* --- HEADER & PROFIL --- */
+.sidebar-header-wrapper {
+  padding: 20px;
+  text-align: center;
+  border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+  margin-bottom: 10px;
+}
+
+.sidebar-header-title {
+  color: var(--text-bright);
+  font-size: 14px;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+  line-height: 1.2;
+}
+
+.profile-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-img-container {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid var(--neon-blue);
+  object-fit: cover;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+  transition: 0.3s;
+}
+
+/* Efek profil saat mengecil */
+.leftbar-container.collapsed .profile-img-container {
+  width: 35px;
+  height: 35px;
+}
+
+/* --- MENU ITEMS --- */
+.menu-group {
+  padding: 10px 0;
+}
+
 .menu-item {
-    display: flex;
-    align-items: center;
-    padding: 15px 25px;
-    cursor: pointer;
-    transition: background var(--transition);
-    white-space: nowrap;
-}
-
-.menu-item:hover {
-    background-color: var(--sidebar-hover);
-    border-left: 4px solid var(--accent-color);
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  cursor: pointer;
+  color: var(--text-dim);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  gap: 15px;
 }
 
 .menu-item i {
-    width: 25px;
-    font-size: 1.2rem;
-    margin-right: 15px;
-    text-align: center;
+  font-size: 18px;
+  width: 25px;
+  text-align: center;
+  color: var(--neon-blue);
+  transition: 0.3s;
 }
 
-/* Badges */
-.badge-admin, .badge-sys {
-    font-size: 0.6rem;
-    padding: 2px 4px;
-    border-radius: 4px;
-    margin-left: 5px;
-    text-transform: uppercase;
+.menu-item span {
+  font-size: 14px;
+  font-weight: 500;
 }
 
-.badge-admin { background: var(--admin-color); }
-.badge-sys { background: var(--sys-color); }
-
-/* Profil */
-.profile-img-container {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    border: 2px solid var(--accent-color);
-    margin: 10px auto;
+.menu-item:hover {
+  background: rgba(56, 189, 248, 0.1);
+  color: var(--text-bright);
 }
 
-/* Navigasi Bawah */
+.menu-item:hover i {
+  text-shadow: 0 0 10px var(--neon-blue);
+}
+
+/* --- BADGES (Admin & Sys) --- */
+.badge-admin {
+  background: var(--neon-gold);
+  color: #000;
+  font-size: 9px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  margin-left: 5px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.badge-sys {
+  background: var(--neon-purple);
+  color: #fff;
+  font-size: 9px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  margin-left: 5px;
+  text-transform: uppercase;
+}
+
+/* --- LOGOUT BUTTON --- */
 .bottom-nav {
-    margin-top: auto; /* Memaksa menu ini ke paling bawah */
-    border-top: 1px solid rgba(255,255,255,0.1);
+  margin-top: auto;
+  border-top: 1px solid var(--border-dim);
+  padding-bottom: 20px;
+}
+
+.btn-logout {
+  color: var(--neon-red) !important;
+}
+
+.btn-logout i {
+  color: var(--neon-red) !important;
 }
 
 .btn-logout:hover {
-    background-color: #c0392b !important;
+  background: rgba(239, 68, 68, 0.1) !important;
 }
 
-/* Sembunyikan Label saat Collapsed */
-.collapsed .nav-label, .collapsed .sidebar-header-title {
-    display: none;
+/* --- HIDE TEXT WHEN COLLAPSED --- */
+.leftbar-container.collapsed .leftbar-header-title,
+.leftbar-container.collapsed span,
+.leftbar-container.collapsed .badge-admin,
+.leftbar-container.collapsed .badge-sys {
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  display: none; /* Paksa hilang agar icon ke tengah */
 }
 
-/* Responsif Mobile Portrait */
-    @media (max-width: 600px) {
-      .sidebar-container {
-        width: 200px;
-      }
+.leftbar-container.collapsed .menu-item {
+  justify-content: center;
+  padding: 15px 0;
+}
 
-      .sidebar-container.collapsed {
-        width: 50px;
-      }
+.leftbar-container.collapsed .menu-item i {
+  margin: 0;
+}
 
-      .container {
-        padding: 10px;
-      }
+/* --- RESPONSIVE MOBILE OPTIMIZATION --- */
+@media (max-width: 600px) {
+    /* 1. Lebar Sidebar di HP lebih ramping */
+    .leftbar-container {
+        width: 180px; 
+    }
+
+    /* 2. Saat mengecil di HP, buat sangat minimalis (hanya ikon kecil) */
+    .leftbar-container.collapsed {
+        width: 60px;
+    }
+
+    /* 3. Atur Padding di Rightbar (Main Content) agar tidak sempit */
+    .inner-content {
+        padding: 15px !important;
+    }
+
+    /* 4. Kecilkan ukuran Profile Image agar tidak makan tempat di HP */
+    .profile-img-container {
+        width: 45px;
+        height: 45px;
+    }
 }

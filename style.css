@@ -9,7 +9,48 @@
             display : none ;
         }
 
-        /* Update CSS untuk class cmain-content */
+
+:root {
+    /* Surface Colors */   /* --- UNTUK RIGHTBAR DAN LEFTBAR --- */
+  --bg-main: #0f172a;           /* Midnight Slate */  /* Latar Belakang Utama */
+  --bg-card: #1e293b;           /* Lighter Slate */  /* Warna Sidebar & Card */
+  --bg-input: rgba(15, 23, 42, 0.8);
+  
+  /* Brand Colors */
+  --neon-blue: #38bdf8;         /* Primary Neon */ /* Warna Ikon & Border Fokus */
+  --neon-gold: #fbbf24;         /* Amber/Gold */ /* Warna Badge Admin */
+  --neon-green: #22c55e;        /* Emerald */
+  --neon-red: #ef4444;          /* Danger/Cancel */  /* Untuk Logout */ 
+  --neon-purple: #7c3aed;       /* Import/Special */
+  
+  /* Border & Glass */
+  --border-glass: rgba(56, 189, 248, 0.15);
+  --border-dim: #334155;      /* Garis Pemisah Sidebar & Rightbar */
+  --glass-blur: blur(10px);
+  
+  /* Text Colors */
+  --text-bright: #f8fafc;
+  --text-dim: #94a3b8;
+  --text-muted: #64748b; 
+  
+  /* leftbar Colors */
+  --leftbar-bg: #2c3e50;
+  --leftbar-hover: #34495e;
+  --text-color: #ecf0f1;
+  --accent-color: #3498db;
+  --admin-color: #e67e22;
+  --sys-color: #e74c3c;
+  --transition: 0.3s ease;
+  
+  /* --- KHUSUS SIDEBAR (TAMBAHAN) --- */
+  --sidebar-width: 260px;
+  --sidebar-collapsed-width: 70px;
+  --neon-purple: #a855f7;       /* KHUSUS Untuk badge Sys */  
+
+
+}
+
+/* Update CSS untuk class cmain-content */
 .cmain-content {
     display: flex;          /* KUNCI: Agar Leftbar & Konten berdampingan */
     width: 100%;
@@ -32,12 +73,6 @@
     padding: 25px;
 }
 
-/* Container pembungkus utama */
-.cmain-content {
-  display: flex;
-  width: 100%;
-  transition: all 0.3s ease; /* Transisi halus saat berubah ukuran */
-}
 
 /* Style Default Leftbar (Besar) */
 .leftbar-container {
@@ -60,4 +95,24 @@
   min-width: 0;  /* Mencegah tabel meluber keluar layar */
   padding: 25px;
   overflow-y: auto;
+}
+
+#leftbar {
+  background: var(--bg-card);        /* Mengikuti warna card rightbar */
+  border-right: 1px solid var(--border-dim); /* Garis pembatas yang sama tipisnya */
+  color: var(--text-bright);
+}
+
+.menu-item i {
+  color: var(--neon-blue);           /* Ikon berwarna biru neon khas aplikasi Anda */
+}
+
+.menu-item:hover {
+  background: rgba(56, 189, 248, 0.1); /* Background tipis biru saat disentuh */
+  color: var(--neon-blue);
+}
+
+.badge-admin {
+  background: var(--neon-gold);      /* Badge admin berwarna emas neon */
+  color: #000;                       /* Teks hitam agar kontras di atas emas */
 }

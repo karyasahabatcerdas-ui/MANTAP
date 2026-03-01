@@ -1,59 +1,73 @@
-<aside id="leftbar" class="leftbar-container collapsed">
+<!-- STRUKTUR SIDEBAR TERESTRUKTUR -->
+<div id="leftbar" class="leftbar-container collapsed">
     
-    <div id="leftbar0" class="sleftbar-toggle-area">
-        <button id="btn-toggle" class="btn-ui-toggle" onclick="toggleleftbar()"> 
-            <i class="fas fa-angles-left" id="toggle-icon"></i>
-        </button>
+    <!-- TOMBOL TOGGLE (UI Atas) -->
+    <button id="btn-toggle" class="btn-ui-toggle" onclick="toggleSidebar()"> 
+      <<< 
+    </button>
+    
+    <!-- HEADER & PROFIL -->
+    <div class="leftbar-header-wrapper">
+      <h3 id="side-title" class="sidebar-header-title">MAINTENANCE<br>APP</h3>
+      <div class="profile-wrapper">
+        <img id="user_profile_shared" 
+             class="profile-img-container" 
+             src="https://lh3.googleusercontent.com">
+      </div>
     </div>
 
-    <div id="leftbar1" class="leftbar-header-wrapper">
-        <h3 id="leftbar11" class="leftbar-header-title">MAINTENANCE<br>APP</h3>
-        <div id="leftbar12" class="profile-wrapper">
-            <img id="user_profile_shared" class="profile-img-container" src="https://lh3.googleusercontent.com">
-        </div>
+    <!-- GROUP: MENU UMUM (Muncul untuk SEMUA) -->
+    <div class="menu-group">
+      <div class="menu-item" onclick="showPage('history')">
+        <i class="fas fa-history"></i> <span>Activity</span>
+      </div>
+      <div class="menu-item" onclick="showPage('jadwal')">
+        <i class="fas fa-calendar-alt"></i> <span>Jadwal</span>
+      </div>
+      <div class="menu-item" onclick="showPage('lihat_aset')">
+        <i class="fas fa-search"></i> <span>Aset</span>
+      </div>
     </div>
 
-    <nav id="leftbar2" class="menu-group">
-        <div id="leftbar21" class="menu-item" onclick="showPage('history')">
-            <i class="fas fa-history"></i> <span class="nav-label">Activity</span>
-        </div>
-        <div id="leftbar22" class="menu-item" onclick="showPage('jadwal')">
-            <i class="fas fa-calendar-alt"></i> <span class="nav-label">Jadwal</span>
-        </div>
-        <div id="leftbar23" class="menu-item" onclick="showPage('lihat_aset')">
-            <i class="fas fa-search"></i> <span class="nav-label">Aset</span>
-        </div>
-    </nav>
+    <!-- GROUP: MENU ADMIN (Kondisional via JS) -->
+    <div id="adminMenuArea" class="admin-section" style="display: none;">
+      <div class="menu-item" onclick="showPage('kelola')">
+        <i class="fas fa-edit"></i>
+        <span>Jadwal<sup class="badge-admin">admin</sup></span>
+      </div>
+      <div class="menu-item" onclick="showPage('m_user')">
+        <i class="fas fa-users-cog"></i>
+        <span>User<sup class="badge-admin">admin</sup></span>
+      </div>
+      <div class="menu-item" onclick="showPage('aset')">
+        <i class="fas fa-boxes"></i>
+        <span>Aset<sup class="badge-admin">admin</sup></span>
+      </div>
+      <div class="menu-item" onclick="showPage('log_book'); loadAuditLogs();">
+        <i class="fa-solid fa-book-open"></i>
+        <span>Log Book<sup class="badge-admin">admin</sup></span>
+      </div>
+      <div class="menu-item" id="menu_db_manager" onclick="showPage('db_manager')">
+        <i class="fa-solid fa-database"></i>
+        <span>DB Manager <sup class="badge-sys">sys</sup></span>
+      </div>
+    </div>
 
-    <nav id="leftbar3" class="admin-section">
-        <div id="leftbar31" class="menu-item" onclick="showPage('kelola')">
-            <i class="fas fa-edit"></i>
-            <span class="nav-label">Jadwal <sup class="badge-admin">admin</sup></span>
+    <!-- GROUP: MENU UMUM (Muncul untuk SEMUA) -->
+      <div class="menu-group">
+        <div class="menu-item" onclick="showPage('setting')">
+          <i class="fas fa-user-cog"></i> <span>Profil</span>
         </div>
-        <div id="leftbar32" class="menu-item" onclick="showPage('m_user')">
-            <i class="fas fa-users-cog"></i>
-            <span class="nav-label">User <sup class="badge-admin">admin</sup></span>
-        </div>
-        <div id="leftbar33" class="menu-item" onclick="showPage('aset')">
-            <i class="fas fa-boxes"></i>
-            <span class="nav-label">Asset <sup class="badge-admin">admin</sup></span>
-        </div>
-        <div id="leftbar34" class="menu-item" onclick="showPage('log_book'); loadAuditLogs();">
-            <i class="fa-solid fa-book-open"></i>
-            <span class="nav-label">Log Book <sup class="badge-admin">admin</sup></span>
-        </div>
-        <div id="leftbar35" class="menu-item" onclick="showPage('db_manager')">
-            <i class="fa-solid fa-database"></i>
-            <span class="nav-label">DB Manager <sup class="badge-sys">sys</sup></span>
-        </div>
-    </nav>
+      </div>
 
-    <nav id="leftbar4" class="menu-group bottom-nav">
-        <div id="leftbar41" class="menu-item" onclick="showPage('setting')">
-            <i class="fas fa-user-cog"></i> <span class="nav-label">Profil</span>
-        </div>
-        <div id="leftbar42" class="menu-item btn-logout" onclick="logout()">
-            <i class="fas fa-sign-out-alt"></i> <span class="nav-label">Logout</span>
-        </div>
-    </nav>
-</aside>
+
+
+          <!-- GROUP: MENU BAWAH -->
+    <div class="menu-group bottom-nav">
+      <!-- TOMBOL LOGOUT (Dipaksa di paling bawah lewat class btn-logout) -->
+      <div class="menu-item btn-logout" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+      </div>
+    </div>
+
+</div>
