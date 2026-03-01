@@ -43,11 +43,12 @@
   --transition: 0.3s ease;
   
   /* --- KHUSUS SIDEBAR (TAMBAHAN) --- */
-  --leftbar-width: 260px;
-  --leftbar-collapsed-width: 70px;
+  --leftbar-width: 6.25rem; /* 260px jika font html 16-berlau untuk semua*/
+  --leftbar-collapsed-width:  4.375rem; /* 70px */
   --neon-purple: #a855f7;       /* KHUSU Untuk badge Sys */  
 
 }
+
 
 html {
   /*font-size: 16px; /* Atau biarkan default browser */

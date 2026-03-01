@@ -1,44 +1,45 @@
+/* ==========================================================================
+   CSS RIGHTBAR (MAIN-CONTENT) - INDUSTRIAL STEALTH VERSION
+   Semua variabel warna terpusat di :root
+   ========================================================================== */
 
-/* --- CONTAINER UTAMA --- */
-.crightbar {
-  flex: 1;
-  min-width: 0;
-  padding: 25px;
+
+
+/* --- WRAPPER UTAMA (BINGKAI) --- */
+.cmain-content {
+  display: flex;
+  width: 100%;
+  height: 100vh;
   background: var(--bg-main);
-  box-shadow: inset 10px 0 20px -10px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+/* --- AREA RIGHTBAR (INNER CONTENT) --- */
+.inner-content {
+  flex-grow: 1;
+  min-width: 0; /* Penting agar tabel tidak meluber */
+  padding: 1.5rem; /* ~24px */
   overflow-y: auto;
   color: var(--text-bright);
+  background: var(--bg-main);
+  box-shadow: inset 10px 0 20px -10px rgba(0, 0, 0, 0.5);
 }
 
 /* --- HEADER GAHAR REFINED --- */
-.crightbar header {
+.inner-content header {
   position: sticky;
   top: 0;
   z-index: 100;
   background: rgba(30, 41, 59, 0.7) !important;
   backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  padding: 15px 25px !important;
+  padding: 1rem 1.5rem !important;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border: 1px solid var(--border-glass);
   border-radius: 12px;
-  margin-bottom: 25px;
+  margin-bottom: 1.5rem;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-}
-
-/* Efek Semburat RGB di bawah Header */
-.crightbar header::after {
-  content: "";
-  position: absolute;
-  bottom: -2px;
-  left: 10%;
-  width: 80%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--neon-blue), var(--neon-purple), var(--neon-blue), transparent);
-  filter: blur(8px);
-  opacity: 0.5;
 }
 
 /* --- JUDUL HALAMAN (H3) DENGAN RGB ROTATE --- */
@@ -47,9 +48,9 @@
   background: var(--bg-card);
   color: var(--text-bright) !important;
   font-size: 1.2rem;
-  padding: 15px 20px;
+  padding: 0.9rem 1.25rem;
   border-radius: 8px;
-  margin-bottom: 25px;
+  margin-bottom: 1.5rem;
   display: inline-flex;
   align-items: center;
   gap: 12px;
@@ -75,24 +76,18 @@
   z-index: -1;
 }
 
-/* --- STICKY BAR ACTION --- */
-.sticky-bar {
-  position: sticky;
-  top: 85px; /* Di bawah header */
-  z-index: 90;
-  background: var(--bg-main);
-  padding: 10px 0 20px 0;
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
+@keyframes h3-rotate {
+  100% { filter: hue-rotate(360deg); }
 }
 
+/* --- TABEL GAHAR (Clean & Solid) --- */
 .table-responsive-aset {
   background: var(--bg-main);
   border: 1px solid var(--border-dim);
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   overflow: hidden;
+  margin-top: 1rem;
 }
 
 .tabel-main-content {
@@ -105,18 +100,19 @@
 .tabel-main-content thead th {
   background: var(--bg-card) !important;
   color: var(--neon-blue);
-  font-size: 11px;
+  font-size: 0.7rem; /* ~11px */
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  padding: 15px;
+  padding: 1rem;
   border-bottom: 2px solid var(--border-dim);
+  text-align: left;
 }
 
 .tabel-main-content td {
   background: var(--bg-main) !important;
   color: var(--text-bright) !important;
-  font-size: 12px;
-  padding: 12px 15px;
+  font-size: 0.75rem; /* ~12px */
+  padding: 0.75rem 1rem;
   border-bottom: 1px solid rgba(51, 65, 85, 0.3);
 }
 
@@ -124,4 +120,145 @@
   background: var(--bg-card) !important;
   color: var(--neon-blue) !important;
   text-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+  cursor: pointer;
+}
+
+/* --- CUSTOM SCROLLBAR (Agar Tidak Kaku) --- */
+.inner-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.inner-content::-webkit-scrollbar-track {
+  background: var(--bg-main);
+}
+
+.inner-content::-webkit-scrollbar-thumb {
+  background: var(--border-dim);
+  border-radius: 10px;
+}
+
+.inner-content::-webkit-scrollbar-thumb:hover {
+  background: var(--neon-blue);
+}
+
+/* ==========================================================================
+   CSS UI ELEMENTS (BUTTONS, INPUTS, SELECTS)
+   Industrial Stealth Theme - Powered by REM
+   ========================================================================== */
+
+/* --- 1. GAYA INPUT & SELECT (DARK GLASS) --- */
+input[type="text"], 
+input[type="number"], 
+input[type="date"], 
+select, 
+textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: var(--bg-input) !important;
+  border: 1px solid var(--border-dim);
+  border-radius: 8px;
+  color: var(--text-bright) !important;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+/* Efek saat Input diklik (Focus) */
+input:focus, select:focus {
+  border-color: var(--neon-blue);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+  background: var(--bg-card) !important;
+}
+
+/* Memberi warna pada opsi di dalam Select */
+select option {
+  background: var(--bg-card);
+  color: var(--text-bright);
+}
+
+/* --- 2. GAYA TOMBOL (BUTTONS) --- */
+.btn-base {
+  padding: 0.625rem 1.25rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Tombol Biru (Primary/Search) */
+.btn-primary {
+  background: rgba(56, 189, 248, 0.15);
+  color: var(--neon-blue);
+  border: 1px solid var(--neon-blue);
+}
+
+.btn-primary:hover {
+  background: var(--neon-blue);
+  color: #000;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+}
+
+/* Tombol Hijau (Save/Add) */
+.btn-success {
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--neon-green);
+  border: 1px solid var(--neon-green);
+}
+
+.btn-success:hover {
+  background: var(--neon-green);
+  color: #000;
+  box-shadow: 0 0 20px rgba(34, 197, 94, 0.4);
+}
+
+/* Tombol Merah (Delete/Cancel) */
+.btn-danger {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--neon-red);
+  border: 1px solid var(--neon-red);
+}
+
+.btn-danger:hover {
+  background: var(--neon-red);
+  color: #fff;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+}
+
+/* --- 3. FORM GROUP (JARAK ANTAR INPUT) --- */
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* --- 4. ANIMASI LOADING/PULSE PADA TOMBOL (OPSIONAL) --- */
+.btn-loading {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* --- 5. SEARCH BAR CONTAINER --- */
+.search-container {
+  display: flex;
+  gap: 10px;
+  background: var(--bg-card);
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-dim);
+  margin-bottom: 2rem;
 }
