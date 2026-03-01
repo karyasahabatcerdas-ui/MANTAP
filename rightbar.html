@@ -12,19 +12,19 @@
                 <!-- FILTER BARIS 1: STATUS & ID JADWAL -->
                 <div class="rightbar-action-bar">
                     <!-- TOMBOL MULAI MAINTENANCE (Deep Orange Matte) -->
-                    <button onclick="startMaintenanceMode()" class="btn-base btn-gold">
+                    <button onclick="startMaintenanceMode()" class="btn-base btn-gold flex:1;">
                     <i class="fas fa-play-circle"></i> MULAI MAINTENANCE
                     </button>
 
                     <!-- Filter Status -->
-                    <select id="filterStatusLog" onchange="applyHistoryFilter()" class="flex">
+                    <select id="filterStatusLog" onchange="applyHistoryFilter()" class="select-custom">
                     <option value="all">🔍 SEMUA STATUS</option>
                     <option value="selesai">✅ SELESAI</option>
                     <option value="pending">⏳ PENDING</option>
                     </select>
 
                     <!-- Filter ID Jadwal Dinamis -->
-                    <select id="filterJadwalLog" onchange="applyHistoryFilter()" class="flex">
+                    <select id="filterJadwalLog" onchange="applyHistoryFilter()" class="select-custom">
                     <option value="">📅 MEMUAT JADWAL...</option>
                     </select>
 
