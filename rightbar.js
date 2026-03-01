@@ -17,6 +17,7 @@ update_man_status = false; // Menandakan apakah sedang dalam mode UPDATE (Pendin
  */
 function startMaintenanceMode() {
     const modal = document.getElementById('modalMaintenanceLog');
+    const computedStyle = window.getComputedStyle(modal);
     if (!modal) {
         console.error("❌ Modal Maintenance tidak ditemukan!");
         return;
@@ -55,7 +56,8 @@ function startMaintenanceMode() {
     
     // 4. Logika Otomatis: Langsung arahkan ke Scanner atau Pencarian Manual
     console.log("🛠️ Maintenance Mode: Aktif. Menunggu validasi Unit ID...");
-    console.log("Z-Index Modal:", modal.style.zIndex);
+    console.log("Z-Index Terdeteksi:", computedStyle.zIndex);
+    console.log("Display Terdeteksi:", computedStyle.display);
     
     // Optional: Auto-scroll ke atas jika modal sangat panjang
     modal.scrollTop = 0;
