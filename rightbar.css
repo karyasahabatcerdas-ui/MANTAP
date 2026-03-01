@@ -186,6 +186,16 @@ input:focus, select:focus {
   width: 250px;
 }
 
+.label-neon {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #38bdf8; /* Biru Neon */
+  display: block;
+  margin-bottom: 0.1rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
 /* Memberi warna pada opsi di dalam Select */
 select option {
   background: var(--bg-card);
