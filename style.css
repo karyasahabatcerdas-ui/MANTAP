@@ -108,7 +108,7 @@ html {
 @media (max-width: 600px) {
     /* 1. Lebar Leftbar di HP lebih ramping */
     .leftbar-container {
-        width: 180px; 
+        width: 140px; 
     }
 
     /* 2. Saat mengecil di HP, buat sangat minimalis (hanya ikon kecil) */

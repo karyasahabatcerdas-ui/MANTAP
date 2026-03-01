@@ -420,19 +420,22 @@
                 <button onclick="loadDBComparison()" class="btn-base btn-gold flex-1">
                 <i class="fa-solid fa-code-compare fa-lg"></i> COMPARISON DB
                 </button>
+                <div class="filter-container-aset">
+                <h4 class="label-neon"><i class="fas fa-plus-circle"></i> TAMBAH TIPE ASET BARU</h4>
+                    <div class="form-row-neon">
+                        <input type="text" id="new_type_id" placeholder="ID (Misal: L)" class="input-neon-gold flex-1">
+                        <input type="text" id="new_type_name" placeholder="Nama Tipe (Misal: Laptop)" class="input-neon-gold flex-1">
+
+                        <button onclick="addNewTypeAsset()" class="btn-base btn-blue flex-1">
+                        <i class="fas fa-plus"></i> SIMPAN
+                        </button>
+                </div>
+            </div>
+
             </div>
 
             <!-- Form Tambah Tipe Aset Baru (Panel Glassmorphism) -->
-            <div class="filter-container-aset">
-                <h4 class="label-neon"><i class="fas fa-plus-circle"></i> TAMBAH TIPE ASET BARU</h4>
-                <div class="form-row-neon">
-                <input type="text" id="new_type_id" placeholder="ID (Misal: L)" class="input-neon-gold flex-1">
-                <input type="text" id="new_type_name" placeholder="Nama Tipe (Misal: Laptop)" class="input-neon-gold flex-3">
-                <button onclick="addNewTypeAsset()" class="btn-base btn-blue flex-1">
-                    <i class="fas fa-plus"></i> SIMPAN
-                </button>
-                </div>
-            </div>
+
 
             <!-- Tabel Registry Database -->
             <div class="table-responsive-aset">
