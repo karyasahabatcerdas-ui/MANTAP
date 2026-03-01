@@ -1,99 +1,76 @@
-<div id="modalMaintenanceLog" class="modal-overlay"
-  style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:white; z-index:30000; overflow-y:auto; align-items:flex-start;">
-  
-  <div style="width:100%; max-width:500px; margin:0 auto; padding:15px; box-sizing:border-box;">
+<div id="modalMaintenanceLog" class="modal-maint-overlay">
+  <div class="maint-container">
 
-    <div style="display:flex; gap:10px; margin-bottom:15px;">
+    <div class="maint-top-nav">
       <canvas id="photoCanvas" style="display:none;"></canvas>
-      <button onclick="openCustomScanner();" style="flex:1; padding:12px; background:#2c3e50; color:white; border:none; border-radius:10px; font-size:11px; font-weight:bold; cursor:pointer;">
-        <i class="fas fa-qrcode"></i> SCAN QR UNIT (KOTAK)
+      <button onclick="openCustomScanner();" class="btn-maint-tool btn-scan">
+        <i class="fas fa-qrcode"></i> SCAN QR UNIT
       </button> 
-      
       <div id="qr-reader-dummy" style="display:none;"></div>
-      <button onclick="openGlobalSearch(); window.isMaintMode=true;" style="flex:1; padding:12px; background:#34495e; color:white; border:none; border-radius:10px; font-size:11px; font-weight:bold; cursor:pointer;">
+      <button onclick="openGlobalSearch(); window.isMaintMode=true;" class="btn-maint-tool btn-manual">
         <i class="fas fa-list"></i> PILIH MANUAL
       </button>      
     </div>
 
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:3px solid #e67e22; padding-bottom:10px;">
-      <h3 style="margin:0; font-size:16px; color:#d35400;"><i class="fas fa-tools"></i> MAINTENANCE WORKER</h3>
-      <button onclick="closeMaintenanceMode()" style="background:#e74c3c; color:white; border:none; padding:8px 15px; border-radius:20px; font-weight:bold; cursor:pointer;">BATAL</button>
+    <div class="maint-title-bar">
+      <h3><i class="fas fa-tools"></i> MAINTENANCE WORKER</h3>
+      <button onclick="closeMaintenanceMode()" class="btn-close-maint">BATAL</button>
     </div>
 
-    <input type="hidden" id="log_maint_id">
-    <input type="hidden" id="log_pending">
-    <input type="hidden" id="log_maint_row">
-    <input type="hidden" id="log_time_mulai">
-    <input type="hidden" id="log_petugas">
-    <input type="hidden" id="Act_online">      
+    <input type="hidden" id="log_maint_id"><input type="hidden" id="log_pending">
+    <input type="hidden" id="log_maint_row"><input type="hidden" id="log_time_mulai">
+    <input type="hidden" id="log_petugas"><input type="hidden" id="Act_online">      
 
-    <div style="background:#fdf2e9; padding:15px; border-radius:10px; margin-bottom:15px; border-left:5px solid #e67e22; font-size:12px; color: #2c3e50;">
-
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; align-items: center;">
-        <div style="background: #fff; padding: 5px; border-radius: 5px;">
-          <b style="color: #e67e22; font-size: 11px; display: block; margin-bottom: 2px;">UNIT ID:</b>
-          <span id="log_as_id" style="font-weight: bold; color: #2c3e50; font-size: 13px;">-</span>
+    <div class="maint-info-card">
+      <div class="info-grid-main">
+        <div class="info-box-highlight">
+          <label>UNIT ID</label>
+          <span id="log_as_id">-</span>
         </div>
-
-        <div>
-          <b style="color: #e67e22; font-size: 11px; display: block; margin-bottom: 2px;">ID JADWAL:</b>
-          <select id="jenis_id_jadwal" style="width: 100%; padding: 8px; border: 2px solid #e67e22; border-radius: 8px; background: white; font-weight: bold; color: #2c3e50; font-size: 12px; cursor: pointer; outline: none;">
-            <option value=""> Memuat...</option>
+        <div class="info-box-select">
+          <label>ID JADWAL</label>
+          <select id="jenis_id_jadwal" class="select-maint-neon">
+            <option value="">Memuat...</option>
           </select>
         </div>
       </div>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-        <div>
-          <b style="color: #e67e22;">TYPE:</b> <span id="log_ui_type" style="font-weight: bold;">-</span>
-        </div>
-        <div>
-          <b style="color: #e67e22;">ID ASSET:</b> <span id="log_ui_asid" style="font-weight: bold;">-</span>
-        </div>
-      </div>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-        <div>
-          <b style="color: #e67e22;">NAMA:</b> <span id="log_ui_nama" style="font-weight: bold;">-</span>
-        </div>
-        <div>
-          <b style="color: #e67e22;">LOKASI:</b> <span id="log_ui_lokasi" style="font-weight: bold;">-</span>
-        </div>
+      <div class="info-grid-details">
+        <div><label>TYPE:</label> <span id="log_ui_type">-</span></div>
+        <div><label>ID ASSET:</label> <span id="log_ui_asid">-</span></div>
+        <div><label>NAMA:</label> <span id="log_ui_nama">-</span></div>
+        <div><label>LOKASI:</label> <span id="log_ui_lokasi">-</span></div>
       </div>
     </div>
 
-    <div style="margin-bottom:15px;">
-      <label style="font-size:11px; font-weight:bold; color:#7f8c8d;">CATATAN KERJA (NOTE)</label>
-      <textarea id="log_pekerjaan" placeholder="Tuliskan detail perbaikan..." style="width:100%; height:80px; padding:10px; border:1px solid #ddd; border-radius:8px; resize:none; box-sizing:border-box; font-size:13px;"></textarea>
+    <div class="maint-section">
+      <label class="section-label">CATATAN KERJA (NOTE)</label>
+      <textarea id="log_pekerjaan" placeholder="Tuliskan detail perbaikan..." class="textarea-maint"></textarea>
     </div>
 
-    <p style="font-size: 11px; font-weight: bold; color: #2c3e50; margin: 20px 0 10px 0;">
-      <i class="fa-solid fa-camera-retro"></i> DOKUMENTASI FOTO (MAKS 5MB/FOTO)
-    </p>
-
-    <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px;">
+    <p class="section-label-icon"><i class="fas fa-camera-retro"></i> DOKUMENTASI FOTO (MAKS 5MB)</p>
+    <div class="photo-grid-maint">
       <div class="photo-btn-large" id="btn_PB" onclick="capturePhoto('PB')">
-        <div id="prev_PB"><i class="fa-solid fa-camera"></i><br><b>PHOTO BEFORE (PB)</b><br><small>Maks 3 Foto</small></div>
+        <div id="prev_PB"><i class="fas fa-camera"></i><br>BEFORE (PB)</div>
       </div>
       <div class="photo-btn-large" id="btn_PO" onclick="capturePhoto('PO')">
-        <div id="prev_PO"><i class="fa-solid fa-tools"></i><br><b>PHOTO ON WORK (PO)</b><br><small>Maks 3 Foto</small></div>
+        <div id="prev_PO"><i class="fas fa-tools"></i><br>ON WORK (PO)</div>
       </div>
       <div class="photo-btn-large" id="btn_PA" onclick="capturePhoto('PA')">
-        <div id="prev_PA"><i class="fa-solid fa-check-double"></i><br><b>PHOTO AFTER (PA)</b><br><small>Maks 3 Foto</small></div>
+        <div id="prev_PA"><i class="fas fa-check-double"></i><br>AFTER (PA)</div>
       </div>
       <div class="photo-btn-large" id="btn_PC" onclick="capturePhoto('PC')">
-        <div id="prev_PC"><i class="fa-solid fa-clipboard-list"></i><br><b>CHECKSHEET (PC)</b><br><small>Maks 1 Foto</small></div>
+        <div id="prev_PC"><i class="fas fa-clipboard-list"></i><br>CHECKSHEET</div>
       </div>
-
       <input type="file" id="logPhotoInput" accept="image/*" style="display:none" onchange="handleLogPhotoSelect(this)">
     </div>
 
-    <div style="display:grid; grid-template-columns: 1fr 1.5fr; gap:10px; margin-bottom: 30px;">
-      <button id="btnLogPending" onclick="saveLog('Pending')" style="padding:18px; background:#f39c12; color:white; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">
-        <i class="fa-solid fa-pause"></i> PENDING
+    <div class="maint-footer">
+      <button id="btnLogPending" onclick="saveLog('Pending')" class="btn-maint-action btn-pending">
+        <i class="fas fa-pause"></i> PENDING
       </button>
-
-      <button id="btnLogSelesai" onclick="saveLog('Selesai')" style="padding:18px; background:#27ae60; color:white; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">
-        <i class="fa-solid fa-check-circle"></i> SELESAI
+      <button id="btnLogSelesai" onclick="saveLog('Selesai')" class="btn-maint-action btn-finish">
+        <i class="fas fa-check-circle"></i> SELESAI
       </button>
     </div>
 
