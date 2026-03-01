@@ -2,13 +2,15 @@
    MASTER CSS: LEFTBAR - INDUSTRIAL STEALTH
    ========================================================================== */
 
+/* Style Default Leftbar (Besar) */
 .leftbar-container {
-  width: var(--leftbar-width);
+  width: var(--leftbar-width); /* Lebar awal */
   height: 100vh;
   background: var(--bg-card);
   border-right: 1px solid var(--border-dim);
   display: flex;
   flex-direction: column;
+  flex-shrink: 0; /* Jangan biarkan dia gepeng */
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow-x: hidden;
@@ -65,6 +67,12 @@
   object-fit: cover;
   transition: all 0.3s ease;
 }
+
+
+
+
+
+
 
 /* --- MENU ITEMS --- */
 .menu-group {
@@ -200,7 +208,7 @@
 /* --- MOBILE RESPONSIVE --- */
 @media (max-width: 600px) {
   .leftbar-container { width: 11.25rem; }
-  .leftbar-container.collapsed { width: 3.75rem; }
+  .leftbar-container.collapsed { width: var(--leftbar-collapsed-width); }
   .inner-content { padding: 0.938rem !important; }
 }
 

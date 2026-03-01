@@ -57,53 +57,7 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Update CSS untuk class cmain-content */
-.cmain-content {
-    display: flex;          /* KUNCI: Agar Leftbar & Konten berdampingan */
-    width: 100%;
-    height: 100vh;          /* Tinggi penuh layar */
-    background: var(--bg-main);
-    overflow: hidden;       /* Mencegah scroll double di luar */
-}
 
-/* Tambahkan pembungkus untuk teks/tabel agar area ini yang bisa di-scroll */
-/* Style Inner Content (Rightbar) */
-.inner-content {
-  flex-grow: 1; /* KUNCI: Dia otomatis mengisi sisa ruang */
-  min-width: 0;  /* Mencegah tabel meluber keluar layar */
-  padding: 25px;
-  overflow-y: auto;
-}
-
-/* Style Default Leftbar (Besar) */
-.leftbar-container {
-  width: var(--leftbar-width); /* Lebar awal */
-  flex-shrink: 0; /* Jangan biarkan dia gepeng */
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
-  background: var(--bg-card);
-  border-right: 1px solid var(--border-dim);
-}
-
-/* Style Leftbar Saat Mengecil */
-.leftbar-container.collapsed {
-  width: var(--leftbar-collapsed-width); /* Lebar saat mengecil */
-}
-
-
-.menu-item i {
-  color: var(--neon-blue);           /* Ikon berwarna biru neon khas aplikasi Anda */
-}
-
-.menu-item:hover {
-  background: rgba(56, 189, 248, 0.1); /* Background tipis biru saat disentuh */
-  color: var(--neon-blue);
-}
-
-.badge-admin {
-  background: var(--neon-gold);      /* Badge admin berwarna emas neon */
-  color: #000;                       /* Teks hitam agar kontras di atas emas */
-}
 
 /* --- RESPONSIVE MOBILE OPTIMIZATION --- */
 @media (max-width: 600px) {

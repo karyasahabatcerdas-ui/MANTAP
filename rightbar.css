@@ -4,20 +4,21 @@
    ========================================================================== */
 
 
+/* Tambahkan pembungkus untuk teks/tabel agar area ini yang bisa di-scroll */
 
-/* --- WRAPPER UTAMA (BINGKAI) --- */
+/* --- WRAPPER UTAMA (BINGKAI rightbar) --- */
 .cmain-content {
-  display: flex;
+  display: flex;   /* KUNCI: Agar Leftbar & Konten berdampingan */
   width: 100%;
-  height: 100vh;
+  height: 100vh;   /* Tinggi penuh layar */
   background: var(--bg-main);
-  overflow: hidden;
+  overflow: hidden;  /* Mencegah scroll double di luar */
 }
 
 /* --- AREA RIGHTBAR (INNER CONTENT) --- */
 .inner-content {
-  flex-grow: 1;
-  min-width: 0; /* Penting agar tabel tidak meluber */
+  flex-grow: 1;  /* KUNCI: Dia otomatis mengisi sisa ruang */
+  min-width: 0;  /* Mencegah tabel meluber keluar layar */
   padding: 0.75rem 1.5rem !important; /* Diubah dari 1.5rem ke 0.75rem agar lebih rapat ke atas */
   overflow-y: auto;
   color: var(--text-bright);
