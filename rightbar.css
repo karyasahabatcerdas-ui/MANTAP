@@ -265,6 +265,7 @@ select option {
   outline: none;
   transition: all 0.3s ease;
   flex:none;
+  box-sizing: border-box; /* WAJIB: Agar padding tidak menambah lebar luar */
 }
 
 /* --- EFEK SAAT SEARCH AKTIF (FOCUS) --- */
@@ -303,6 +304,7 @@ select option {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  box-sizing: border-box; /* WAJIB: Agar padding tidak menambah lebar luar */
 }
 
 /* Tombol Biru (Primary/Search) */
