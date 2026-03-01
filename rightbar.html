@@ -16,12 +16,6 @@
                     <i class="fas fa-play-circle"></i> MULAI MAINTENANCE
                     </button>
 
-                    <!-- TOMBOL GLOBAL SEARCH (GOLD / AMBER NEON) -->
-                    <div class="search-wrapper-neon input-pendek">
-                        <i class="fas fa-search icon-search-gold"></i>
-                        <input type="text" id="cari_history" placeholder="Ketik kata kunci..." onkeyup="filterGlobalOpen(this, 'tablehistory')" class="input-neon-gold">
-                    </div>
-
                     <!-- Filter Status -->
                     <select id="filterStatusLog" onchange="applyHistoryFilter()" class="input-pendek">
                     <option value="all">🔍 SEMUA STATUS</option>
@@ -33,6 +27,12 @@
                     <select id="filterJadwalLog" onchange="applyHistoryFilter()" class="input-pendek">
                     <option value="">📅 MEMUAT JADWAL...</option>
                     </select>
+                    
+                    <!-- TOMBOL GLOBAL SEARCH (GOLD / AMBER NEON) -->
+                    <div class="search-wrapper-neon input-pendek">
+                        <i class="fas fa-search icon-search-gold"></i>
+                        <input type="text" id="cari_history" placeholder="Ketik kata kunci..." onkeyup="filterGlobalOpen(this, 'tablehistory')" class="input-neon-gold">
+                    </div>
                 </div>
 
                 <!-- TABEL HISTORY -->
