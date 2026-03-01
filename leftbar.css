@@ -99,6 +99,24 @@
   color: var(--text-bright);
 }
 
+
+/* EFEK SAAT MENU AKTIF */
+.menu-item.active {
+  background: rgba(56, 189, 248, 0.15) !important;
+  color: var(--neon-blue) !important;
+  border-left: 3px solid var(--neon-blue); /* Garis indikator di kiri */
+}
+
+.menu-item.active i {
+  text-shadow: 0 0 10px var(--neon-blue);
+}
+
+/* EFEK FLASH SAAT PINDAH HALAMAN */
+.side-glow-flash {
+  box-shadow: 10px 0 30px rgba(56, 189, 248, 0.4) !important;
+  border-right: 1px solid var(--neon-blue) !important;
+}
+
 /* --- BADGES --- */
 .badge-admin { background: var(--neon-red); color:  #fde55f; }
 .badge-sys { background: var(--neon-purple-sys); color: #fff; }
@@ -110,7 +128,6 @@
   font-weight: bold;
 }
 
-/* --- LOGOUT (BOTTOM) --- */
 /* --- LOGOUT (BOTTOM) --- */
 .bottom-nav {
   margin-top: auto;
