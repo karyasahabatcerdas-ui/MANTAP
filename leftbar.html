@@ -19,28 +19,28 @@
     <!-- GROUP: MENU UMUM (Muncul untuk SEMUA) -->
     <div class="menu-group">
       <div class="menu-item" onclick="showPage('history')">
-        <i class="fas fa-history"></i> <span>Activity</span>
+        <i class="fa-solid fa-history"></i> <span>Activity</span>
       </div>
       <div class="menu-item" onclick="showPage('jadwal')">
-        <i class="fas fa-calendar-alt"></i> <span>Jadwal</span>
+        <i class="fa-solid fa-calendar-alt"></i> <span>Jadwal</span>
       </div>
       <div class="menu-item" onclick="showPage('lihat_aset')">
-        <i class="fas fa-search"></i> <span>Aset</span>
+        <i class="fa-solid fa-search"></i> <span>Aset</span>
       </div>
     </div>
 
     <!-- GROUP: MENU ADMIN (Kondisional via JS) -->
     <div id="adminMenuArea" class="admin-section" style="display: inline-block;"> <!-- sementara terlihat nanti = Awalnya none, ditampilkan jika user =admin -->
       <div class="menu-item" onclick="showPage('kelola')">
-        <i class="fas fa-edit"></i>
+        <i class="fa-solid fa-edit"></i>
         <span>Jadwal<sup class="badge-admin">admin</sup></span>
       </div>
       <div class="menu-item" onclick="showPage('m_user')">
-        <i class="fas fa-users-cog"></i>
+        <i class="fa-solid fa-users-cog"></i>
         <span>User<sup class="badge-admin">admin</sup></span>
       </div>
       <div class="menu-item" onclick="showPage('aset')">
-        <i class="fas fa-boxes"></i>
+        <i class="fa-solid fa-boxes"></i>
         <span>Aset<sup class="badge-admin">admin</sup></span>
       </div>
       <div class="menu-item" onclick="showPage('log_book'); loadAuditLogs();">
@@ -56,7 +56,7 @@
     <!-- GROUP: MENU UMUM (Muncul untuk SEMUA) -->
       <div class="menu-group">
         <div class="menu-item" onclick="showPage('setting')">
-          <i class="fas fa-user-cog"></i> <span>Profil</span>
+          <i class="fa-solid fa-user-cog"></i> <span>Profil</span>
         </div>
       </div>
 
@@ -66,7 +66,7 @@
     <div class="menu-group bottom-nav">
       <!-- TOMBOL LOGOUT (Dipaksa di paling bawah lewat class btn-logout) -->
       <div class="menu-item btn-logout" onclick="logout()">
-        <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+        <i class="fa-solid fa-sign-out-alt"></i> <span>Logout</span>
       </div>
     </div>
 
