@@ -31,7 +31,13 @@
 .maint-top-nav {
     display: flex; 
     gap: 10px; 
-    margin-bottom: 20px;
+    margin-bottom: 0; /* Kita rapatkan dengan header info */
+    position: sticky; /* JADIKAN STICKY */
+    top: -15px;      /* Menempel ke atas (sesuaikan dengan padding container) */
+    background: var(--bg-main); /* Harus ada background agar tidak tembus pandang */
+    padding-top: 15px;
+    padding-bottom: 10px;
+    z-index: 1200;   /* Di atas elemen lain */
 }
 
 .btn-maint-tool {
@@ -62,13 +68,19 @@
 }
 
 /* 4. HEADER INFO CARD (IDENTITAS UNIT) */
+/* HEADER INFO (UNIT & JADWAL) */
 .maint-header-info {
     background: var(--bg-card);
     padding: 15px; 
     border-radius: 12px;
     border-left: 4px solid var(--neon-gold);
     margin-bottom: 20px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    
+    /* JADIKAN STICKY JUGA */
+    position: sticky; 
+    top: 55px; /* Diletakkan tepat di bawah Top Nav */
+    z-index: 1150;
 }
 
 .info-grid-main {
