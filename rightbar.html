@@ -314,8 +314,8 @@
             
             <!-- Master Search Button (Neon Glow Style) -->
             <div class="rightbar-action-bar">
-                <button onclick="openGlobalSearch()" class="btn-base btn-gold">
-                <i class="fa-solid fa-database"></i> MASTER SEARCH (SEMUA ASET)
+                <button onclick="openGlobalSearch()" class="btn-base btn-gold input-panjang">
+                 <i class="fas fa-search"></i> MASTER SEARCH
                 </button>
                 <select id="viewAssetTypeSelect" onchange="loadAssetDataView(this.value)" class="input-panjang">
                 <option value="">-- Pilih Tipe Aset --</option>
@@ -357,40 +357,40 @@
 
                 <div class="modal-field-neon">
                 <label class="label-neon">USERNAME</label>
-                <input type="text" id="set_user" readonly class="input-neon readonly-neon">
+                <input type="text" id="set_user" readonly class="input-neon-gold readonly-neon input-pendek">
                 </div>
 
                 <div class="modal-field-neon">
                 <label class="label-neon">PASSWORD BARU</label>
-                <input type="password" id="set_pass" placeholder="Kosongkan jika tidak diubah" class="input-neon">
+                <input type="password" id="set_pass" placeholder="Kosongkan jika tidak diubah" class="input-neon-gold input-pendek">
                 </div>
 
                 <div class="form-row-neon modal-field-neon">
-                <div style="flex:1;">
+                <div>
                     <label class="label-neon">ROLE</label>
-                    <input type="text" id="set_role" readonly class="input-neon readonly-neon">
+                    <input type="text" id="set_role" readonly class="input-neon-gold readonly-neon input-pendek">
                 </div>
-                <div style="flex:1;">
+                <div>
                     <label class="label-neon">STATUS</label>
-                    <input type="text" id="set_status" readonly class="input-neon readonly-neon">
+                    <input type="text" id="set_status" readonly class="input-neon-gold readonly-neon input-pendek">
                 </div>
                 </div>
 
                 <div class="modal-field-neon">
                 <label class="label-neon">EMAIL ADDRESS</label>
-                <input type="email" id="set_email" class="input-neon">
+                <input type="email" id="set_email" class="input-neon-gold input-pendek">
                 </div>
 
                 <div class="modal-field-neon">
                 <label class="label-neon">NOMOR TELEPON</label>
-                <input type="text" id="set_phone" class="input-neon">
+                <input type="text" id="set_phone" class="input-neon-gold input-pendek">
                 </div>
 
                 <div class="modal-field-neon">
                 <label class="label-neon">LOGIN ATTEMPTS</label>
                 <div class="form-row-neon">
-                    <input type="text" id="set_attempts" readonly class="input-neon readonly-neon" style="flex:1;">
-                    <button disabled class="btn-base btn-gold flex-1" style="padding: 5px 10px; font-size: 10px;">RESET</button>
+                    <input type="text" id="set_attempts" readonly class="input-neon-gold readonly-neon input-pendek">
+                    <button disabled class="btn-base btn-gold " >RESET</button>
                 </div>
                 </div>
 
@@ -402,29 +402,29 @@
 
         <!-- [UI BLOCK: HALAMAN DATABASE MANAGER - SERVER MODE] -->
         <div id="page_db_manager" class="page hidden">
-            <h3><i class="fas fa-server"></i> Database & Schema Manager</h3>
+            <h3><i class="fa-solid fa-server"></i> Database & Schema Manager</h3>
 
             <!-- Barisan Tombol Status & Tools (Gaya Industrial) -->
             <div class="rightbar-action-bar">
-                <button id="db_connection_status" onclick="checkDBStatus()" class="btn-base btn-gold flex-1">
+                <button id="db_connection_status" onclick="checkDBStatus()" class="btn-base btn-gold">
                 <i class="fa-solid fa-database fa-lg"></i> DB STATUS 
                 </button>
 
-                <button onclick="inspectDatabase()" class="btn-base btn-gold flex-1">
+                <button onclick="inspectDatabase()" class="btn-base btn-gold">
                 <i class="fa-solid fa-list-check fa-lg"></i> INSPECT DB 
                 </button>
 
-                <button onclick="loadDBComparison()" class="btn-base btn-gold flex-1">
+                <button onclick="loadDBComparison()" class="btn-base btn-gold">
                 <i class="fa-solid fa-code-compare fa-lg"></i> COMPARISON DB
                 </button>
                 <div class="filter-container-aset">
                 <h4 class="label-neon"><i class="fas fa-plus-circle"></i> TAMBAH TIPE ASET BARU</h4>
                     <div class="flex flex-row" style="gap: 8px;">
-                        <input type="text" id="new_type_id" placeholder="ID (Misal: L)" class="input-neon-gold flex-1">
-                        <input type="text" id="new_type_name" placeholder="Nama Tipe (Misal: Laptop)" class="input-neon-gold flex-1">
+                        <input type="text" id="new_type_id" placeholder="ID (Misal: L)" class="input-neon-gold ">
+                        <input type="text" id="new_type_name" placeholder="Nama Tipe (Misal: Laptop)" class="input-neon-gold ">
 
-                        <button onclick="addNewTypeAsset()" class="btn-base btn-blue flex-1">
-                        <i class="fas fa-plus"></i> SIMPAN
+                        <button onclick="addNewTypeAsset()" class="btn-base btn-blue">
+                        <i class="fa-solid fa-plus"></i> SIMPAN
                         </button>
                 </div>
             </div>
