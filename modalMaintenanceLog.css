@@ -7,7 +7,7 @@
   background: var(--bg-main); /* Pastikan gelap agar kontras */
 
   /* NAIKKAN KE ANGKA TERTINGGI DI BAWAH LOGIN DAN SWAL2 KERAMAT */
-  z-index: 99999;
+  z-index: 1000;
   overflow-y: auto;
     padding: 0;
     margin: 0;
@@ -21,7 +21,7 @@
     padding: 20px;
     min-height: 100vh; /* Pastikan dia mengambil tinggi layar */
     position: relative;
-    z-index: 100000; /* Harus lebih tinggi sedikit dari overlay-nya */
+    z-index: 2000; /* Harus lebih tinggi sedikit dari overlay-nya */
 }
 
 /* TOP NAVIGATION */
