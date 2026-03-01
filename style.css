@@ -53,7 +53,7 @@
 
 
 html {
-  font-size: 16px; /* Atau biarkan default browser */
+  /*font-size: 16px; /* Atau biarkan default browser */
   scroll-behavior: smooth;
 }
 
