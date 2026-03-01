@@ -227,8 +227,8 @@ select option {
 
 /* --- INPUT NYA (DIBAWAH IKON) --- */
 .input-neon-gold {
-  width: 100px !important;
-  max-width: 100px !important;
+  width: 300px !important;
+  max-width: 300px !important;
   padding: 0.75rem 1rem 0.75rem 2.8rem !important; /* Kiri diberi 2.8rem (45px) agar teks tidak menabrak ikon */
   background: var(--bg-input) !important;
   border: 1px solid rgba(251, 191, 36, 0.3) !important; /* Warna Amber/Gold tipis */
@@ -283,11 +283,12 @@ select option {
 }
 
 /* --- INPUT UTNUK CREATE DATABASE --- */
-.tambah-db{
-  display: flex; 
-  flex-direction: row; 
-  align-items: center; 
-  gap: 10px;
+.tambah-db {
+    display: flex;
+    flex-wrap: wrap; /* INI KUNCINYA: Agar jika tidak muat, dia otomatis turun ke bawah */
+    gap: 10px;
+    width: 100%;    /* Pastikan containernya tidak lebih lebar dari layar */
+    overflow: hidden; /* Potong jika ada yang meluber */
 }
 
 /* --- 2. GAYA TOMBOL (BUTTONS) --- */
