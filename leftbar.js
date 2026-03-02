@@ -78,7 +78,7 @@ function showPage(id) {
       'history': () => typeof loadHist === 'function' && loadHist(),
       'jadwal': () => {
          if (typeof loadJad === 'function') loadJad();
-         handleJadwalDropdown(); // Fungsi pembantu untuk dropdown
+         //handleJadwalDropdown(); // Fungsi pembantu untuk dropdown
       },
       'kelola': () => typeof loadKel === 'function' && loadKel(),
       'm_user': () => typeof loadUserList === 'function' && loadUserList(),

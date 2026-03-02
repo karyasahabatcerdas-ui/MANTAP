@@ -1826,8 +1826,6 @@ async function loadMaintDetail(row) {
 }
 
 /**=========================================================================
- * [FUNGSI: UPDATE MAINTENANCE LOG - MODE PENDING CHECK]
- * Mengambil data dari form maintenance log dan mengirimnya ke server untuk update log yang sudah pending
  * [FUNGSI CLIENT GITHUB: LOAD TIPE ASET]
  * Sekali ambil dari server (fetch), semua dropdown tipe aset langsung sinkron via Cache.
  * ==========================================================================
