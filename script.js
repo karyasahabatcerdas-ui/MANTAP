@@ -1490,7 +1490,7 @@ function driveLinkToDirect(url) {
  * =================================================================================
  */
 let timerPencarian; 
-
+/**
 async function loadJad() {
   clearTimeout(timerPencarian);
   
@@ -1503,7 +1503,7 @@ async function loadJad() {
     const keyword = document.getElementById('cari_jadwal')?.value.toUpperCase() || "";
 
     try {
-      const response = await fetch(`${urlGAS}?action=getJadwalData`);
+      const response = await fetch(`${urlGAS}?action=getJadwal`);
       const data = await response.json();
 
       if (!data || data.length < 2) return;
@@ -1557,7 +1557,8 @@ async function loadJad() {
     }
   }, 400); 
 }
-/**
+  */
+
 async function loadJad() {
   clearTimeout(timerPencarian);
   
@@ -1574,7 +1575,7 @@ async function loadJad() {
 
     try {
       // 2. Panggil Server (GET)
-      const response = await fetch(`${urlGAS}?action=getJadwalData`);
+      const response = await fetch(`${urlGAS}?action=getJadwal`);
       const data = await response.json();
 
       if (!data || data.length < 2) return;
@@ -1630,14 +1631,14 @@ async function loadJad() {
     }
   }, 400); 
 }
-*/
+
 
 /**======================================================================================================
  * [FUNGSI CLIENT GITHUB: LOAD TABEL KELOLA JADWAL]
  * Mengambil data jadwal dari server dan memanggil fungsi render khusus untuk panel kelola
  * =======================================================================================================
  */
-
+/**
 async function loadKel() {
   const tbody = document.getElementById('kelolaBody');
   if (!tbody) return;
@@ -1646,7 +1647,7 @@ async function loadKel() {
   tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'><i class='fas fa-spinner fa-spin'></i> Memuat panel kelola...</td></tr>";
 
   try {
-    const response = await fetch(`${urlGAS}?action=getJadwalData`);
+    const response = await fetch(`${urlGAS}?action=getJadwal`);
     
     if (!response.ok) throw new Error("Gagal mengambil data dari server");
     
@@ -1664,8 +1665,8 @@ async function loadKel() {
     tbody.innerHTML = `<tr><td colspan='5' style='text-align:center; color:red;'>⚠️ Error: ${err.message}</td></tr>`;
   }
 }
+*/
 
-/**
 async function loadKel() {
   const tbody = document.getElementById('kelolaBody');
   if (!tbody) return;
@@ -1678,7 +1679,7 @@ async function loadKel() {
 
   try {
     // Panggil server (Action sudah kita buat sebelumnya di doGet)
-    const response = await fetch(`${urlGAS}?action=getJadwalData`);
+    const response = await fetch(`${urlGAS}?action=getJadwal`);
     const data = await response.json();
 
     if (!data || data.length < 2) {
@@ -1695,7 +1696,6 @@ async function loadKel() {
     tbody.innerHTML = "<tr><td colspan='5' style='text-align:center; color:red;'>⚠️ Error koneksi database.</td></tr>";
   }
 }
-*/
 
 /**=========================================================================================
  * [FUNGSI: MESIN RENDER KELOLA - TRACING: renderKelolaIncremental]
