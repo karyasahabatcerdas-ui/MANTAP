@@ -182,3 +182,76 @@ function navigateAsset() {
 function closeGlobalSearch() {
   document.getElementById('globalSearchModal').style.display = 'none';
 }
+
+
+/**============================================================================
+ * [FUNGSI: FETCH DETAIL ASET UNTUK LOG MAINTENANCE]
+ * Menarik detail aset dari server berdasarkan ID untuk diisi ke Modal Maintenance Log.
+ * Juga menangani logika auto-linking jadwal open jika ada.
+ * ============================================================================
+ */
+
+async function fetchAssetDetailForLog(unitID) {
+  if (!unitID) return;    
+  const uiNama = document.getElementById('log_as_id');    
+  const iframe = document.getElementById('iframeGAS');
+  const urlGAS = iframe.src;
+  
+  if(uiNama) uiNama.innerHTML = `<span class="text-gradient">Baca Database...</span>`;
+
+  try {
+    // Memanggil server dengan parameter action dan unitID
+    const response = await fetch(`${urlGAS}?action=getAssetDetailForLog&unitID=${unitID}`);
+    const res = await response.json();
+
+    if (res && res.nama !== "TIDAK DITEMUKAN") {
+      
+      // 1. TAMPILKAN KONFIRMASI UNIT
+      await Swal.fire({
+        title: "Unit Ditemukan!",
+        text: `${res.nama} (${res.type})`,
+        icon: "success",
+        confirmButtonText: "Mulai Kerja",
+        width: '80%'
+      });
+
+      // 2. INJEKSI IDENTITAS KE UI
+      document.getElementById('log_as_id').innerText = res.type + "-" + res.asId;
+      document.getElementById('log_ui_asid').innerText = res.asId;
+      document.getElementById('log_ui_type').innerText = res.type;
+      document.getElementById('log_ui_nama').innerText = res.nama;
+      document.getElementById('log_ui_lokasi').innerText = res.lokasi || "N/A";
+      
+      // 3. SET WAKTU MULAI DARI SERVER
+      document.getElementById('log_time_mulai').value = res.serverTime;
+
+      // 4. LOGIKA B.1.1 (AUTO-LINKING JADWAL OPEN)
+      const logMaintId = document.getElementById('log_maint_id');
+      const dropdownJadwal = document.getElementById('jenis_id_jadwal');
+
+      if (res.openJadwal && res.openJadwal.length > 0) {
+        const hit = res.openJadwal[0]; 
+        dropdownJadwal.value = hit.idJadwal; 
+        logMaintId.value = hit.maintId; 
+        if(typeof speakSenor === "function") speakSenor("Jadwal terencana ditemukan Señor, silakan lanjut.");
+      } else {
+        logMaintId.value = ""; 
+        dropdownJadwal.value = ""; 
+        if(typeof speakSenor === "function") speakSenor("Tidak ada jadwal, silakan input manual.");
+      }
+
+      unlockMaintenanceForm(); 
+
+    } else {
+      await Swal.fire({ 
+        title: "Unit Ghoib!", 
+        text: "ID Unit [" + unitID + "] tidak ada!", 
+        icon: "error", 
+        width: '80%' 
+      });
+    }
+  } catch (err) {
+    console.error("Fetch Error:", err);
+    if(uiNama) uiNama.innerText = "Error Koneksi!";
+  }
+}
