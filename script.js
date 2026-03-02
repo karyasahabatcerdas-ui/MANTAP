@@ -33,6 +33,25 @@ document.addEventListener("DOMContentLoaded", () => {
 // Simpan URL Iframe GAS untuk referensi di fungsi lain (opsional, tergantung kebutuhan navigasi)
 const urlGAS = document.getElementById('iframeGAS').src;
 
+/**
+ * [FUNGSI AI: UNIVERSAL VOICE NOTIFICATION]
+ * Bisa dipanggil dari mana saja. Contoh: speakSeñor("Data berhasil disimpan");
+ */
+function speakSenor(pesan) {
+  if ('speechSynthesis' in window) {
+    // Batalkan suara yang sedang berjalan agar tidak tumpang tindih
+    window.speechSynthesis.cancel();
+
+    const msg = new SpeechSynthesisUtterance();
+    msg.text = pesan;
+    msg.lang = 'id-ID'; // Bahasa Indonesia
+    msg.rate = 0.9;     // default 1.1 Sedikit lebih cepat agar terdengar profesional
+    msg.pitch = 0.9;  // defaul 1.0
+    
+    window.speechSynthesis.speak(msg);
+  }
+}
+
 
 /**=============================================================================
  * [FUNGSI: OPEN GLOBAL SEARCH]
