@@ -480,8 +480,8 @@ async function handleLogPhotoSelect(input) {
     if (window.currentCategory === 'SCAN') {        
         speakSenor("Lagi baca QR dari galeri Señor.");
 
-        const scannerDummy = new Html5Qrcode("reader"); 
-try {
+        const scannerFile = new Html5Qrcode("reader"); 
+        try {
             const decodedText = await scannerFile.scanFile(imageFile, true);
             if (decodedText.includes("-")) {
                 const unitID = decodedText.split("-")[1].trim();
