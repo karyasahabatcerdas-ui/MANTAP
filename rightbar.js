@@ -51,18 +51,8 @@ function startMaintenanceMode() {
         }
     });
 
-
     // 3. Tampilkan Modal
-    //modal.style.pointerEvents = "auto"; // Pastikan modal bisa diinteraksi (untuk tombol close)
-    //modal.style.opacity = "1"; // Pastikan modal terlihat jelas 
-    //modal.style.display = 'flex'; // Tampilkan modal dengan flex untuk responsif
     modal.style.display = 'block';
-    
-    // 4. Logika Otomatis: Langsung arahkan ke Scanner atau Pencarian Manual
-    console.log("🛠️ Maintenance Mode: Aktif. Menunggu validasi Unit ID...");
-    console.log("Z-Index Terdeteksi:", computedStyle.zIndex);
-    console.log("Display Terdeteksi:", computedStyle.display);
-
     // Optional: Auto-scroll ke atas jika modal sangat panjang
     modal.scrollTop = 0;
 }
