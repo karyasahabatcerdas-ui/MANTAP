@@ -22,11 +22,13 @@ async function loadComponent(elementId, filePath) {
 }
 
 // Jalankan fungsi saat halaman dibuka
-document.addEventListener("DOMContentLoaded", () => {
-    loadComponent('modalMaintenanceLog-placeholder', 'modalMaintenanceLog.html');
+document.addEventListener("DOMContentLoaded", () => {    
     loadComponent('leftbar-placeholder', 'leftbar.html');
     loadComponent('rightbar-placeholder', 'rightbar.html');
-    loadComponent('globalSearchModal-placeholder', 'globalSearchModal.html');
+    loadComponent('modalMaintenanceLog-placeholder', 'modalMaintenanceLog.html');
+    loadComponent('modalGlobalSearch-placeholder', 'modalGlobalSearch.html');
+    loadComponent('modalMaint-placeholder', 'modalMaint.html');
+    loadComponent('modalDetailHist-placeholder', 'modalDetailHist.html');
 
 });
 
@@ -1189,7 +1191,7 @@ async function saveLog(status) {
 
 
 // 1. Inisialisasi awal (Wajib di luar fungsi)
-let allHistoryData = []; 
+let allHistoryData = []; //variabel global untuk menyimpan data log history mentah dari server
 
 
 /**=================================================================
@@ -1409,3 +1411,1370 @@ function openDetailLog(logId) {
   if (modal) modal.style.display = 'flex';
   //activateFullscreen();
 }
+
+/**=================================================================================
+ * [FUNGSI UI: LIHAT JADWAL - VERSI FINAL DENGAN FILTER 2 MINGGU & STANDARISASI DATE]
+ * [MENGGUNAKAN TI FORMATER KEEPER getServerTime]
+ * =================================================================================
+ */
+let timerPencarian; 
+
+async function loadJad() {
+  clearTimeout(timerPencarian);
+  
+  // Debounce 400ms agar tidak spam request saat user mengetik
+  timerPencarian = setTimeout(async function() {
+    const iframe = document.getElementById('iframeGAS');
+    const urlGAS = iframe.src;
+    
+    // 1. Ambil Nilai Filter dari UI GitHub
+    const fType = document.getElementById('filterType')?.value || "";   
+    const fState = document.getElementById('filterState')?.value || ""; 
+    const sortBy = document.getElementById('sortJadwal')?.value || "";   
+    const keyword = document.getElementById('cari_jadwal')?.value.toUpperCase() || "";
+
+    try {
+      // 2. Panggil Server (GET)
+      const response = await fetch(`${urlGAS}?action=getJadwalData`);
+      const data = await response.json();
+
+      if (!data || data.length < 2) return;
+      
+      // Ambil data tanpa header (asumsi data[0] adalah header)
+      let rawData = data.slice(1); 
+
+      // 3. FILTERING (Logika tetap sama di Client)
+      if (fType) rawData = rawData.filter(d => String(d[1]) === fType);
+      if (fState) rawData = rawData.filter(d => String(d[9]) === fState);
+      if (keyword) rawData = rawData.filter(d => d.join(" ").toUpperCase().includes(keyword));
+
+      const now = new Date();
+      
+      // HELPER KONVERSI TANGGAL
+      const toDate = (val) => {
+        if (!val) return new Date(0);
+        const p = String(val).split(/[\/\s:]/); 
+        if (p.length < 3) return new Date(0);
+        // Format: dd/mm/yyyy
+        return new Date(p[2], p[1] - 1, p[0], p[3] || 0, p[4] || 0, p[5] || 0);
+      };
+
+      // 4. SORTING & RENTANG WAKTU
+      if (sortBy === 'newest') {
+        rawData.sort((a, b) => toDate(b[7]) - toDate(a[7]));
+      } 
+      else if (sortBy === 'oldest') {
+        rawData.sort((a, b) => toDate(a[7]) - toDate(b[7]));
+      } 
+      else if (sortBy === 'two_weeks_ahead') {
+        const limitAhead = new Date();
+        limitAhead.setDate(now.getDate() + 14);
+        rawData = rawData.filter(d => {
+          const dDate = toDate(d[7]);
+          return dDate >= now && dDate <= limitAhead;
+        });
+      } 
+      else if (sortBy === 'two_weeks_back') {
+        const limitBack = new Date();
+        limitBack.setDate(now.getDate() - 14);
+        rawData = rawData.filter(d => {
+          const dDate = toDate(d[7]);
+          return dDate <= now && dDate >= limitBack;
+        });
+      }
+
+      // 5. RENDER KE TABEL/VIEW
+      renderJadwalViewIncremental(rawData);
+
+    } catch (err) {
+      console.error("Gagal load jadwal:", err);
+    }
+  }, 400); 
+}
+
+
+/**======================================================================================================
+ * [FUNGSI CLIENT GITHUB: LOAD TABEL KELOLA JADWAL]
+ * Mengambil data jadwal dari server dan memanggil fungsi render khusus untuk panel kelola
+ * =======================================================================================================
+ */
+async function loadKel() {
+  const tbody = document.getElementById('kelolaBody');
+  if (!tbody) return;
+
+  const iframe = document.getElementById('iframeGAS');
+  const urlGAS = iframe.src;
+
+  // Berikan loading indicator sederhana
+  tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'><i class='fas fa-spinner fa-spin'></i> Memuat panel kelola...</td></tr>";
+
+  try {
+    // Panggil server (Action sudah kita buat sebelumnya di doGet)
+    const response = await fetch(`${urlGAS}?action=getJadwalData`);
+    const data = await response.json();
+
+    if (!data || data.length < 2) {
+      tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>Belum ada jadwal maintenance.</td></tr>";
+      return;
+    }
+    
+    // Panggil mesin render khusus kelola jadwal Anda
+    // window.renderKelolaIncremental(data);
+    renderKelolaIncremental(data);
+
+  } catch (err) {
+    console.error("Gagal load kelola jadwal:", err);
+    tbody.innerHTML = "<tr><td colspan='5' style='text-align:center; color:red;'>⚠️ Error koneksi database.</td></tr>";
+  }
+}
+
+
+/**=========================================================================================
+ * [FUNGSI: MESIN RENDER KELOLA - TRACING: renderKelolaIncremental]
+ * Update baris tabel secara cerdas dengan tombol Edit & Hapus di sisi kanan.
+ * Fokus pada kolom penting: MaintID, Unit Aset, Plan, Status, dan Aksi (Edit/Hapus).
+ * Data diambil langsung dari index yang sesuai (sesuai struktur data jadwal)
+ * ==========================================================================================
+ */
+function renderKelolaIncremental(data) {
+  const tbody = document.getElementById('kelolaBody');
+  const existingRows = tbody.rows;
+  const newDataLength = data.length - 1;
+
+  for (let i = 1; i < data.length; i++) {
+    const d = data[i];
+    const rowIdx = i - 1;
+    
+    // Cukup ambil langsung nilainya dari index 7 (Kolom H)
+    let planDate = d[7] || "-"; 
+    
+    // Warna Badge Status (J)
+    let state = d[9] || "Open";
+    let badgeColor = (state === "Close") ? "#27ae60" : (state === "Pending") ? "#f39c12" : "#2980b9";
+
+    // Susun isi baris: MaintID, Unit Aset, Plan, State, Aksi
+    const rowHtml = `
+      <td style="padding:5px;">${d[0]}</td>
+      <td style="padding:5px;"><b>${d[1]}</b> - ${d[2]}<br><small>${d[3]}</small></td>
+      <td style="padding:5px;">${planDate}<br><small>${d[10]}</small></td>
+      <td style="padding: 10px 5px; text-align: center; vertical-align: middle;">
+        <div style="margin-bottom: 8px;">
+          <span style="background:${badgeColor}; color:white; padding:3px 8px; border-radius:12px; font-size:12px; font-weight:bold; display: inline-block; min-width: 50px; text-align: center;">
+            ${state}
+          </span>
+        </div>
+
+        <div style="display: flex; gap: 5px; justify-content: center;">
+          <button onclick="openMaintModal(${i+1})" style="background:#3498db; color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; flex: 1; max-width: 60px;">
+            <i class="fas fa-edit"></i> EDIT
+          </button>
+          
+          <button onclick="delJad(${i+1})" style="background:#e74c3c; color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; flex: 1; max-width: 45px;">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </td>
+      `;
+
+    // Update baris jika ada atau tambah baru (Incremental)
+    if (existingRows[rowIdx]) {
+      if (existingRows[rowIdx].innerHTML !== rowHtml) {
+        existingRows[rowIdx].innerHTML = rowHtml;
+      }
+    } else {
+      const newRow = tbody.insertRow();
+      newRow.innerHTML = rowHtml;
+    }
+  }
+
+  // Hapus sisa baris jika data di sheet berkurang
+  while (tbody.rows.length > newDataLength) {
+    tbody.deleteRow(newDataLength);
+  }
+}
+/**=========================================================================================
+ * [FUNGSI: MESIN RENDER JADWAL - TRACING: renderJadwalViewIncremental]
+ * Update baris tabel secara cerdas dengan tombol aksi di sisi kanan.
+ * Fokus pada kolom penting: MaintID, Unit Aset, Plan, Status, dan Aksi (Lihat Detail & Go To Maintenance).
+ * Data diambil langsung dari index yang sesuai (sesuai struktur data jadwal)
+ * ==========================================================================================
+ */
+
+function renderJadwalViewIncremental(data) {
+  const tbody = document.getElementById('jadwalBody');
+  tbody.innerHTML = ""; // Bersihkan dulu kalau urutan berubah
+   data.forEach((d, i) => {
+     
+    //let planDate = d[7] ? new Date(d[7]).toLocaleString('id-ID', {dateStyle:'short', timeStyle:'short'}) : "-";
+
+    let state = d[9] || "Open";
+    let color = (state === "Close") ? "#27ae60" : (state === "Pending") ? "#f39c12" : "#2980b9";
+    
+    // Di dalam loop render jadwal user (Lihat Jadwal)
+    //      <tr style="border-bottom: 1px solid #eee;">
+    //      </tr>
+    const rowHtml = `
+
+        <td style="padding:5px;">${d[0]}</td> <!-- Maint ID -->
+        <td style="padding:5px;"><b>${d[1]}</b> - ${d[2]}<br><small>${d[3]}</small></td> <!-- Unit Aset -->
+        <td style="padding:5px;">${d[7]}<br><small>${d[10]}</small></td> <!-- Plan Date -->
+        <td style="padding:5px; text-align:center;">
+          <!-- TOMBOL AKSI: Mengarah ke Mode Read-Only -->
+          <button onclick="openMaintDetailView(${i+2})"style="background:#7f8c8d; color:white; border:none; padding:6px; border-radius:4px; cursor:pointer;">
+            <i class="fas fa-search"></i>
+          </button>
+          <button onclick="goMaint(${i+2})" style="background:${color}; color:white; border:none; padding:6px; border-radius:4px; cursor:pointer;">
+            <i class="fa-solid fa-toolbox"></i> <span style="padding:2px 6px; border-radius:4px; font-size:10px;">${state}</span>
+          </button>
+        </td>
+      `;
+
+    tbody.innerHTML += rowHtml;
+  });
+}
+
+/**=================================================================
+ * [FUNGSI CLIENT GITHUB: EKSEKUSI MAINTENANCE UPDATE]
+ * Mengambil data baris Pending dan memuatnya ke form via Fetch
+ * ===================================================================
+ */
+async function goMaint(rowIdx) {
+  const urlGAS = document.getElementById('iframeGAS').src;
+
+  // 1. VALIDASI DATA AWAL
+  if (!window.activeRowData || window.activeRowData.length === 0) {
+    await Swal.fire({
+      title: "Data Tidak Ditemukan!",
+      text: "Silakan pilih baris terlebih dahulu, Señor.",
+      icon: "error",
+      width: '80%'
+    });
+    return; 
+  }
+
+  const data = window.activeRowData; 
+
+  // 2. TAMPILKAN LOADING
+  Swal.fire({
+    title: 'Mencari Detail Aset...',
+    text: 'Sik Tak Wocone Dilit...',
+    allowOutsideClick: false,
+    didOpen: () => { Swal.showLoading(); }
+  });
+
+  try {
+    // 3. PANGGIL SERVER (GET) - Menggunakan action searchAllAssets
+    // data[5] adalah Asset_ID dari kolom tabel Anda
+    const response = await fetch(`${urlGAS}?action=searchAllAssets&keyword=${encodeURIComponent(data[5])}`);
+    const results = await response.json();
+
+    if (results && results.length > 0) {
+      const res = results[0]; 
+      Swal.close();
+
+      // --- PENGISIAN DATA KE UI MODAL ---
+      document.getElementById('log_maint_id').value = data[0]; //pengisian Maint_ID ke form maintenance log
+      
+      let pend_sebelum = `Pending [tgl: ${data[2]}] [by: ${data[4]}] [Note: ${data[7]}] - Updated[next]`; 
+      document.getElementById('log_as_id_label').value = pend_sebelum; // Sesuaikan ID elemen catatan Anda
+
+      // Injeksi Detail Aset dari hasil fetch
+      document.getElementById('log_as_id').innerText = res.type + "-" + res.id;
+      document.getElementById('log_ui_type').innerText = res.type;
+      document.getElementById('log_ui_asid').innerText = res.id;
+      document.getElementById('log_ui_nama').innerText = res.nama;
+      document.getElementById('log_ui_lokasi').innerText = res.lokasi;
+
+      // Set dropdown jadwal (data[6] adalah ID_Jadwal dari tabel)
+      const sEl = document.getElementById('jenis_id_jadwal');
+      if (sEl) sEl.value = data[6];
+
+      // --- LOGIKA DARI lIHAT JADWAL ADALAH SEMUA JADWAL OPEN ADALAH BARU TIDAK ADA PENDING, HANYA ADA OPEN DAN CLOSE) ---
+      // Jadi kita asumsikan jika statusnya "Open" maka kita anggap sebagai "Pending" untuk keperluan update log
+      // Jika statusnya "Close" maka kita anggap sebagai "Selesai" dan tidak bisa diupdate lagi (tombol update akan dinonaktifkan)
+      // Kita masukkan URL (String) ke dalam array tempPhotos
+      // Fungsi renderPhotoPreview Anda harus bisa menangani string URL
+      //tempPhotos.PB = data[8]  ? [{ data: data[8], isOld: true }]  : []; 
+      //tempPhotos.PO = data[9]  ? [{ data: data[9], isOld: true }]  : [];
+      //tempPhotos.PA = data[10] ? [{ data: data[10], isOld: true }] : [];
+      //tempPhotos.PC = data[11] ? [{ data: data[11], isOld: true }] : [];
+
+      //['PB', 'PO', 'PA', 'PC'].forEach(cat => renderPhotoPreview(cat));
+      resetTempPhotos(); // mengosongkan karena goMaint adalah jadwal baru, bukan update, jadi kita reset dulu tempPhotos agar tidak tercampur dengan data lama
+
+      // --- TRANSISI UI ---
+      const modalDetail = document.getElementById('modalDetailHist');
+      if (modalDetail) modalDetail.style.display = 'none';
+
+      // Buka modal maintenance log dengan data yang sudah terisi
+      update_man_status = true; // tandai supaya tidak direset saat buka modal maintenancelog
+      startMaintenanceMode(); 
+      unlockMaintenanceForm(); 
+
+    } else {
+      await Swal.fire({
+        title: "Unit Tidak Ada!",
+        text: `ID Aset [${data[5]}] tidak ditemukan, Señor!`,
+        icon: "error",
+        width: '80%'
+      });
+    }
+  } catch (err) {
+    await Swal.fire({
+      title: "Server Error",
+      text: "Gagal memuat detail aset: " + err.toString(),
+      icon: "error",
+      width: '80%'
+    });
+  }
+}
+
+/**
+ * [FUNGSI UI: LIHAT JADWAL - MODE LOCK]
+ */
+function openMaintDetailView(row) {
+  // 1. Sembunyikan Tombol Aksi
+  const btnCreate = document.getElementById('btnCreateMaint');
+  const btnSearch = document.getElementById('btnMaintSearch'); 
+  
+  if (btnCreate) btnCreate.style.display = "none";
+  if (btnSearch) btnSearch.style.display = "none";
+
+  // 2. Gembok Semua Input (Disabled)
+  const inputs = ['m_plan', 'm_shift_note', 'm_other_note', 'm_state'];
+  inputs.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.disabled = true;
+  });
+
+  // 3. Ubah Tombol Batal Jadi Tombol Keluar Lebar  
+  const btnCancel = document.getElementById('btnCancelMaint');
+  if (btnCancel) {
+    btnCancel.parentElement.style.display = "block"; // Full width
+    btnCancel.style.width = "100%";
+    btnCancel.innerHTML = '<i class="fas fa-times"></i> KELUAR PRATINJAU';
+  }
+
+  loadMaintDetail(row); // Panggil load data
+}
+
+
+/**=========================================================================
+ * [FUNGSI CLIENT GITHUB: LOAD DETAIL JADWAL]
+ * Menarik detail satu baris jadwal berdasarkan index baris
+ * Menggunakan Fetch GET dengan parameter row untuk mengambil data spesifik dari server
+ * ==========================================================================
+ */
+async function loadMaintDetail(row) {
+  const iframe = document.getElementById('iframeGAS');
+  const urlGAS = iframe.src;
+
+  if (typeof speakSenor === "function") speakSenor("Mencari data, Señor...");
+
+  try {
+    // 1. PANGGIL SERVER (GET) dengan parameter action dan row
+    const response = await fetch(`${urlGAS}?action=getSingleMaint&row=${row}`);
+    const data = await response.json();
+
+    if (!data || data.length === 0) {
+      if (typeof speakSenor === "function") speakSenor("Data ghoib Señor!");
+      return;
+    }
+
+    // Helper Fungsi untuk mengisi value elemen UI GitHub
+    const setVal = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) el.value = val || "";
+    };
+
+    // 2. INJEKSI DATA DASAR
+    setVal('maintRowIdx', row);
+    setVal('m_id', data[0]);
+    setVal('m_type', data[1]);
+    setVal('m_as_id', data[2]);
+    setVal('m_as_nama', data[3]);
+
+    // 3. LOGIKA TANGGAL (Plan) 
+    // Format dari GAS: "dd/mm/yyyy hh:mm" -> Ubah ke: "yyyy-mm-ddThh:mm"
+    const s = data[7]; 
+    if (s && s.length >= 16) {
+      try {
+        const formattedDate = `${s.substring(6,10)}-${s.substring(3,5)}-${s.substring(0,2)}T${s.substring(11,16)}`;
+        setVal('m_plan', formattedDate);
+      } catch (e) {
+        console.error("Format tanggal error:", s);
+      }
+    }
+
+    // 4. UPDATE DROPDOWN & CATATAN
+    setVal('m_state', data[9]);
+    setVal('maint_id_jadwal', data[10]); 
+    setVal('m_shift_note', data[11]);
+    setVal('m_other_note', data[12]);
+
+    // 5. TAMPILKAN MODAL
+    const modal = document.getElementById('modalMaint');
+    if (modal) {
+      modal.style.display = 'flex';
+      if (typeof speakSenor === "function") speakSenor("Data dimuat.");
+    }
+
+  } catch (err) {
+    console.error("Gagal load detail jadwal:", err);
+    if (typeof speakSenor === "function") speakSenor("Koneksi bermasalah Señor.");
+  }
+}
+
+/**=========================================================================
+ * [FUNGSI: UPDATE MAINTENANCE LOG - MODE PENDING CHECK]
+ * Mengambil data dari form maintenance log dan mengirimnya ke server untuk update log yang sudah pending
+ * [FUNGSI CLIENT GITHUB: LOAD TIPE ASET]
+ * Sekali ambil dari server (fetch), semua dropdown tipe aset langsung sinkron via Cache.
+ * ==========================================================================
+ */
+async function loadAssetTypes() {
+  const iframe = document.getElementById('iframeGAS');
+  const urlGAS = iframe.src;
+
+  // 1. Jika cache sudah ada di memori browser GitHub, langsung pakai
+  if (window.cachedAssetTypes) {
+    renderAllTypeDropdowns(window.cachedAssetTypes);
+    return;
+  }
+
+  // 2. Jika belum ada, ambil dari server (GAS)
+  try {
+    const response = await fetch(`${urlGAS}?action=getAssetTypes`);
+    const types = await response.json(); // Mengambil array tipe aset
+
+    if (types && types.length > 0) {
+      window.cachedAssetTypes = types; // Simpan ke cache global GitHub
+      renderAllTypeDropdowns(types); // Sebar ke semua dropdown (filter, modal, dll)
+      console.log("📥 Data Tipe Aset Baru Diterima & Disinkronkan.");
+    }
+  } catch (err) {
+    console.error("Gagal memuat tipe aset:", err);
+  }
+}
+
+
+/**=========================================================================
+ * [FUNGSI PEMBANTU: SEBAR DATA KE SEMUA DROPDOWN]
+ * Menghindari penulisan berulang untuk setiap ID dropdown.
+ * Menerima array tipe aset dan mengisi semua dropdown yang relevan dengan opsi baru.
+ * ==========================================================================
+ */
+function renderAllTypeDropdowns(types) {
+  // Daftar ID dropdown yang harus diisi
+  const dropdownIds = ['assetTypeSelect', 'viewAssetTypeSelect', 'filterType', 'm_type'];
+  
+  dropdownIds.forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return; // Lewati jika elemen tidak ada di halaman saat ini
+
+    // Simpan nilai lama (biar kalau lagi milih gak keriset ke kosong)
+    const currentVal = sel.value;
+    
+    let h = (id === 'filterType') ? '<option value=""> Semua Tipe</option>' : '<option value="">-- Pilih Tipe Aset --</option>';
+    
+    if (types && types.length > 0) {
+      types.forEach(t => {
+        h += `<option value="${t}">${t}</option>`;
+      });
+    }
+    sel.innerHTML = h;
+    
+    // Balikin nilai lama kalau ada
+    if (currentVal) sel.value = currentVal;
+  });
+}
+
+/**==================================================================================================================
+ * [FUNGSI CLIENT GITHUB: LOAD DATA ASET SPESIFIK]
+ * Menarik data dari sheet tertentu sesuai type_asset yg juga nama sheet nya, lalu memanggil mesin render untuk menampilkan di tabel aset.
+ * ====================================================================================================================
+ */
+async function loadAssetData(sheetName) {
+  if (!sheetName) return;
+  
+  const iframe = document.getElementById('iframeGAS');
+  const urlGAS = iframe.src;
+  const masterCheck = document.getElementById('checkAllAsset');
+
+  try {
+    // 1. PANGGIL SERVER (GET) dengan parameter action dan sheetName
+    // EncodeURIComponent penting jika nama sheet ada spasi (misal: 'Pompa Air')
+    const response = await fetch(`${urlGAS}?action=getSpecificAsset&sheetName=${encodeURIComponent(sheetName)}`);
+    const data = await response.json();
+
+    if (!data || data.length < 2) {
+      document.getElementById('assetBody').innerHTML = "<tr><td colspan='5' style='text-align:center;'>📭 Data Kosong</td></tr>";
+      return;
+    }    
+
+    // Reset checkbox master jika ada
+    if (masterCheck) masterCheck.checked = false; 
+
+    // 2. PANGGIL MESIN RENDER INCREMENTAL ANDA
+    renderAssetTableIncremental(sheetName, data);
+
+  } catch (err) {
+    console.error("Gagal load data aset:", err);
+    document.getElementById('assetBody').innerHTML = "<tr><td colspan='5' style='text-align:center; color:red;'>⚠️ Gagal terhubung ke database aset.</td></tr>";
+  }
+}
+
+
+/**=========================================================================
+ * [FUNGSI: RENDER TABEL INCREMENTAL + INTEGRASI CHECK ALL]
+ * Mesin render khusus untuk halaman Lihat Aset dengan checkbox, terintegrasi dengan fungsi toggleAllAssets untuk fitur Check All.
+ * Fokus pada efisiensi update baris dan sinkronisasi checkbox dengan data yang diambil dari server.
+ * Data diambil langsung dari index yang sesuai (sesuai struktur data aset) dan disesuaikan dengan logika status warna yang sudah kita buat sebelumnya.
+ * Logika warna status (Baik, Rusak, Perlu Perbaikan) diambil dari kolom 4 (Index 3) dan ditampilkan sebagai badge di bawah nama aset.
+ * Setiap checkbox memiliki class 'asetCheck' untuk memudahkan fungsi toggleAllAssets dalam mengontrol semua checkbox sekaligus.
+ * Penting: Pastikan struktur data yang dikirim dari server sesuai dengan yang diharapkan (misal: nama di index 0, kondisi di index 4, dll) agar render berjalan dengan benar.
+ *==========================================================================
+ */
+function renderAssetTableIncremental(sheetName, data) {
+  const tbody = document.getElementById('assetBody');
+  const masterCheck = document.getElementById('checkAllAsset');
+  
+  // A. RESET CHECKBOX HEADER (Penting agar tidak nyangkut saat ganti Tipe Aset)
+  if (masterCheck) masterCheck.checked = false;
+
+  const newDataLength = data.length - 1; 
+
+  for (let i = 1; i < data.length; i++) {
+    const rowData = data[i];
+    const rowIdx = i - 1;
+    let badgeColor = (rowData[4] === "Baik") ? "#27ae60" : (rowData[4] === "Rusak") ?  "#2980b9" : "#f39c12";
+    // B. PASTIKAN CLASS SAMA (Gunakan 'assetCheck' sesuai fungsi toggle kita)
+    const rowHtml = `
+      <td style="padding:5px; text-align:center;"><input type="checkbox" class="asetCheck" value="${i+1}"></td>
+      <td style="padding:5px; font-weight:bold;"> ${rowData[0]} <br>${rowData[2]}<br><span style="background:${badgeColor}; color:white;">${rowData[4]}</span></td>
+      <td style="padding:5px;"> ${rowData[3]} </td>      
+      <td style="padding:5px;">
+        <button onclick="openAssetDetail('${sheetName}', ${i+1})" style="background:#2980b9; color:white; border:none; padding:5px 10px; border-radius:3px; cursor:pointer;">
+          <i class="fas fa-eye"></i> Detil
+        </button>
+      </td>`;
+
+    if (tbody.rows[rowIdx]) {
+      if (tbody.rows[rowIdx].innerHTML !== rowHtml) {
+        tbody.rows[rowIdx].innerHTML = rowHtml;
+      }
+    } else {
+      const newRow = tbody.insertRow();
+      newRow.innerHTML = rowHtml;
+    }
+  }
+
+  while (tbody.rows.length > newDataLength) {
+    tbody.deleteRow(newDataLength);
+  }
+}
+
+/**=========================================================================
+ * [FUNGSI: TOGGLE CHECK ALL ASSET]
+ * Mengontrol semua checkbox aset dengan satu klik pada checkbox master.
+ * Setiap checkbox aset memiliki class 'asetCheck' untuk memudahkan seleksi.
+ * Saat master dicentang, semua checkbox aset akan dicentang dan barisnya diberi efek warna (misal: #fff9e6 untuk highlight). Saat master tidak dicentang, semua checkbox aset akan dilepas centangnya dan efek warna dihapus.
+ * Pastikan fungsi ini dipanggil setiap kali data aset di-render ulang agar tetap sinkron dengan checkbox yang ada.
+ *==========================================================================
+ */
+function toggleAllAssets() {
+  const master = document.getElementById('checkAllAsset');
+  const items = document.querySelectorAll('.asetCheck');
+  
+  items.forEach(cb => {
+    cb.checked = master.checked;
+    // Beri efek warna pada baris yang dicentang
+    const row = cb.closest('tr');
+    if (row) {
+      row.style.backgroundColor = master.checked ? "#fff9e6" : "";
+    }
+  });
+}
+
+
+/**=========================================================================
+ * [FUNGSI: RENDER TABEL VIEW INCREMENTAL]
+ * Mesin khusus untuk halaman Lihat Aset (Tanpa Checkbox).
+ * Fokus pada efisiensi update baris dan penyajian data yang bersih untuk mode tampilan saja (Read-Only).
+ * Setiap baris memiliki tombol "Lihat Detail" yang memanggil fungsi openAssetDetailView dengan parameter sheetName dan row index untuk menampilkan detail aset di modal.
+ * Data diambil langsung dari index yang sesuai (sesuai struktur data aset) dan disesuaikan dengan logika status warna yang sudah kita buat sebelumnya.
+ * Logika warna status (Baik, Rusak, Perlu Perbaikan) diambil dari kolom 4 (Index 3) dan ditampilkan sebagai badge di bawah nama aset.
+ * Penting: Pastikan struktur data yang dikirim dari server sesuai dengan yang diharapkan agar render berjalan dengan benar.
+ *==========================================================================
+ */
+function renderAssetTableIncrementalView(sheetName, data) {
+  const tbody = document.getElementById('viewAssetBody');
+  const existingRows = tbody.rows;
+  const newDataLength = data.length - 1;
+
+  for (let i = 1; i < data.length; i++) {
+    const rowData = data[i];
+    const rowIdx = i - 1;
+    // Template baris tanpa checkbox, tombol manggil openAssetDetailView
+    const rowHtml = `
+      <td>${rowData[0]}</td><td>${rowData[2]}</td><td>${rowData[3]}</td>
+      <td>
+        <button onclick="openAssetDetailView('${sheetName}', ${i+1})" style="background:#7f8c8d; color:white; border:none; padding:5px; border-radius:3px; cursor:pointer;">
+          <i class="fas fa-search"></i> Lihat
+        </button>
+      </td>`;
+
+    if (existingRows[rowIdx]) {
+      if (existingRows[rowIdx].innerHTML !== rowHtml) {
+        existingRows[rowIdx].innerHTML = rowHtml;
+      }
+    } else {
+      const newRow = tbody.insertRow();
+      newRow.innerHTML = rowHtml;
+    }
+  }
+
+  while (tbody.rows.length > newDataLength) {
+    tbody.deleteRow(newDataLength);
+  }
+}
+
+
+/**=========================================================================
+ * [FUNGSI CLIENT GITHUB: LOAD TABEL LIHAT ASET - READ ONLY]
+ * Menarik data aset spesifik via Fetch GET untuk mode tampilan saja.
+ * Menggunakan action getSpecificAsset dengan parameter sheetName untuk mengambil data dari server, lalu memanggil mesin render khusus untuk mode view aset yang sudah kita buat sebelumnya.
+ * Fokus pada penyajian data yang bersih dan efisien untuk mode tampilan saja (Read-Only), tanpa checkbox atau fitur edit.
+ * Setiap baris memiliki tombol "Lihat Detail" yang memanggil fungsi openAssetDetailView dengan parameter sheetName dan row index untuk menampilkan detail aset di modal.
+ * ==========================================================================
+ */
+async function loadAssetDataView(sheetName) {
+  if (!sheetName) return;
+  
+  const iframe = document.getElementById('iframeGAS');
+  const urlGAS = iframe.src;
+
+  try {
+    // 1. PANGGIL SERVER (GET) - Menggunakan action yang sama dengan Kelola Aset
+    const response = await fetch(`${urlGAS}?action=getSpecificAsset&sheetName=${encodeURIComponent(sheetName)}`);
+    const data = await response.json();
+
+    if (!data || data.length < 2) {
+      const tbody = document.getElementById('viewAssetBody');
+      if (tbody) tbody.innerHTML = "<tr><td colspan='4' style='text-align:center;'>📭 Data Kosong</td></tr>";
+      return;
+    }
+
+    // 2. PANGGIL MESIN RENDER KHUSUS VIEW (READ-ONLY)
+    renderAssetTableIncrementalView(sheetName, data);
+
+  } catch (err) {
+    console.error("Gagal load data aset view:", err);
+    const tbody = document.getElementById('viewAssetBody');
+    if (tbody) tbody.innerHTML = "<tr><td colspan='4' style='text-align:center; color:red;'>⚠️ Gagal memuat data aset.</td></tr>";
+  }
+}
+
+
+/**=========================================================================
+ * [FUNGSI CLIENT GITHUB: ISI DROPDOWN LIHAT ASET]
+ * Memanfaatkan cache global agar perpindahan tab terasa instan.
+ * Jika cache belum ada (misal: refresh halaman), baru ambil dari server. Setelah itu, render dropdown dengan opsi tipe aset yang sudah kita buat sebelumnya.
+ * ==========================================================================
+ */
+async function loadAssetTypesView() {
+  const sel = document.getElementById('viewAssetTypeSelect');
+  const iframe = document.getElementById('iframeGAS');
+  const urlGAS = iframe.src;
+  
+  // 1. Jika cache sudah ada di memori GitHub, langsung pakai (Instan!)
+  if (window.cachedAssetTypes) {
+    console.log("🚀 Menggunakan Cache untuk Dropdown View Asset.");
+    renderViewDropdown(window.cachedAssetTypes);
+    return;
+  }
+
+  // 2. Jika belum ada (misal: refresh halaman di tab ini), ambil dari server
+  try {
+    const response = await fetch(`${urlGAS}?action=getAssetTypes`);
+    const types = await response.json();
+
+    if (types && types.length > 0) {
+      window.cachedAssetTypes = types; // Simpan ke cache global
+      renderViewDropdown(types);
+    }
+  } catch (err) {
+    console.error("Gagal memuat tipe aset untuk view:", err);
+    if (sel) sel.innerHTML = '<option value="">⚠️ Gagal memuat data</option>';
+  }
+}
+/**=========================================================================
+ * [FUNGSI PEMBANTU: RENDER DROPDOWN LIHAT ASET]
+ * Menerima array tipe aset dan mengisi dropdown filter di tab Lihat Aset.
+ * Setiap opsi dropdown akan memiliki value yang sesuai dengan tipe aset untuk memudahkan filtering saat user memilih.
+ * Pastikan fungsi ini dipanggil dengan data yang benar (array tipe aset) agar dropdown terisi dengan benar.
+ * ==========================================================================
+ */
+
+function renderViewDropdown(types) {
+  const sel = document.getElementById('viewAssetTypeSelect');
+  let h = '<option value="">-- Pilih  --</option>';
+  types.forEach(t => h += `<option value="${t}">${t}</option>`);
+  sel.innerHTML = h;
+}
+
+/**=========================================================================
+ * [FUNGSI: LIHAT ASET DETIL - MODE VIEW ONLY]
+ * Kita balik logikanya: Panggil detil dulu, baru timpa dengan mode Read-Only.
+ * Tujuannya agar fungsi openAssetDetail tetap berjalan normal (mengisi data, render foto, dll), baru setelah itu kita "Sikat" semua input dan tombol untuk memastikan benar-benar tidak bisa diedit.
+ * Dengan cara ini, kita meminimalisir risiko bug atau data yang tidak terisi dengan benar karena mode view hanya merubah state tampilan setelah data sudah dimuat.
+ * Pastikan fungsi openAssetDetail sudah benar-benar berjalan dan mengisi semua data sebelum kita kunci inputnya, jadi kita beri sedikit jeda (setTimeout) untuk memastikan urutan eksekusi yang benar.
+ *==========================================================================
+ */
+function openAssetDetailView(sheetName, row) {
+  // 1. Jalankan fungsi load data utama dulu
+  openAssetDetail(sheetName, row);
+
+  // 2. Gunakan sedikit jeda (100ms) agar fungsi utama selesai merender, 
+  // baru kemudian kita "Sikat" tombol-tombolnya untuk mode View
+  setTimeout(function() {
+    console.log("🔒 Mengaktifkan Mode Read-Only...");
+
+    // Kunci Input
+    document.getElementById('as_nama').readOnly = true;
+    document.getElementById('as_lokasi').readOnly = true;
+    document.getElementById('as_status').disabled = true;
+    
+    const btnSave = document.getElementById('btnSaveAsset');
+    const btnBatal = document.getElementById('btnCancelAsset');
+    const actionArea = document.getElementById('assetActionArea');
+    const btnTake = document.querySelector("button[onclick='takeAssetPhoto()']");
+
+    // Sembunyikan Simpan & Baris Foto
+    if (btnSave) btnSave.style.display = "none"; 
+    if (btnTake && btnTake.parentElement) {
+      btnTake.parentElement.style.display = "none"; 
+    }
+
+    // Buat Batal jadi Full Width
+    if (actionArea) actionArea.style.gridTemplateColumns = "1fr";
+    if (btnBatal) {
+      btnBatal.style.width = "100%";
+      btnBatal.innerHTML = '<i class="fas fa-times"></i> KELUAR';
+    }
+
+    // Visual Galeri Read-Only
+    const gallery = document.getElementById('as_gallery_box');
+    if (gallery) {
+      gallery.style.opacity = "1"; 
+      gallery.style.pointerEvents = "auto";
+      const label = gallery.querySelector('label');
+      if (label) label.innerText = "DOKUMENTASI FOTO (VIEW ONLY)";
+    }
+  }, 200); // 200ms cukup untuk memastikan openAssetDetail sudah jalan
+}
+
+
+/**=========================================================================
+ * [variableglobal asset]
+ * Menyimpan URL pratinjau foto yang sudah dipilih untuk ditampilkan di slider, serta file asli yang disimpan sementara di laci sebelum disimpan permanen ke Drive.
+ * assetImages digunakan untuk slider, sementara temp_Asset_Files digunakan untuk menyimpan file asli yang akan diupload ke Drive saat simpan.
+ * Saat user memilih foto baru, kita simpan URL pratinjau di assetImages agar langsung muncul di slider, dan file aslinya kita simpan di temp_Asset_Files untuk nanti diupload ke Drive.
+ * Saat user menghapus foto, kita cek apakah itu foto baru (blob URL) atau foto lama (URL Drive). Jika foto baru, kita hapus dari kedua array. Jika foto lama, kita panggil server untuk hapus permanen di Drive dan update assetImages sesuai respon server.
+ * Logika ini memastikan bahwa user bisa langsung melihat perubahan di slider saat memilih atau menghapus foto, sekaligus menjaga data file asli yang akan diupload tetap terorganisir di laci sementara.
+ * Penting: Pastikan fungsi updateImageSlider sudah benar-benar menggunakan assetImages untuk menampilkan foto di slider agar perubahan langsung terlihat saat user memilih atau menghapus foto.
+ *==========================================================================
+ */
+let assetImages = [];
+let currentImgIdx = 0;
+let temp_Asset_Files = []; 
+const mAX_IMG = 5;
+
+/**=========================================================================
+ * [FUNGSI: AMBIL FOTO ASET]
+ * Membuka dialog file untuk memilih foto, menyimpan file asli di laci sementara, dan menampilkan pratinjau instan di slider.
+ * Logika kuota foto: Cek jumlah foto yang sudah ada di assetImages (yang tampil di slider) sebelum membuka dialog. Jika sudah mencapai mAX_IMG, tampilkan alert dan hentikan proses.
+ * Saat user memilih foto, kita simpan file aslinya di temp_Asset_Files untuk nanti diupload ke Drive saat simpan, dan kita buat URL pratinjau untuk langsung ditampilkan di slider dengan menambahkannya ke assetImages. Setelah itu, kita update slider agar user bisa langsung melihat foto yang baru saja dipilih.
+ * Pastikan fungsi updateImageSlider sudah benar-benar menggunakan assetImages untuk menampilkan foto di slider agar perubahan langsung terlihat saat user memilih foto baru.
+ *==========================================================================
+ */
+function takeAssetPhoto() {
+  // Cek kuota laci
+  if (temp_Asset_Files.length >= mAX_IMG) { Swal.fire({title: "Maksimal!",text: "Maksimal " + mAX_IMG + " foto saja!",icon: "warning", confirmButtonText: "OK", width: '80%' });
+        return; // Berhenti di sini, tidak lanjut ke proses simpan
+     }
+  // Buka dialog file dan kedepan menggunakan kamera jika memungkinkan (fitur ini lebih optimal di mobile)
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+  
+  input.onchange = function() {
+    const file = this.files[0];
+    if (!file) return;
+
+    // 1. Simpan file asli ke Laci
+    temp_Asset_Files.push(file);
+
+    // 2. Buat pratinjau instan untuk Slider
+    const pratinjauUrl = URL.createObjectURL(file);
+    
+    // Kita masukkan ke array assetImages (yang dipakai slider)
+    // agar user bisa langsung melihat foto yang baru saja dipilih
+    assetImages.push(pratinjauUrl);
+    currentImgIdx = assetImages.length - 1; // Geser ke foto terbaru
+    
+    updateImageSlider();
+    console.log("Foto ditambahkan ke laci. Total: " + temp_Asset_Files.length);
+  };
+
+  input.click();
+}
+/**=========================================================================
+ * [FUNGSI: HAPUS FOTO ASET]
+ * Menghapus foto dari slider dan laci sementara, dengan konfirmasi sebelum menghapus.
+ * Logika penghapusan: Cek apakah assetImages kosong sebelum memulai proses. Jika kosong, tampilkan alert dan hentikan proses. Jika tidak, tampilkan konfirmasi. Jika user setuju, cek apakah foto yang akan dihapus adalah foto baru (blob URL) atau foto lama (URL Drive). Jika foto baru, hapus dari kedua array (assetImages dan temp_Asset_Files) dan update slider. Jika foto lama, panggil server untuk hapus permanen di Drive dan update assetImages sesuai respon server.
+ * Pastikan fungsi updateImageSlider sudah benar-benar menggunakan assetImages untuk menampilkan foto di slider agar perubahan langsung terlihat saat user menghapus foto.
+ *==========================================================================
+ */
+/**=========================================================================
+ * [FUNGSI CLIENT GITHUB: HAPUS FOTO ASET]
+ * Menghapus foto sementara di memori browser atau permanen di Google Drive via Fetch POST
+ * ==========================================================================
+ */
+async function deleteAssetPhoto() {
+  const iframe = document.getElementById('iframeGAS');
+  const urlGAS = iframe.src;
+
+  // 1. VALIDASI AWAL
+  if (window.assetImages.length === 0) {
+    Swal.fire({ title: "Kosong!", text: "Tidak ada foto untuk dihapus!", icon: "warning", width: '80%' });
+    return;
+  }
+
+  // 2. KONFIRMASI GAHAR
+  const confirmHapus = await Swal.fire({
+    title: "Hapus Foto",
+    text: "Foto ini akan dihapus dari daftar?",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    confirmButtonText: "Ya, Hapus",
+    cancelButtonText: "Batal",
+    width: '80%'
+  });
+
+  if (!confirmHapus.isConfirmed) return;
+
+  const currentUrl = window.assetImages[window.currentImgIdx];
+
+  // --- JALUR A: FOTO BARU (BLOB / LOKAL GITHUB) ---
+  if (currentUrl.startsWith("blob:") || currentUrl.startsWith("data:")) {
+    // Hapus dari laci temp_Asset_Files
+    const offset = window.assetImages.length - window.temp_Asset_Files.length;
+    window.temp_Asset_Files.splice(window.currentImgIdx - offset, 1);
+    window.assetImages.splice(window.currentImgIdx, 1);
+    
+    window.currentImgIdx = 0;
+    updateImageSlider();
+    
+    Swal.fire({ title: "Sukses", text: "Pratinjau foto lokal dihapus", icon: "success", width: '80%' });
+  } 
+  
+  // --- JALUR B: FOTO LAMA (PERMANEN DI DRIVE) ---
+  else {
+    const row = document.getElementById('assetRowIdx').value;
+    const type = document.getElementById('as_type').value;
+
+    Swal.fire({ title: 'Menghapus...', text: 'Sik, lagi dibusek di Drive...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+
+    try {
+      const bodyPayload = {
+        action: "removeSpecificAssetPhoto",
+        payload: {
+          type: type,
+          row: row,
+          photoUrl: currentUrl
+        }
+      };
+
+      // Gunakan mode 'no-cors' untuk POST besar, atau CORS standar untuk membaca 'res.all'
+      const response = await fetch(urlGAS, {
+        method: 'POST',
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify(bodyPayload)
+      });
+      
+      const res = await response.json(); // Mengharapkan {success: true, all: [...]}
+
+      if (res.success) {
+        window.assetImages = res.all;
+        window.currentImgIdx = 0;
+        updateImageSlider();
+        Swal.fire({ title: "Sukses", text: "Foto permanen berhasil dihapus dari Drive", icon: "success", width: '80%' });
+      }
+    } catch (err) {
+      console.error("Gagal hapus foto Drive:", err);
+      Swal.fire({ title: "Gagal!", text: "Error server saat menghapus foto.", icon: "error", width: '80%' });
+    }
+  }
+}
+
+/**=========================================================================
+ * [FUNGSI PEMBANTU: AMBIL QR CODE SEBAGAI BASE64]
+ * Mengambil gambar QR dari elemen img, menggambar ulang di canvas untuk mengatasi CORS, lalu mengembalikan data base64 yang siap diupload ke Drive.
+ * Logika CORS: Karena gambar QR biasanya berasal dari URL eksternal (misal: API QR), kita tidak bisa langsung mengambil data base64 karena pembatasan CORS. Solusinya adalah dengan membuat elemen Image baru, mengatur crossOrigin ke "Anonymous", lalu menggambar ulang gambar tersebut di canvas. Setelah itu, kita bisa mengambil data base64 dari canvas tanpa terkena CORS.
+ * Pastikan fungsi ini dipanggil saat menyimpan aset, dan hasil base64-nya dimasukkan ke payload yang akan dikirim ke server untuk diupload ke Drive.
+ *==========================================================================
+ */
+
+function getQRCodeBase64() {
+  return new Promise((resolve) => {
+    const img = document.getElementById('assetQRCode');
+    if (!img || !img.src.includes("http")) return resolve(null);
+
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const newImg = new Image();
+    
+    newImg.crossOrigin = "Anonymous"; // Hindari CORS error
+    newImg.onload = function() {
+      canvas.width = newImg.width;
+      canvas.height = newImg.height;
+      ctx.drawImage(newImg, 0, 0);
+      resolve({
+        base64: canvas.toDataURL("image/png").split(',')[1],
+        mimeType: "image/png"
+      });
+    };
+    newImg.src = img.src;
+  });
+}
+
+/**=========================================================================
+ * [FUNGSI: SIMPAN EDITAN ASET]
+ * Mengumpulkan data dari form edit aset, menangani foto baru dan QR code, lalu mengirim semuanya ke server untuk disimpan.
+ * Logika simpan: Pertama, kita validasi input ID Aset. Jika kosong, tampilkan alert dan hentikan proses. Kemudian, kita ambil QR code sebagai base64 menggunakan fungsi getQRCodeBase64. Selanjutnya, kita susun payload yang akan dikirim ke server, termasuk data dasar aset, QR code dalam format base64, dan file foto baru yang disimpan di laci sementara. Terakhir, kita kirim payload ini ke server menggunakan google.script.run dengan success dan failure handler untuk menangani respon dari server.
+ * Pastikan fungsi ini dipanggil saat user menekan tombol "Simpan Perubahan" di modal edit aset, dan semua data yang diperlukan sudah terisi dengan benar sebelum proses simpan dimulai.
+ *==========================================================================
+ */
+
+/**=========================================================================
+ * [FUNGSI CLIENT GITHUB: SAVE ASSET EDIT & QR]
+ * Mengirim data aset, QR Code, dan foto massal via Fetch POST
+ * =========================================================================
+ */
+async function saveAssetEdit() {
+  const asId = document.getElementById('as_id').value;
+  const type = document.getElementById('as_type').value;
+  const row = document.getElementById('assetRowIdx').value;
+  const btn = document.getElementById('btnSaveAsset');
+  const iframe = document.getElementById('iframeGAS');
+  const urlGAS = iframe.src;
+
+  // 1. VALIDASI INPUT
+  if (!asId) { 
+    await Swal.fire({title: "Input Kosong!", text: "ID Aset tidak boleh kosong!", icon: "warning", width: '80%' });
+    return; 
+  }
+
+  // 2. PERSIAPAN UI & QR
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Menyiapkan QR...";
+  }
+  
+  const qrBlob = await getQRCodeBase64(); // Pastikan fungsi ini sudah ada di GitHub
+
+  // 3. SUSUN DATA UNTUK SPREADSHEET (Kolom A-E)
+  const userData = [
+    asId, 
+    "", // Akan diisi link QR oleh server
+    document.getElementById('as_nama').value,
+    document.getElementById('as_lokasi').value,
+    document.getElementById('as_status').value
+  ];
+
+  // 4. SUSUN PAYLOAD LOGIKA SERVER
+  let payload = {
+    asId: asId,
+    type: type,
+    row: row,
+    qrBase64: qrBlob ? qrBlob.base64 : null,
+    adminAktif: window.loggedInUser || "Admin",
+    allFiles: [] 
+  };
+
+  // 5. PROSES FOTO DARI LACI (temp_Asset_Files)
+  if (window.temp_Asset_Files && window.temp_Asset_Files.length > 0) {
+    if (btn) btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Memproses Foto...";
+    try {
+      const filePromises = window.temp_Asset_Files.map(file => getBase64(file));
+      payload.allFiles = await Promise.all(filePromises);
+    } catch (e) {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = "SIMPAN PERUBAHAN";
+      }
+      await Swal.fire({ title: "Gagal Memproses Foto", text: e.toString(), icon: "error", width: '80%' });
+      return;
+    }
+  }
+
+  // 6. TRANSMISI KE SERVER (POST)
+  if (btn) btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Mengunggah ke Drive...";
+
+  try {
+    const bodyPayload = {
+      action: "saveAssetEnterpriseWithQR",
+      payload: payload,
+      userData: userData
+    };
+
+    // Gunakan fetch POST (mode 'no-cors' disarankan untuk payload foto yang sangat besar)
+    await fetch(urlGAS, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify(bodyPayload)
+    });
+
+    // Karena no-cors, kita asumsikan sukses jika tidak ada error network
+    await Swal.fire({
+      title: "Sukses",
+      text: "Data Aset & QR berhasil dikirim ke server Google.",
+      icon: "success",
+      width: '80%'
+    });
+
+    window.temp_Asset_Files = []; 
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = "SIMPAN PERUBAHAN";
+    }
+    closeAssetModal();
+    loadAssetData(type); // Refresh tabel aset
+
+  } catch (err) {
+    await Swal.fire({
+      title: "Gagal",
+      text: "Gagal Mengirim ke Server: " + err.message,
+      icon: "error",
+      width: '80%'
+    });
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = "SIMPAN PERUBAHAN";
+    }
+  }
+}
+
+
+/**=========================================================================
+ * [FUNGSI: DO BULK DELETE USER]
+ * Menghapus beberapa aset sekaligus berdasarkan checkbox yang dipilih, dengan konfirmasi sebelum menghapus.
+ * Logika penghapusan: Pertama, kita kumpulkan semua checkbox yang dicentang dan ambil nilai row index-nya. Jika tidak ada yang dipilih, tampilkan alert dan hentikan proses. Jika ada yang dipilih, tampilkan konfirmasi dengan jumlah aset yang akan dihapus. Jika user setuju, kita tampilkan modal loading sambil memproses penghapusan di server menggunakan google.script.run. Setelah server merespon, kita tampilkan hasilnya menggunakan Swal dan refresh tabel aset.
+ * Pastikan fungsi ini dipanggil saat user menekan tombol "Hapus Terpilih" di halaman Kelola Aset, dan semua checkbox memiliki class 'asetCheck' agar bisa terdeteksi dengan benar.
+ *==========================================================================
+ */
+/**
+ * [FUNGSI CLIENT GITHUB: HAPUS ASET MASSAL]
+ * Menghapus banyak aset sekaligus dari Spreadsheet & Drive via Fetch POST
+ */
+async function doBulkDeleteAsset() {
+  const type = document.getElementById('assetTypeSelect').value; 
+  const iframe = document.getElementById('iframeGAS');
+  const urlGAS = iframe.src;
+  
+  let selected = [];
+  document.querySelectorAll('.asetCheck:checked').forEach(cb => selected.push(parseInt(cb.value)));
+
+  // 1. VALIDASI PILIHAN
+  if (selected.length === 0) { 
+    Swal.fire({ title: "Pilih Dulu!", text: "Pilih aset yang ingin dihapus!", icon: "warning", width: '80%' });
+    return; 
+  }
+ 
+  // 2. KONFIRMASI GAHAR
+  const konfirmasi = await Swal.fire({
+    title: "Hapus Asset!",
+    text: `⚠️ HAPUS ${selected.length} ASET? \n\nFolder foto dan QR di Drive juga akan dihapus.`,
+    icon: "warning", 
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    confirmButtonText: "Ya, Hapus!",
+    cancelButtonText: "Batal",
+    width: '80%'
+  });
+
+  if (konfirmasi.isConfirmed) { 
+      // 3. TAMPILKAN LOADING
+      Swal.fire({
+        title: 'Memproses Penghapusan...',
+        text: 'Sedang membersihkan database dan Drive, mohon tunggu...',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => { Swal.showLoading(); }
+      });
+
+      // 4. TRANSMISI KE SERVER (POST)
+      try {
+        const bodyPayload = {
+          action: "deleteSelectedAssets",
+          payload: {
+            type: type,
+            selected: selected,
+            admin: window.loggedInUser || "Admin"
+          }
+        };
+
+        // Menggunakan fetch POST (tanpa no-cors agar bisa menerima balasan teks sukses)
+        const response = await fetch(urlGAS, {
+          method: 'POST',
+          headers: { "Content-Type": "text/plain" },
+          body: JSON.stringify(bodyPayload)
+        });
+        
+        const res = await response.text();
+
+        // 5. TAMPILKAN HASIL
+        await Swal.fire({
+          title: "Terhapus!",
+          text: res,
+          icon: "success",
+          width: '80%'
+        });
+        
+        loadAssetData(type); // Refresh tabel di GitHub
+
+      } catch (err) {
+        console.error("Gagal hapus massal:", err);
+        Swal.fire("Gagal!", "Server Error: " + err.toString(), "error");
+      }
+  }
+}
+
+
+/**==========================================================================
+ * [FUNGSI CLIENT GITHUB: UPDATE QR MASSAL]
+ * Konversi QR ke Base64 secara lokal, lalu kirim borongan ke Server via Fetch POST
+ * Logika update massal: Pertama, kita kumpulkan semua checkbox yang dicentang dan ambil nilai row index serta ID Aset-nya. Jika tidak ada yang dipilih, tampilkan alert dan hentikan proses. Jika ada yang dipilih, tampilkan konfirmasi dengan jumlah aset yang akan diproses. Jika user setuju, kita tampilkan modal loading sambil memproses konversi QR ke Base64 secara lokal untuk setiap aset yang dipilih. Setelah semua QR berhasil dikonversi, kita kirim data borongan ke server menggunakan Fetch POST. Setelah server merespon, kita tampilkan hasilnya menggunakan Swal dan refresh tabel aset.
+ * Pastikan fungsi ini dipanggil saat user menekan tombol "Update QR Massal" di halaman Kelola Aset, dan semua checkbox memiliki class 'asetCheck' agar bisa terdeteksi dengan benar. Juga pastikan fungsi generateVirtualQR sudah benar-benar berjalan untuk mengkonversi QR ke Base64 secara lokal.
+ *==========================================================================
+ */
+async function bulkUpdateQR() {
+  const type = document.getElementById('assetTypeSelect').value;
+  const iframe = document.getElementById('iframeGAS');
+  const urlGAS = iframe.src;
+  let selected = [];
+  
+  // 1. AMBIL ASET YANG DICENTANG
+  document.querySelectorAll('.asetCheck:checked').forEach(cb => {
+    const row = cb.closest('tr');
+    selected.push({
+      rowIdx: cb.value,
+      asId: row.cells[1].innerText.trim() 
+    });
+  });
+
+  if (selected.length === 0) {
+    return Swal.fire({ title: "Pilih aset dulu!", icon: "info", width: '80%' });
+  }
+
+  // 2. KONFIRMASI GAHAR
+  const konfirmasi = await Swal.fire({
+    title: "Update QR Massal",
+    text: `Proses ${selected.length} aset sekaligus?`,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Ya, Proses",
+    width: '80%'
+  });
+
+  if (konfirmasi.isConfirmed) {
+    Swal.fire({
+      title: 'Menyiapkan Data...',
+      html: '<b id="progress-text">Konversi QR: 0%</b>',
+      allowOutsideClick: false,
+      didOpen: () => { Swal.showLoading(); }
+    });
+
+    try {
+      const bulkData = [];
+      for (let i = 0; i < selected.length; i++) {
+        // Update teks progres di modal (Real-time)
+        const progressVal = Math.round(((i + 1) / selected.length) * 100);
+        document.getElementById('progress-text').innerText = `Konversi QR: ${progressVal}% (${i+1}/${selected.length})`;
+        
+        const item = selected[i];
+        const code = type + "-" + item.asId;
+        const qrApiUrl = `https://api.qrserver.com{encodeURIComponent(code)}&size=150x150`;
+        
+        // Konversi ke Base64 (Fungsi virtual QR Anda)
+        const qrBase64 = await generateVirtualQR(qrApiUrl);
+        
+        bulkData.push({
+          asId: item.asId,
+          row: item.rowIdx,
+          qrBase64: qrBase64
+        });
+      }
+
+      // 3. KIRIM BORONGAN KE SERVER (POST)
+      document.getElementById('progress-text').innerText = "Mengirim ke Database...";
+      
+      const bodyPayload = {
+        action: "saveBulkQR_Optimized",
+        payload: {
+          bulkData: bulkData,
+          admin: window.loggedInUser || "Admin",
+          type: type
+        }
+      };
+
+      const response = await fetch(urlGAS, {
+        method: 'POST',
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify(bodyPayload)
+      });
+      
+      const res = await response.text();
+
+      await Swal.fire({ title: "Sukses", text: res, icon: "success", width: '80%' });
+      loadAssetData(type); 
+
+    } catch (err) {
+      console.error("Gagal Bulk Update QR:", err);
+      Swal.fire({ title: "Error", text: "Gagal memproses QR: " + err.toString(), icon: "error" });
+    }
+  }
+}
+
+
+/**=========================================================================
+ * HELPER: GENERATE QR BASE64 (Safe for CORS)
+ * ==========================================================================
+ */
+function generateVirtualQR(url) {
+  return new Promise((resolve, reject) => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    // Penting untuk menghindari security error saat toDataURL
+    img.crossOrigin = "Anonymous"; 
+    
+    img.onload = function() {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+      // Ambil data murni base64 (setelah tanda koma)
+      resolve(canvas.toDataURL("image/png").split(',')[1]); 
+    };
+    
+    img.onerror = () => reject("Gagal memuat gambar QR dari API");
+    img.src = url;
+  });
+}
+
+
+/**=========================================================================
+ * [FUNGSI: UPDATE SLIDER - ANTI ERROR URL & RAMAH BLOB]
+ * Memperbarui gambar di slider dengan logika khusus untuk menangani URL foto yang berasal dari Drive (http/lh3) dan foto baru yang masih berupa blob URL.
+ * Logika URL: Jika URL foto berasal dari Drive (http/lh3), kita tambahkan timestamp sebagai query parameter untuk memastikan gambar selalu refresh dan tidak cache. Jika URL foto adalah blob URL (foto baru yang belum disimpan ke Drive), kita tampilkan langsung tanpa menambahkan timestamp agar tidak terjadi error karena blob URL tidak bisa diproses dengan query parameter.
+ * Pastikan fungsi ini dipanggil setiap kali assetImages diperbarui, agar perubahan foto langsung terlihat di slider dengan logika yang benar untuk setiap jenis URL.
+ *==========================================================================
+ */
+function updateImageSlider() {
+  const imgEl = document.getElementById('currAssetImg');
+  if (!imgEl) return;
+
+  // 1. Jika ada foto di array assetImages
+  if (assetImages.length > 0 && assetImages[currentImgIdx]) {
+    let rawUrl = assetImages[currentImgIdx].trim();
+
+    // LOGIKA PERBAIKAN:
+    if (rawUrl.startsWith("blob:")) {
+      // JIKA BLOB: Langsung tampilkan tanpa timestamp agar tidak ERROR
+      imgEl.src = rawUrl;
+    } else {
+      // JIKA DARI DRIVE (http/lh3): Tambahkan timestamp agar gambar selalu refresh
+      // Pastikan membersihkan tanda tanya lama jika ada
+      imgEl.src = rawUrl.split('?')[0] + "?t=" + Date.now();
+    }
+    
+    imgEl.style.opacity = "1";
+  } 
+  // 2. Jika Kosong, gunakan URL Placeholder
+  else {
+    imgEl.src = "https://lh3.googleusercontent.com/d/13Q4RtDMmEMVvErifoZOa_yKiAACUpg7a=s1000";
+    imgEl.style.opacity = "1";
+  }
+}
+
+/**=========================================================================
+ * [FUNGSI: NAVIGASI FOTO ASET]
+ * Memungkinkan user untuk melihat foto aset lainnya jika ada lebih dari satu, dengan logika navigasi yang melingkar (circular).
+ * Logika navigasi: Saat user menekan tombol "Next", kita cek apakah assetImages memiliki foto. Jika ya, kita geser indeks ke kanan (currentImgIdx + 1) dan gunakan modulus untuk membuatnya mel
+ * ingkar ke awal jika sudah mencapai akhir. Saat user menekan tombol "Previous", kita geser indeks ke kiri (currentImgIdx - 1) dan tambahkan panjang array sebelum modulus untuk memastikan hasilnya tetap positif dan melingkar ke akhir jika sudah melewati awal. Setelah mengubah indeks, kita panggil updateImageSlider untuk memperbarui gambar yang ditampilkan sesuai dengan indeks baru.
+ * Pastikan fungsi updateImageSlider sudah benar-benar menggunakan currentImgIdx untuk menampilkan foto yang sesuai di slider agar navigasi berjalan dengan lancar.
+ *==========================================================================
+ */
+function nextAssetImg() {
+  if (assetImages.length > 0) {
+    currentImgIdx = (currentImgIdx + 1) % assetImages.length;
+    updateImageSlider();
+  }
+}
+
+/**=========================================================================
+ * [FUNGSI: NAVIGASI FOTO ASET - PREVIOUS]
+ * Memungkinkan user untuk melihat foto aset sebelumnya dengan logika navigasi yang melingkar (circular).
+ * Logika navigasi: Saat user menekan tombol "Previous", kita cek apakah assetImages memiliki foto. Jika ya, kita geser indeks ke kiri (currentImgIdx - 1) dan tambahkan panjang array sebelum modulus untuk memastikan hasilnya tetap positif dan melingkar ke akhir jika sudah melewati awal. Setelah mengubah indeks, kita panggil updateImageSlider untuk memperbarui gambar yang ditampilkan sesuai dengan indeks baru.
+ * Pastikan fungsi updateImageSlider sudah benar-benar menggunakan currentImgIdx untuk menampilkan foto yang sesuai di slider agar navigasi berjalan dengan lancar.
+ *==========================================================================
+ */
+function prevAssetImg() {
+  if (assetImages.length > 0) {
+    currentImgIdx = (currentImgIdx - 1 + assetImages.length) % assetImages.length;
+    updateImageSlider();
+  }
+}
+
+
+/**=========================================================================
+ * [FUNGSI: TUTUP MODAL ASET]
+ * Menutup modal detail aset dan mereset tampilan serta input ke mode default (Edit Mode) untuk memastikan siap digunakan kembali saat membuka aset lain.
+ * Logika reset: Saat menutup modal, kita pastikan untuk mengembalikan semua input ke mode edit (readOnly = false, disabled = false), menampilkan kembali tombol simpan, dan mengatur ulang tata letak grid jika sebelumnya diubah untuk mode view. Dengan cara ini, setiap kali modal dibuka, user akan selalu memulai dengan tampilan yang konsisten dan siap untuk diedit tanpa harus khawatir tentang sisa state dari aset sebelumnya.
+ * Pastikan fungsi ini dipanggil saat user menekan tombol "Batal/Keluar" di modal detail aset, agar modal benar-benar tertutup dan siap untuk digunakan kembali dengan tampilan default.
+ *==========================================================================
+ */
+function closeAssetModal() {
+  document.getElementById('assetDetailModal').style.display = 'none';
+
+  const btnSave = document.getElementById('btnSaveAsset');
+  const btnBatal = document.getElementById('btnCancelAsset');
+  const actionArea = document.getElementById('assetActionArea');
+
+  // Balikkan Grid ke 2 kolom (Admin Mode)
+  if (actionArea) actionArea.style.gridTemplateColumns = "1fr 1fr";
+  if (btnSave) btnSave.style.display = "block";
+  if (btnBatal) {
+    btnBatal.style.width = "";
+    btnBatal.innerHTML = '<i class="fas fa-times"></i> BATAL/KELUAR';
+  }
+
+  // Balikkan input ke mode Edit
+  document.getElementById('as_nama').readOnly = false;
+  document.getElementById('as_lokasi').readOnly = false;
+  document.getElementById('as_status').disabled = false;
+
+  // --- BUKA/RESET KUNCI DI SINI ---
+  const gallery = document.getElementById('as_gallery_box');
+  if (gallery) {
+    gallery.style.opacity = "1";
+    gallery.style.pointerEvents = "auto";
+    const label = gallery.querySelector('label');
+    if (label) label.innerText = "KELOLA FOTO ASET";
+  }
+}
+

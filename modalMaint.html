@@ -1,0 +1,79 @@
+<div id="modalMaint" class="modal-overlay-custom" style="display:none;">
+  <div class="modal-content-profile maint-form-window">
+    
+    <div class="maint-header-row">
+      <div class="header-title">
+        <h3><i class="fas fa-calendar-plus"></i> Form Jadwal</h3>
+      </div>
+      <div class="maint-id-box">
+        <label class="label-neon-small">MAINT ID (AUTO)</label>
+        <input type="text" id="m_id" disabled value="AUTO" class="input-neon-slim readonly-blue">
+      </div>
+    </div>
+
+    <input type="hidden" id="maintRowIdx">
+
+    <div class="maint-body-scroll scroll-dark-mini">
+      
+      <div class="form-grid-maint-2">
+        <div class="col-1">
+          <label class="label-neon">TIPE ASSET</label>
+          <input type="text" id="m_type" readonly class="input-neon readonly-dim">
+        </div>
+        <div class="col-2">
+          <label class="label-neon">NAMA ASSET</label>
+          <input type="text" id="m_as_nama" readonly class="input-neon readonly-dim">
+        </div>
+      </div>
+
+      <div class="form-grid-equal">
+        <div>
+          <label class="label-neon">ASSET ID</label>
+          <input type="text" id="m_as_id" readonly class="input-neon readonly-dim">
+        </div>
+        <div>
+          <label class="label-neon">STATUS</label>
+          <input type="text" id="m_state" readonly class="input-neon readonly-dim">
+        </div>
+      </div>
+
+      <div class="form-grid-maint-search">
+        <div class="search-field">
+          <label class="label-neon text-orange">ID JADWAL</label>
+          <select id="maint_id_jadwal" class="select-neon-orange">
+            <option value="">Memuat...</option>
+          </select>
+        </div>
+        <button id="btnMaintSearch" onclick="openGlobalSearch()" class="btn-neon-gold-search">
+          <i class="fas fa-search"></i> CARI
+        </button>
+      </div>
+
+      <div class="field-group">
+        <label class="label-neon">PLAN DATE (PELAKSANAAN)</label>
+        <input type="datetime-local" id="m_plan" class="input-neon accent-blue">
+      </div>
+
+      <div class="field-group">
+        <label class="label-neon">SHIFT NOTE</label>
+        <textarea id="m_shift_note" placeholder="Alasan perubahan..." class="input-neon text-area-slim"></textarea>
+      </div>
+
+      <div class="field-group">
+        <label class="label-neon">OTHER NOTE</label>
+        <textarea id="m_other_note" placeholder="Catatan tambahan..." class="input-neon text-area-slim"></textarea>
+      </div>
+
+    </div>
+
+    <div class="maint-footer-row">
+      <button id="btnCreateMaint" onclick="saveMaintData()" class="btn-footer-neon btn-create">
+        <i class="fas fa-plus-circle"></i> CREATE
+      </button>
+      <button onclick="closeMaintModal()" class="btn-footer-neon btn-cancel">
+        <i class="fas fa-times"></i> BATAL
+      </button>
+    </div>
+
+  </div>
+</div>

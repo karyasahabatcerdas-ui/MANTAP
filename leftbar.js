@@ -10,9 +10,15 @@ function toggleleftbar() {
   btn.innerText = isCollapsed ? ">>>" : "<<<";
 }
 
-/**
+/**=====================================================================================
  * FUNGSI UTAMA NAVIGASI: Industrial Stealth Edition
  * Sinkron dengan ID 'leftbar' & Sistem Page
+ * - Menambahkan efek visual LED flash & hentakan untuk feedback klik
+ * - Menambahkan security check untuk halaman admin-only (log_book, aset, db_manager)
+ * - Memperbaiki logika active state pada menu item untuk memastikan hanya satu yang aktif
+ * - Menambahkan transisi halaman yang lebih halus dengan class 'hidden' dan display toggle
+ * - Menambahkan logika pemanggilan data yang lebih aman dengan try-catch dan mapping fungsi
+ * ======================================================================================
  */
 function showPage(id) {
   console.log("🛠️ Membuka halaman: " + id);
@@ -89,35 +95,3 @@ function showPage(id) {
     console.error(`⚠️ Terjadi kesalahan saat memuat data [${id}]:`, err);
   }
 }
-
-/**
- * FUNGSI PEMBANTU: Mengisi Dropdown Jadwal
- */
-function handleJadwalDropdown() {
-  const selT = document.getElementById('filterType');
-  if (selT && typeof cachedAssetTypes !== 'undefined' && selT.options.length <= 1) {
-    cachedAssetTypes.forEach(t => {
-      let opt = new Option(t, t);
-      selT.add(opt);
-    });
-  }
-}
-
-
-/**
-function toggleleftbar() {
-  const side = document.getElementById("leftbar");
-  const btn = document.getElementById("btn-toggle");
-  // Memicu class collapsed (Visual mengecil)
-  side.classList.toggle("collapsed");
-  // Memicu class expanded pada main-content (Layout melebar)
-  const main = document.getElementById("rightbar");
-  if (main) main.classList.toggle("expanded");
-  // Ubah arah panah
-  if (side.classList.contains("collapsed")) {
-    btn.innerText = ">>>";
-  } else {
-    btn.innerText = "<<<";
-  }
-}
-*/
