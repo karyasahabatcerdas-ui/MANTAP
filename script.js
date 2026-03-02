@@ -1494,6 +1494,73 @@ let timerPencarian;
 async function loadJad() {
   clearTimeout(timerPencarian);
   
+  timerPencarian = setTimeout(async function() {
+    const urlGAS = document.getElementById('iframeGAS').src;
+    
+    const fType = document.getElementById('filterType')?.value || "";   
+    const fState = document.getElementById('filterState')?.value || ""; 
+    const sortBy = document.getElementById('sortJadwal')?.value || "";   
+    const keyword = document.getElementById('cari_jadwal')?.value.toUpperCase() || "";
+
+    try {
+      const response = await fetch(`${urlGAS}?action=getJadwalData`);
+      const data = await response.json();
+
+      if (!data || data.length < 2) return;
+      
+      let rawData = data.slice(1); 
+
+      // 3. FILTERING
+      if (fType) rawData = rawData.filter(d => String(d[1]) === fType);
+      if (fState) rawData = rawData.filter(d => String(d[9]) === fState);
+      if (keyword) rawData = rawData.filter(d => d.join(" ").toUpperCase().includes(keyword));
+
+      const now = new Date();
+      
+      // HELPER KONVERSI TANGGAL (Format: dd/mm/yyyy hh:mm)
+      const toDate = (val) => {
+        if (!val || val === "-") return new Date(0);
+        const p = String(val).split(/[\/\s:]/); 
+        if (p.length < 3) return new Date(0);
+        // Date(tahun, bulan-1, tanggal, jam, menit)
+        return new Date(p[2], p[1] - 1, p[0], p[3] || 0, p[4] || 0);
+      };
+
+      // 4. SORTING Berdasarkan Kolom Plan (Index 7)
+      if (sortBy === 'newest') {
+        rawData.sort((a, b) => toDate(b[7]) - toDate(a[7]));
+      } 
+      else if (sortBy === 'oldest') {
+        rawData.sort((a, b) => toDate(a[7]) - toDate(b[7]));
+      } 
+      else if (sortBy === 'two_weeks_ahead') {
+        const limitAhead = new Date();
+        limitAhead.setDate(now.getDate() + 14);
+        rawData = rawData.filter(d => {
+          const dDate = toDate(d[7]);
+          return dDate >= now && dDate <= limitAhead;
+        });
+      } 
+      else if (sortBy === 'two_weeks_back') {
+        const limitBack = new Date();
+        limitBack.setDate(now.getDate() - 14);
+        rawData = rawData.filter(d => {
+          const dDate = toDate(d[7]);
+          return dDate <= now && dDate >= limitBack;
+        });
+      }
+
+      renderJadwalViewIncremental(rawData);
+
+    } catch (err) {
+      console.error("Gagal load jadwal:", err);
+    }
+  }, 400); 
+}
+/**
+async function loadJad() {
+  clearTimeout(timerPencarian);
+  
   // Debounce 400ms agar tidak spam request saat user mengetik
   timerPencarian = setTimeout(async function() {
     const iframe = document.getElementById('iframeGAS');
@@ -1563,13 +1630,42 @@ async function loadJad() {
     }
   }, 400); 
 }
-
+*/
 
 /**======================================================================================================
  * [FUNGSI CLIENT GITHUB: LOAD TABEL KELOLA JADWAL]
  * Mengambil data jadwal dari server dan memanggil fungsi render khusus untuk panel kelola
  * =======================================================================================================
  */
+
+async function loadKel() {
+  const tbody = document.getElementById('kelolaBody');
+  if (!tbody) return;
+
+  const urlGAS = document.getElementById('iframeGAS').src;
+  tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'><i class='fas fa-spinner fa-spin'></i> Memuat panel kelola...</td></tr>";
+
+  try {
+    const response = await fetch(`${urlGAS}?action=getJadwalData`);
+    
+    if (!response.ok) throw new Error("Gagal mengambil data dari server");
+    
+    const data = await response.json(); // Mengambil hasil JSON dari GAS
+
+    if (!data || data.length < 2) {
+      tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>Belum ada jadwal maintenance.</td></tr>";
+      return;
+    }
+    
+    renderKelolaIncremental(data);
+
+  } catch (err) {
+    console.error("CORS atau Network Error:", err);
+    tbody.innerHTML = `<tr><td colspan='5' style='text-align:center; color:red;'>⚠️ Error: ${err.message}</td></tr>`;
+  }
+}
+
+/**
 async function loadKel() {
   const tbody = document.getElementById('kelolaBody');
   if (!tbody) return;
@@ -1599,7 +1695,7 @@ async function loadKel() {
     tbody.innerHTML = "<tr><td colspan='5' style='text-align:center; color:red;'>⚠️ Error koneksi database.</td></tr>";
   }
 }
-
+*/
 
 /**=========================================================================================
  * [FUNGSI: MESIN RENDER KELOLA - TRACING: renderKelolaIncremental]
