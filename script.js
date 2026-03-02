@@ -1409,6 +1409,7 @@ function openDetailLog(logId) {
 
   var modal = document.getElementById('modalDetailHist');
   if (modal) modal.style.display = 'flex';
+  console.log("🔍 Detail Log Dibuka untuk ID:", logId);
 }
 
 
