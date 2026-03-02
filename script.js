@@ -311,7 +311,8 @@ function stopScannerAndProcess(decodedText) {
     if (html5QrCode) {
         html5QrCode.stop().then(() => {
             const modal = document.getElementById('qrModal');
-            modal.classList.remove('active'); // Sembunyikan modal
+            //modal.classList.remove('active'); // Sembunyikan modal
+              modal.style.display = 'none'; // Sembunyikan modal
             
             // Eksekusi Logika Unit ID Anda
             if (decodedText.includes("-")) {
@@ -327,10 +328,12 @@ function stopScannerAndProcess(decodedText) {
 function closeQrModal() {
     if (html5QrCode && html5QrCode.isScanning) {
         html5QrCode.stop().then(() => {
-            document.getElementById('qrModal').classList.remove('active');
+            //document.getElementById('qrModal').classList.remove('active');
+            document.getElementById('qrModal').style.display = 'none';
         });
     } else {
-        document.getElementById('qrModal').classList.remove('active');
+        //document.getElementById('qrModal').classList.remove('active');
+         document.getElementById('qrModal').style.display = 'none';
     }
 }
 
