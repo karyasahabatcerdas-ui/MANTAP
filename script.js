@@ -1225,13 +1225,13 @@ async function loadHist() {
 
     // 3. HANDLING DATA
     if (!res || res.length === 0) {
-      window.allHistoryData = [];
+      allHistoryData = [];
       if(tbody) tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">📭 Data Log Kosong.</td></tr>';
       return;
     }
 
     // Simpan ke variabel global dan render tabel
-    window.allHistoryData = res;
+    allHistoryData = res;
     applyHistoryFilter(); 
 
   } catch (err) {
