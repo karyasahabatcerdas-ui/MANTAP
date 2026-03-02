@@ -91,6 +91,20 @@ function fillGlobalTable(results) {
   tbody.innerHTML = html;
 }
 
+/**=============================================================================
+ * [FUNGSI: LIVE FILTER DALAM MODAL]
+ * Menyaring hasil yang sudah tampil di modal agar makin spesifik.
+ * =============================================================================
+ */
+function filterGlobalResult() {
+  const input = document.getElementById('masterSearchInput').value.toLowerCase();
+  const rows = document.getElementById('globalResultBody').getElementsByTagName('tr');
+  
+  for (let i = 0; i < rows.length; i++) {
+    const text = rows[i].textContent.toLowerCase();
+    rows[i].style.display = text.includes(input) ? "" : "none";
+  }
+}
 /**============================================================================
  * [FUNGSI: NAVIGASI SAKTI - MODE MULTI-PAGE]
  * Mengarahkan hasil Search ke modal yang tepat sesuai halaman aktif.
@@ -163,4 +177,8 @@ function navigateAsset() {
       executeHighlight(row, 'assetBody', false);
     }).getSpecificAssetData(type);
   }
+}
+
+function closeGlobalSearch() {
+  document.getElementById('globalSearchModal').style.display = 'none';
 }

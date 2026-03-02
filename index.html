@@ -29,11 +29,24 @@
     <link rel="stylesheet" href="rightbar.css">
     <link rel="stylesheet" href="modalMaintenanceLog.css">
     <link rel="stylesheet" href="globalSearchModal.css">
-    
+    <style>
+        .iframe-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Pastikan iframe berada di belakang konten utama */
+            display: none; /* Sembunyikan iframe secara default */
+        }
+         /* Pastikan iframe tidak mengganggu interaksi dengan konten utama */
+    </style>
 
 </head>
 <body>
-
+<iframe id="iframeGAS" class="iframe-container"
+  src="https://script.google.com/macros/s/AKfycbyQniu1rWdWY6pgH_sIauEaOouf3E4McTgJIDQQaSyiLyQ9NMGuwf0FVTnunzWd08Dq/exec"
+  ></iframe>
 
 <!--Konten utama di sini -->
 
@@ -57,9 +70,6 @@
 
  <!--Konten utama di sini -->
 <!--IFRAME GAS UNTUK FUNGSI-FUNGSI KHUSUS YANG MEMBUTUHKAN IFRAME (SEPERTI SCANNER QR)-->
-<iframe id="iframeGAS" 
-  src="https://script.google.com/macros/s/AKfycbyQniu1rWdWY6pgH_sIauEaOouf3E4McTgJIDQQaSyiLyQ9NMGuwf0FVTnunzWd08Dq/exec"
-  style="z-index: -1;display: none;"
-  ></iframe>
+
 </body>
 </html>
