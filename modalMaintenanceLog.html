@@ -87,6 +87,28 @@
         <i class="fas fa-check-circle"></i> SELESAI
       </button>
     </div>
+    <!-- jendela untuk scanner QR custom (bukan dari iframe) -->
+    <div id="qrModal" class="modal-qr-gahar">
+        <div class="qr-window">
+            <div class="qr-header">
+                <i class="fa-solid fa-qrcode"></i> SCANNER UNIT ID
+            </div>
+            
+            <div id="reader" class="qr-reader-container"></div>
+            
+            <div class="qr-footer">
+                <button onclick="closeQrModal()" class="btn-qr-action btn-qr-danger">
+                    <i class="fa-solid fa-circle-xmark"></i> TUTUP
+                </button>
+                <button onclick="openGalleryForQR()" class="btn-qr-action btn-qr-primary">
+                    <i class="fa-solid fa-image"></i> GALERI
+                </button>
+            </div>
+        </div>
+    </div>
+
+<!-- Input File Tersembunyi untuk Semua Kebutuhan (QR & Foto) -->
+<input type="file" id="logPhotoInput" accept="image/*" style="display:none;" onchange="handleLogPhotoSelect(this)">
 
   </div>
 </div>

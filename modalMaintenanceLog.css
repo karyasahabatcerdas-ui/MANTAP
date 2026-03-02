@@ -228,3 +228,97 @@
     color: var(--neon-gold); 
     margin: 20px 0 10px 0; 
 }
+
+
+/* MODAL SCANNER QR - THEME GAHAR */
+.modal-qr-gahar {
+    display: none; 
+    position: fixed; 
+    top: 0; left: 0; 
+    width: 100vw; height: 100vh; 
+    background: rgba(15, 23, 42, 0.95); /* Gelap pekat */
+    backdrop-filter: blur(8px);
+    z-index: 10000; /* Paling atas */
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center;
+}
+
+.qr-window {
+    width: 90%;
+    max-width: 400px;
+    background: #0f172a;
+    border: 2px solid var(--neon-gold);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 0 30px rgba(230, 126, 34, 0.3);
+}
+
+.qr-header {
+    background: var(--neon-gold);
+    color: #000;
+    padding: 12px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+
+/* AREA KAMERA */
+.qr-reader-container {
+    width: 100% !important;
+    background: #000 !important;
+    border: none !important;
+}
+
+/* Sembunyikan pesan sukses/error bawaan library jika ada */
+#reader img { display: none; }
+#reader span { color: var(--neon-gold) !important; }
+
+.qr-footer {
+    padding: 20px;
+    display: flex;
+    gap: 12px;
+    background: #1e293b;
+}
+
+.btn-qr-action {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: 0.3s;
+}
+
+.btn-qr-danger { background: #ef4444; }
+.btn-qr-primary { background: #3b82f6; }
+
+.btn-qr-action:active {
+    transform: scale(0.95);
+}
+
+/* Garis pemindai animasi (Opsional) */
+.qr-reader-container::after {
+    content: "";
+    position: absolute;
+    top: 50%; left: 10%;
+    width: 80%; height: 2px;
+    background: var(--neon-gold);
+    box-shadow: 0 0 10px var(--neon-gold);
+    animation: scanning 2s infinite;
+    z-index: 10;
+    pointer-events: none;
+}
+
+@keyframes scanning {
+    0% { top: 20%; }
+    50% { top: 80%; }
+    100% { top: 20%; }
+}
