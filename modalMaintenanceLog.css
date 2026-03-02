@@ -141,53 +141,85 @@
 }
 
 /* 6. PHOTO SECTION (STACK VERTICAL) */
-.photo-stack-maint {
-    display: flex;
-    flex-direction: column; /* MEMAKSA 4 BARIS KE BAWAH */
-    gap: 15px;
-    margin-bottom: 30px;
-}
 
+/**CSS UNTUK AREA THMBNAIL MAINTENANCE LOG (MODAL DETAIL HISTORY) - THEME INDUSTRIAL NEON */
+/* Container Utama dari HTML-mu */
 .photo-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    position: relative;
+    margin-bottom: 15px;
 }
 
 .photo-btn-large {
-    background: #2c3e50; 
+    position: relative; /* Wajib agar thumb di dalam bisa absolute */
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Tengah saat kosong */
+    min-height: 90px;
+    background: #2c3e50;
     border: 2px dashed #4a5568;
-    border-radius: 12px; 
-    padding: 25px 15px; 
-    text-align: center;
-    color: #a0aec0; 
-    cursor: pointer; 
-    transition: 0.3s;
-    width: 100%;
-    box-sizing: border-box;
-}
-.photo-btn-large:hover { 
-    border-color: var(--neon-blue); 
-    color: #fff; 
-    background: #34495e; 
+    border-radius: 12px;
+    overflow: hidden;
+    padding: 10px;
+    transition: all 0.3s ease;
 }
 
-/* AREA UNTUK HASIL FOTO (THUMBNAILS) */
-.thumb-area-maint {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Hasil foto berjajar 3 kesamping */
+/* Label Inside (BEFORE, AFTER, etc) */
+.photo-btn-large div[id^="prev_"] {
+    z-index: 5;
+    transition: all 0.3s ease;
+}
+
+/* Animasi Label Geser ke Kanan saat ada foto */
+.btn-has-content div[id^="prev_"] {
+    position: absolute;
+    right: 15px;
+    text-align: right;
+    font-size: 11px;
+    opacity: 0.7;
+}
+
+/* Area Thumbnail Baru (Dibuat Dinamis oleh JS di dalam Tombol) */
+.inner-thumb-float {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
     gap: 8px;
-    margin-top: 5px;
+    z-index: 10;
 }
 
-.thumb-area-maint img {
-    width: 100%;
-    aspect-ratio: 1/1;
+.thumb-wrapper {
+    position: relative;
+    width: 65px;
+    height: 65px;
+}
+
+.thumb-wrapper img {
+    width: 65px;
+    height: 65px;
     object-fit: cover;
-    border-radius: 5px;
-    border: 1px solid var(--border-dim);
+    border-radius: 8px;
+    border: 2px solid var(--neon-blue);
 }
 
+.btn-delete-float {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #ef4444;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #1e293b;
+    z-index: 20;
+    cursor: pointer;
+}
 /* 7. FOOTER ACTION BUTTONS */
 .maint-footer { 
     display: grid; 

@@ -299,9 +299,11 @@ async function openCustomScanner() {
         console.error("Kamera Error:", err);
         Swal.fire({
             title: "Kamera Tidak Ditemukan",
-            text: "Gunakan fitur Upload Galeri sebagai cadangan.",
+            text: "Gunakan fitur Upload Galeri.",
             icon: "warning",
             width: '80%'
+        }).then(() => {
+          openGalleryForQR(); // Langsung trigger klik input file
         });
     });
 }
@@ -359,26 +361,123 @@ function capturePhoto(category) {
     document.getElementById('logPhotoInput').click();
 }
 
+
+/**================================================================================================================================
+ *  FUNGSI CAPTURE PHOTO DENGAN KAMERA & GALERI (DOKUMENTASI MAINTENANCE)
+ * ================================================================================================================================
+ */ 
+ let stream; //variabel global untuk menyimpan stream kamera agar bisa dimatikan saat modal ditutup
+
+// --- 1. BUKA KAMERA DOKUMENTASI ---
+async function capturePhoto(category) {
+    window.currentCategory = category;
+    document.getElementById('camLabel').innerText = category;
+    const modal = document.getElementById('camModal');
+    const video = document.getElementById('videoFeed');
+
+    try {
+        // Minta akses kamera belakang secara paksa
+        stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: { exact: "environment" } }
+        });
+    } catch (err) {
+        // Jika kamera belakang tidak ditemukan (misal di laptop), coba kamera apapun
+        try {
+            stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        } catch (e) {
+            console.error("Kamera Error:", e);
+            speakSenor("Kamera ghoib Señor, silakan pakai galeri.");
+            openGalleryFromCam(); // Auto-switch ke galeri jika kamera gagal
+            return;
+        }
+    }
+
+    video.srcObject = stream;
+    modal.style.display = 'flex';
+}
+
+/**================================================================================================================================
+ * FUNGSI TOMBOL JEPRET FOTO & LOGIKA PENYIMPANAN SEMENTARA
+ * ================================================================================================================================
+ */
+
+// --- 2. AMBIL FOTO (CAPTURE) ---
+async function takeSnapshot() {
+    const video = document.getElementById('videoFeed');
+    const canvas = document.getElementById('photoCanvas');
+    const context = canvas.getContext('2d');
+    const cat = window.currentCategory;
+
+    // Set ukuran canvas sesuai video feed
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    // Ambil data Base64
+    const base64Data = canvas.toDataURL('image/jpeg', 0.8); // Kualitas 80% biar hemat memori
+    const asId = document.getElementById('log_ui_asid').innerText.trim();
+    const dateTag = await getMMDDYY();
+
+    // Masukkan ke laci memori tempPhotos
+    tempPhotos[cat].push({
+        name: `${asId}_${dateTag}_${cat}_${tempPhotos[cat].length + 1}.jpg`,
+        mimeType: 'image/jpeg',
+        data: base64Data.split(',')[1] // Base64 murni tanpa header
+    });
+
+    if (typeof renderPhotoPreview === "function") renderPhotoPreview(cat);
+    speakSenor(`Foto ${cat} siap Señor!`);
+    closeCamModal();
+}
+
+/**================================================================================================================================
+ * FUNGSI GALERI UNTUK SCAN QR & FOTO DOKUMENTASI
+ * ================================================================================================================================
+ */
+
+// --- 3. LOGIKA GALERI & TUTUP ---
+function openGalleryFromCam() {
+    closeCamModal();
+    document.getElementById('logPhotoInput').click();
+}
+
+function closeCamModal() {
+    if (stream) {
+        stream.getTracks().forEach(track => track.stop()); // Matikan lampu kamera
+    }
+    document.getElementById('camModal').style.display = 'none';
+}
+
+/**================================================================================================================================
+ * FUNGSI HANDLE FILE INPUT UNTUK SCAN QR & FOTO DOKUMENTASI
+ * =================================================================================================================================
+ */
+
 async function handleLogPhotoSelect(input) {
     if (!input.files || !input.files[0]) return;
     const imageFile = input.files[0];
 
     // JALUR 1: SCAN QR DARI GALERI
-    if (window.currentCategory === 'SCAN') {
-        const scannerDummy = new Html5Qrcode("reader"); 
+    if (window.currentCategory === 'SCAN') {        
         speakSenor("Lagi baca QR dari galeri Señor.");
-        
-        scannerDummy.scanFile(imageFile, true)
-            .then(decodedText => {
-                if (decodedText.includes("-")) {
-                    const unitID = decodedText.split("-")[1].trim();
-                    fetchAssetDetailForLog(unitID);
-                }
-            })
-            .catch(err => {
-                Swal.fire({ title: "Gagal!", text: "QR galeri tidak terbaca.", icon: "error" });
-            });
-        input.value = "";
+
+        const scannerDummy = new Html5Qrcode("reader"); 
+try {
+            const decodedText = await scannerFile.scanFile(imageFile, true);
+            if (decodedText.includes("-")) {
+                const unitID = decodedText.split("-")[1].trim();
+                if (navigator.vibrate) navigator.vibrate(150);
+                fetchAssetDetailForLog(unitID);
+                speakSenor("QR sukses Señor!");
+            } else {
+                throw new Error("Format salah");
+            }
+        } catch (err) {
+            console.error("QR Error:", err);
+            speakSenor("Gagal baca QR Señor.");
+            Swal.fire({ title: "Gagal!", text: "QR tidak terdeteksi di foto ini.", icon: "error" });
+        }
+        input.value = ""; 
         return;
     }
 
@@ -411,76 +510,68 @@ async function handleLogPhotoSelect(input) {
  */
 function renderPhotoPreview(cat) {
   const btn = document.getElementById(`btn_${cat}`);
-  if (!btn) return;
+  const prevLabel = document.getElementById(`prev_${cat}`);
+  if (!btn || !prevLabel) return;
 
-  let thumbArea = document.getElementById(`thumb_area_${cat}`);  
-  if (!thumbArea) {
-    thumbArea = document.createElement('div');
-    thumbArea.id = `thumb_area_${cat}`;
-    thumbArea.style = "display:flex; gap:8px; margin-top:10px; overflow-x:auto; padding:5px; border-top:1px solid #eee; scroll-behavior: smooth;";
-    btn.appendChild(thumbArea);
-  }  
-  
-  thumbArea.innerHTML = "";  
-  
+  // Sembunyikan thumb_area bawaan HTML (karena kita pindah ke dalam tombol)
+  const externalThumb = document.getElementById(`thumb_area_${cat}`);
+  if(externalThumb) externalThumb.style.display = 'none';
+
+  const count = tempPhotos[cat].length;
+
+  // 1. KONDISI KOSONG
+  if (count === 0) {
+    btn.classList.remove('btn-has-content');
+    resetSingleCategoryUI(cat);
+    return;
+  }
+
+  // 2. KONDISI ISI
+  btn.classList.add('btn-has-content');
+  btn.style.borderColor = "var(--neon-blue)";
+  btn.style.background = "rgba(56, 189, 248, 0.05)";
+
+  // Cari atau buat area thumb di dalam tombol
+  let innerThumb = btn.querySelector('.inner-thumb-float');
+  if (!innerThumb) {
+    innerThumb = document.createElement('div');
+    innerThumb.className = 'inner-thumb-float';
+    btn.appendChild(innerThumb);
+  }
+  innerThumb.innerHTML = ""; // Bersihkan
+
+  // 3. RENDER FOTO MELAYANG
   tempPhotos[cat].forEach((img, index) => {
-    const container = document.createElement('div');
-    container.style = "position:relative; flex:0 0 60px; height:60px;";    
-    
-    const image = document.createElement('img');
-    
-    // Penentuan Sumber Gambar
-    if (typeof img === 'string' && img.startsWith('http')) {
-      image.src = driveLinkToDirect(img); 
-    } else {
-      image.src = "data:" + img.mimeType + ";base64," + img.data;
-    }
-    
-    image.style = "height:60px; width:60px; object-fit:cover; border-radius:8px; border:2px solid #fff; box-shadow:0 2px 4px rgba(0,0,0,0.2); cursor:pointer;";    
+    const wrapper = document.createElement('div');
+    wrapper.className = "thumb-wrapper";
 
-    // --- FITUR BARU: KLIK UNTUK PERBESAR (PREVIEW) ---
+    const image = document.createElement('img');
+    image.src = (typeof img === 'string' && img.startsWith('http')) 
+                ? driveLinkToDirect(img) 
+                : "data:" + img.mimeType + ";base64," + img.data;
+    
     image.onclick = (e) => {
       e.stopPropagation();
-      Swal.fire({
-        imageUrl: image.src,
-        imageAlt: 'Preview Foto',
-        showConfirmButton: false,
-        showCloseButton: true,
-        background: 'rgba(0,0,0,0.9)',
-        width: '100%',
-        padding: '0'
-      });
-      //.then(() => activateFullscreen()); // Balik ke Fullscreen setelah lihat foto
+      Swal.fire({ imageUrl: image.src, background: '#0f172a', showConfirmButton: false });
     };
-    
-    // Tombol Hapus (X)
-    const delX = document.createElement('div');
-    delX.innerHTML = "×";
-    delX.style = "position:absolute; top:-5px; right:-5px; background:#e74c3c; color:white; width:22px; height:22px; border-radius:50%; font-size:16px; display:flex; align-items:center; justify-content:center; cursor:pointer; border:2px solid white; z-index: 10;";
-    
-    delX.onclick = (e) => {
-      e.stopPropagation();
-      removeSinglePhoto(cat, index); // Memanggil fungsi hapus dengan konfirmasi
-    };    
-    
-    container.appendChild(image);
-    container.appendChild(delX);
-    thumbArea.appendChild(container);
-  });  
 
-  // Update Label & Warna Tombol Utama
-  const count = tempPhotos[cat].length;
-  const label = btn.querySelector('b') || btn.querySelector('span');
-  if(label) {
-    label.innerText = `${cat} (${count} FOTO)`;
-    // Berikan indikasi warna hijau jika sudah ada foto
-    btn.style.background = count > 0 ? "#f0fff4" : "#fffaf5";
-    btn.style.borderColor = count > 0 ? "#27ae60" : "#e67e22";
-  }
-  
-  if(count === 0) resetSingleCategoryUI(cat);
+    const delBtn = document.createElement('div');
+    delBtn.className = "btn-delete-float";
+    delBtn.innerHTML = "&times;";
+    delBtn.onclick = (e) => {
+      e.stopPropagation(); // Biar kamera gak kebuka pas mau hapus
+      removeSinglePhoto(cat, index);
+    };
+
+    wrapper.appendChild(image);
+    wrapper.appendChild(delBtn);
+    innerThumb.appendChild(wrapper);
+  });
+
+  // Update Teks Label (Tetap terlihat di sebelah kanan)
+  const title = (cat === 'PB') ? 'BEFORE' : (cat === 'PO') ? 'ON WORK' : (cat === 'PA') ? 'AFTER' : 'CHECKSHEET';
+  prevLabel.innerHTML = `<b>${title}</b><br><small>${count}/3 FOTO</small>`;
 }
-
 /**=========================================================================
  * [FUNGSI: REMOVE FOTO DENGAN KONFIRMASI SWAL]
  * ==========================================================================

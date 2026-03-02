@@ -39,6 +39,7 @@
     <input type="hidden" id="log_time_mulai">
     <input type="hidden" id="log_petugas">
     <input type="hidden" id="Act_online"> 
+    
     <canvas id="photoCanvas" style="display:none;"></canvas>
     <div class="maint-section">
       <label class="section-label">CATATAN KERJA (NOTE)</label>
@@ -106,6 +107,34 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Kamera Dokumentasi (Gahar Style) -->
+    <div id="camModal" class="modal-qr-gahar" style="display:none;">
+        <div class="qr-window">
+            <div class="qr-header">
+                <i class="fa-solid fa-camera"></i> KAMERA: <span id="camLabel">...</span>
+            </div>
+            
+            <!-- Video Stream Preview -->
+            <div class="qr-reader-container">
+                <video id="videoFeed" autoplay playsinline style="width:100%; height:100%; object-fit:cover;"></video>
+                <canvas id="photoCanvas" style="display:none;"></canvas>
+            </div>
+            
+            <div class="qr-footer">
+                <button onclick="takeSnapshot()" class="btn-qr-action btn-qr-success">
+                    <i class="fa-solid fa-circle-dot"></i> CAPTURE
+                </button>
+                <button onclick="openGalleryFromCam()" class="btn-qr-action btn-qr-primary">
+                    <i class="fa-solid fa-image"></i> GALERI
+                </button>
+                <button onclick="closeCamModal()" class="btn-qr-action btn-qr-danger">
+                    <i class="fa-solid fa-circle-xmark"></i> BATAL
+                </button>
+            </div>
+        </div>
+    </div>
+
 
 <!-- Input File Tersembunyi untuk Semua Kebutuhan (QR & Foto) -->
 <input type="file" id="logPhotoInput" accept="image/*" style="display:none;" onchange="handleLogPhotoSelect(this)">
