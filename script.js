@@ -792,7 +792,7 @@ async function startMaintenanceModeUpdate() {
   const urlGAS = document.getElementById('iframeGAS').src;
 
   // 1. VALIDASI DATA AWAL
-  if (!window.activeRowData || window.activeRowData.length === 0) {
+  if (!activeRowData || activeRowData.length === 0) {
     await Swal.fire({
       title: "Data Tidak Ditemukan!",
       text: "Silakan pilih baris terlebih dahulu, Señor.",
@@ -802,7 +802,7 @@ async function startMaintenanceModeUpdate() {
     return; 
   }
 
-  const data = window.activeRowData; 
+  const data = activeRowData; 
 
   // 2. TAMPILKAN LOADING
   Swal.fire({
@@ -1365,7 +1365,7 @@ function openDetailLog(logId) {
   var data = allHistoryData.find(function(row) { return row[0] === logId; });
   if (!data) return Swal.fire("Data Ghoib!", "ID Log tidak ditemukan, Señor!", "error");
 
-  window.activeRowData = data; 
+  activeRowData = data; 
 
   var setEl = function(id, val) {
     var el = document.getElementById(id);
@@ -1713,7 +1713,7 @@ async function goMaint(rowIdx) {
   const urlGAS = document.getElementById('iframeGAS').src;
 
   // 1. VALIDASI DATA AWAL
-  if (!window.activeRowData || window.activeRowData.length === 0) {
+  if (!activeRowData || activeRowData.length === 0) {
     await Swal.fire({
       title: "Data Tidak Ditemukan!",
       text: "Silakan pilih baris terlebih dahulu, Señor.",
@@ -1723,7 +1723,7 @@ async function goMaint(rowIdx) {
     return; 
   }
 
-  const data = window.activeRowData; 
+  const data = activeRowData; 
 
   // 2. TAMPILKAN LOADING
   Swal.fire({
