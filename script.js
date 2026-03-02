@@ -1409,7 +1409,77 @@ function openDetailLog(logId) {
 
   var modal = document.getElementById('modalDetailHist');
   if (modal) modal.style.display = 'flex';
-  //activateFullscreen();
+}
+
+
+/**=========================================================================
+ * [FUNGSI: UPDATE THUMBNAIL FOTO ASET]
+ * Memperbarui thumbnail foto aset di tampilan utama berdasarkan URL foto yang disimpan, dengan logika khusus untuk menangani kasus URL kosong atau tidak valid.
+ * Logika thumbnail: Jika URL foto kosong atau hanya berisi spasi, kita tampilkan ikon placeholder dan label "0 Foto". Jika URL foto valid, kita ambil URL pertama (jika ada banyak), konversi ke direct link jika berasal dari Drive, dan set sebagai background image thumbnail. Kita juga update label jumlah foto berdasarkan jumlah URL yang ada. Untuk label waktu, kita bisa menampilkan waktu saat ini atau data waktu yang terkait dengan foto jika tersedia.
+ * Pastikan fungsi ini dipanggil setiap kali data aset diperbarui, agar thumbnail di tampilan utama selalu mencerminkan kondisi terbaru dari foto yang terkait dengan aset tersebut.
+ *==========================================================================
+ */
+
+function updateThumbnail(targetId, rawUrls) {
+  var el = document.getElementById(targetId);
+  var suffix = targetId.split('_')[1]; // mengambil 'before', 'on', dll
+  var elCount = document.getElementById('cnt_' + suffix);
+  var elTime = document.getElementById('time_' + suffix);
+  
+  if (!el) return;
+
+  if (!rawUrls || rawUrls.toString().trim() === "") {
+    el.style.backgroundImage = "none";
+    el.innerHTML = '<i class="fas fa-image" style="color:#ccc; font-size:30px;"></i>';
+    if (elCount) elCount.innerText = "0 Foto";
+    if (elTime) elTime.innerText = "-";
+    return;
+  }
+
+  var parts = rawUrls.toString().split(",");
+  var count = parts.length;
+  var firstUrl = parts[0].trim();
+  
+  // 1. Update Gambar
+  el.innerHTML = "";
+  el.style.backgroundImage = "url('" + driveLinkToDirect(firstUrl) + "')";
+  el.style.backgroundSize = "cover";
+  el.style.backgroundPosition = "center";
+
+  // 2. Update Label Jumlah
+  if (elCount) elCount.innerText = count + " Foto";
+
+  // 3. Update Label Waktu (Jika namafoto mengandung jam, atau pakai jam input)
+  // Untuk sementara kita ambil jam saat ini sebagai simulasi jika data jam tidak ada di kolom
+  if (elTime) {
+     var now = new Date();
+     elTime.innerText = now.getHours() + ":" + (now.getMinutes()<10?'0':'') + now.getMinutes();
+  }
+}
+
+
+/**=========================================================================
+ * [FUNGSI: KONVERTER DRIVE KE LH3]
+ * Memperbaiki URL agar bisa dibaca langsung oleh IMG tag
+ * Logika konversi: Jika URL mengandung "drive.google.com", kita ekstrak ID file menggunakan regex yang aman, lalu kita buat URL baru dengan format "https://lh3.googleusercontent.com/d/ID_FILE" yang bisa langsung digunakan sebagai sumber gambar di tag IMG. Jika URL tidak mengandung "drive.google.com", kita kembalikan URL asli tanpa perubahan.
+ * Pastikan fungsi ini dipanggil setiap kali kita ingin menampilkan gambar dari URL yang mungkin berasal dari Drive, agar gambar bisa langsung muncul tanpa error di halaman web.
+ *==========================================================================
+ */
+function driveLinkToDirect(url) {
+  if (!url || typeof url !== 'string') return "";
+  if (url.indexOf("drive.google.com") === -1) return url;
+
+  // Ekstrak ID File (Regex aman)
+  var regex = /[-\w]{25,}/;
+  var match = url.match(regex);
+  
+  if (match && match[0]) {
+    var fileId = match[0];
+    // Pastikan format URL lh3 lengkap dan benar
+    return "https://lh3.googleusercontent.com/d/" + fileId;
+
+  }
+  return url;
 }
 
 /**=================================================================================
@@ -2775,4 +2845,3 @@ function closeAssetModal() {
     if (label) label.innerText = "KELOLA FOTO ASET";
   }
 }
-
