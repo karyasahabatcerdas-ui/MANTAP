@@ -7,7 +7,7 @@
     border-radius: 15px;
     border: 1px solid var(--border-dim);
     overflow: hidden;
-    z-index: 1200;
+    z-index: 999999;
 }
 
 /* Header Grid */
