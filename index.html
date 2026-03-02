@@ -33,16 +33,29 @@
 
 </head>
 <body>
-/** matikan sementara untuk testing */
-// ada iframe
-  /** Konten utama di sini */
+<!--Konten utama di sini -->
+<!--IFRAME GAS UNTUK FUNGSI-FUNGSI KHUSUS YANG MEMBUTUHKAN IFRAME (SEPERTI SCANNER QR)-->
+
+<iframe id="iframeGAS" 
+  src="https://script.google.com/macros/s/AKfycbwwhJbsUm691F6FNIQ3E8jkBuEdu2xAQe1SchuFKA9JU00K3qvVRSnaEcHrcXliNK-_Ag/exec"
+
+  > </iframe>
+
+  
+<!--
+  allow="microphone; camera *; display-capture; fullscreen; self https://script.google.com/;" 
+  sandbox="allow-forms allow-scripts allow-same-origin allow-popups allow-modals allow-downloads allow-top-navigation-by-user-activation"
+  style="width:100%; height:100vh; border:none;">   </iframe>
+-->
+
+<!--Konten utama di sini -->
 
 <main id="main-content" class="cmain-content">
     <div id="leftbar-placeholder"></div>
 
     <div class="inner-content">
-    <!-- <h1>Selamat Datang di Portal Native</h1>
-        <p>Konten ini bukan lagi di dalam Iframe.</p>    -->
+    <h1>Selamat Datang di Portal Native</h1>
+        <p>Konten ini bukan lagi di dalam Iframe.</p>   
         <div id="rightbar-placeholder"></div>
     </div>
 </main>

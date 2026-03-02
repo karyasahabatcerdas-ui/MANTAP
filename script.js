@@ -30,7 +30,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
-
+// Simpan URL Iframe GAS untuk referensi di fungsi lain (opsional, tergantung kebutuhan navigasi)
+const urlGAS = document.getElementById('iframeGAS').src;
 
 
 /**=============================================================================
@@ -39,24 +40,28 @@ document.addEventListener("DOMContentLoaded", () => {
  * ==============================================================================
  */
 
-function openGlobalSearch() {
+async function openGlobalSearch() {
   const tbody = document.getElementById('globalResultBody');
   const input = document.getElementById('masterSearchInput');
+  const iframe = document.getElementById('iframeGAS');
+  const urlGAS = iframe.src;
   
   tbody.innerHTML = "<tr><td colspan='5' style='text-align:center; padding:20px;'><i class='fas fa-spinner fa-spin'></i> Menyisir seluruh database...</td></tr>";
   input.value = "";
   document.getElementById('globalSearchModal').style.display = 'flex';
   document.getElementById('masterSearchInput').focus();
 
-  // Panggil server tanpa filter awal (ambil semua) atau sesuaikan dengan input
-  google.script.run.withSuccessHandler(function(res) {
+  // Memanggil server menggunakan GET dengan parameter action dan keyword
+  try {
+    const response = await fetch(`${urlGAS}?action=searchAllAssets&keyword=`);
+    const res = await response.json();
     fillGlobalTable(res);
-  }).searchAllAssets(""); // Mengambil semua data dari db_maintenance
+  } catch (err) {
+    console.error("Gagal melakukan pencarian:", err);
+    tbody.innerHTML = "<tr><td colspan='5' style='text-align:center; color:red;'>⚠️ Gagal terhubung ke server.</td></tr>";
+  }
 }
 
-function closeGlobalSearch() {
-  document.getElementById('globalSearchModal').style.display = 'none';
-}
 
 /**=============================================================================
  * [FUNGSI: ISI TABEL HASIL GLOBAL SEARCH - SEÑOR ENTERPRISE VERSION]
