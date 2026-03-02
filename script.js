@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadComponent('modalGlobalSearch-placeholder', 'modalGlobalSearch.html');
     loadComponent('modalMaint-placeholder', 'modalMaint.html');
     loadComponent('modalDetailHist-placeholder', 'modalDetailHist.html');
+    loadComponent('modalAssetDetail-placeholder', 'modalAssetDetail.html');
 
 });
 
