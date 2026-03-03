@@ -2350,15 +2350,18 @@ function renderViewDropdown(types) {
  * Dipakai oleh Admin (Edit) maupun User (Lihat).
  * Kita tambahkan Reset UI di awal agar tidak ada tombol yang "ketinggalan" hidden.
  */
-
+/**
+ * [FUNGSI UTAMA: BUKA MODAL DETIL ASET - VERSI GET]
+ */
 async function openAssetDetail(sheetName, row) {
   // --- 1. RESET & PERSIAPAN UI ---
   const btnSave = document.getElementById('btnSaveAsset');
   const btnBatal = document.getElementById('btnCancelAsset');
   const actionArea = document.getElementById('assetActionArea');
   const btnTake = document.querySelector("button[onclick='takeAssetPhoto()']");
+  const modal = document.getElementById('assetDetailModal');
 
-  // Reset tampilan modal ke mode edit/admin
+  // Munculkan elemen yang mungkin tersembunyi
   if (btnSave) btnSave.style.display = "block";
   if (btnTake && btnTake.parentElement) btnTake.parentElement.style.display = "flex";
   if (actionArea) actionArea.style.gridTemplateColumns = "1fr 1fr";
@@ -2369,79 +2372,80 @@ async function openAssetDetail(sheetName, row) {
     btnBatal.innerHTML = '<i class="fas fa-times"></i> BATAL/KELUAR';
   }
 
-  // Buka kunci input
+  // Buka kunci input (Editable mode)
   document.getElementById('as_nama').readOnly = false;
   document.getElementById('as_lokasi').readOnly = false;
   document.getElementById('as_status').disabled = false;
 
-  // Set hidden input untuk identitas baris
+  // Set ID baris ke hidden input agar tahu baris mana yang akan di-update nanti
   document.getElementById('assetRowIdx').value = row;
   document.getElementById('as_type').value = sheetName;
 
-  // --- 2. LOGIKA AMBIL DATA VIA POST ---
+  // --- 2. AMBIL DATA DARI DATABASE (GOOGLE APPS SCRIPT) ---
   const iframe = document.getElementById('iframeGAS');
-  if (!iframe || !iframe.src) {
-    return alert("URL Server (GAS) tidak ditemukan!");
-  }
-  
-  const urlGAS = iframe.src;
-  console.log("Mengambil data via POST ke:", urlGAS);
+  if (!iframe || !iframe.src) return alert("Error: URL Script (GAS) tidak ditemukan!");
 
-  // Tampilkan loading sederhana (opsional)
-  document.getElementById('as_nama').value = "Memuat...";
+  // Ambil URL dasar dari iframe (menghilangkan fragment jika ada)
+  const baseUrl = iframe.src.split('?')[0];
+  
+  // Susun Query Parameter untuk doGet
+  const params = new URLSearchParams({
+    action: 'getSingleAssetData',
+    sheetName: sheetName,
+    row: row
+  });
+
+  const finalUrl = `${baseUrl}?${params.toString()}`;
+  console.log("Fetching Data (GET):", finalUrl);
+
+  // Indikator loading pada input nama
+  const inputNama = document.getElementById('as_nama');
+  const originalPlaceholder = inputNama.placeholder;
+  inputNama.value = "Memuat data...";
 
   try {
-    const response = await fetch(urlGAS, {
-      method: "POST",
-      // Google Apps Script membutuhkan mode 'no-cors' jika tidak mengembalikan header CORS,
-      // tapi untuk doPost yang mengembalikan JSON, default fetch biasanya cukup.
-      body: JSON.stringify({
-        action: "getSingleAssetData",
-        payload: {
-          sheetName: sheetName,
-          row: parseInt(row)
-        }
-      })
-    });
-
-    if (!response.ok) throw new Error("Respon server gagal");
+    const response = await fetch(finalUrl);
+    
+    if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
 
     const data = await response.json();
 
-    if (!data || data.length === 0) {
-      alert("Data tidak ditemukan di baris " + row);
-      return;
+    // Cek jika data kosong atau ada error dari server
+    if (!data || data.length === 0 || data.error) {
+      throw new Error(data.error || "Data tidak ditemukan di database.");
     }
 
     // --- 3. MAPPING DATA KE FORM ---
-    // Sesuai urutan kolom: A=ID, C=Nama, D=Lokasi, E=Status (Index 0, 2, 3, 4)
+    // Sesuai urutan kolom Spreadsheet: A=0(ID), B=1(Tipe), C=2(Nama), D=3(Lokasi), E=4(Status), F=5(Foto)
     document.getElementById('as_id').value     = data[0] || ""; 
     document.getElementById('as_nama').value   = data[2] || "";   
     document.getElementById('as_lokasi').value = data[3] || ""; 
     document.getElementById('as_status').value = data[4] || "Baik";
 
-    // Mapping Foto (Kolom F = Index 5)
+    // Mapping Foto (Kolom F / Index 5)
     const photoString = data[5] ? data[5].toString() : ""; 
+    // assetImages adalah variabel global untuk slider
     assetImages = photoString.split(",").map(s => s.trim()).filter(s => s !== "");
     currentImgIdx = 0;
     
-    // Fungsi slider foto (pastikan fungsi ini ada di script kamu)
+    // Update Slider & QR Code (Jika fungsi tersedia)
     if (typeof updateImageSlider === 'function') updateImageSlider();
-
-    // Update QR Code jika ada
     if (typeof updateQRCode === 'function') {
+      // data[0] adalah ID Aset untuk generate QR
       updateQRCode(sheetName, data[0]);
     }
 
-    // Tampilkan Modal
-    document.getElementById('assetDetailModal').style.display = 'flex';
+    // Tampilkan Modal setelah semua data siap
+    if (modal) modal.style.display = 'flex';
 
   } catch (err) {
-    console.error("Error Detail Aset:", err);
-    alert("Gagal memuat detail aset. Pastikan koneksi internet stabil dan Deployment GAS sudah benar.");
-    document.getElementById('as_nama').value = "";
+    console.error("Gagal Memuat Detail Aset:", err);
+    alert("⚠️ Error: " + err.message);
+    inputNama.value = "";
+    inputNama.placeholder = originalPlaceholder;
   }
 }
+
 
 /**=========================================================================
  * [FUNGSI: LIHAT ASET DETIL - MODE VIEW ONLY]
