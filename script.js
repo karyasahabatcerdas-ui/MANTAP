@@ -132,74 +132,64 @@ function filterGlobalResult() {
  * Mengarahkan hasil Search ke modal yang tepat sesuai halaman aktif.
  * ============================================================================
  */
-function navigateAsset() {
+async function navigateAsset() {
   const selected = document.querySelector('input[name="selAset"]:checked');
   if (!selected) return alert("Pilih aset dulu bos!");
-  const [type, row] = selected.value.split('|');
-  // Ambil ID Aset dari atribut data-asid yang kita buat tadi
-  const unitID = selected.getAttribute('data-asid');   
-  // LOGIKA: JIKA MODAL MAINTENANCE LAGI KEBUKA (MODE PILIH MANUAL)
-
-
-  //KETIKA TERPILIH 'ModalMaintenanceLog'
-  const modalMaint = document.getElementById('modalMaintenanceLog');
   
-  if (modalMaint && modalMaint.style.display === 'block') {
-    console.log("masuk globalsearch di :"+ modalMaint);
-    console.log("📥 Mapping Unit ID: " + unitID);    
-    // Panggil fungsi penarik data
+  const [type, row] = selected.value.split('|');
+  const unitID = selected.getAttribute('data-asid');   
+  const urlGAS = document.getElementById('iframeGAS').src; // URL Web App Anda
+
+  // --- LOGIKA 1: MODAL MAINTENANCE LOG (SEARCH UNIT ID) ---
+  const modalMaintLog = document.getElementById('modalMaintenanceLog');
+  if (modalMaintLog && modalMaintLog.style.display === 'block') {
     fetchAssetDetailForLog(unitID);    
-    closeGlobalSearch(); // Tutup searchnya saja
+    closeGlobalSearch();
     return; 
   }
 
-  // LOGIKA: JIKA MULAI DARI HALAMAN HISTORY (START MODE)
-  if (window.isMaintMode) {
-    const [type, row] = selected.value.split('|');
-    closeGlobalSearch();
-    window.isMaintMode = false;
-    //openMaintenanceLog(parseInt(row) + 1); 
-    return;
-  }
-
-  // NAVIGASI NORMAL LAINNYA
-  // --- LOGIKA BARU: CEK JIKA SEDANG INPUT JADWAL ---
-  // Jika modalMaint sedang terbuka, maka isi datanya ke modal tersebut
+  // --- LOGIKA 2: INPUT JADWAL (GET SINGLE ASSET) ---
   if (document.getElementById('modalMaint').style.display === 'flex') {
-    google.script.run.withSuccessHandler(function(data) {
-      if (!data) return alert("Data aset gagal diambil!");
-      console.log("masuk globalsearch di : modalMaint input jadwal");
-      // Isi data ke input modal jadwal sesuai mapping kolom (A=0, C=2)
-      document.getElementById('m_as_id').value = data[0];   // ID ASSET
-      document.getElementById('m_type').value = type;      // TIPE
-      document.getElementById('m_as_nama').value = data[2]; // NAMA
-      
-      closeGlobalSearch(); // Tutup modal search
-      console.log("✅ Data Aset berhasil di-import ke Form Jadwal");
-    }).getSingleAssetData(type, row);
-    return; // STOP! Jangan lanjut ke pindah halaman
-  }
-  // --- LOGIKA LAMA: NAVIGASI HALAMAN (TETAP AMAN) ---
-  closeGlobalSearch();
-  // (Navigasi lama yang tidak butuh Jendela Modal...)
-    const currentPage = document.querySelector('.page:not(.hidden)').id;
+    try {
+      // Menggunakan GET dengan query parameter
+      const resp = await fetch(`${urlGAS}?action=getSingleAssetData&sheetName=${type}&row=${row}`);
+      const data = await resp.json();
 
-  if (currentPage === 'page_lihat_aset') {
-    document.getElementById('viewAssetTypeSelect').value = type;
-    console.log("masuk globalsearch di : "+ currentPage);
-    google.script.run.withSuccessHandler(function(data) {
+      if (!data || data.length === 0) return alert("Data aset gagal diambil!");
+      
+      document.getElementById('m_as_id').value = data[0];   
+      document.getElementById('m_type').value = type;      
+      document.getElementById('m_as_nama').value = data[2]; 
+      
+      closeGlobalSearch();
+    } catch (err) {
+      console.error("Error fetch asset:", err);
+    }
+    return; 
+  }
+
+  // --- LOGIKA 3: NAVIGASI HALAMAN (GET SPECIFIC ASSET DATA) ---
+  closeGlobalSearch();
+  const currentPage = document.querySelector('.page:not(.hidden)').id;
+
+  try {
+    const resp = await fetch(`${urlGAS}?action=getSpecificAsset&sheetName=${type}`);
+    const data = await resp.json();
+
+    if (currentPage === 'page_lihat_aset') {
+      document.getElementById('viewAssetTypeSelect').value = type;
       renderAssetTableIncrementalView(type, data); 
       executeHighlight(row, 'viewAssetBody', true);
-    }).getSpecificAssetData(type);
-  } else {
-    document.getElementById('assetTypeSelect').value = type;
-    console.log("masuk globalsearch di : "+ currentPage);
-    google.script.run.withSuccessHandler(function(data) {
+    } else {
+      document.getElementById('assetTypeSelect').value = type;
       renderAssetTableIncremental(type, data);
       executeHighlight(row, 'assetBody', false);
-    }).getSpecificAssetData(type);
+    }
+  } catch (err) {
+    console.error("Error navigasi asset:", err);
   }
 }
+
 
 function closeGlobalSearch() {
   document.getElementById('globalSearchModal').style.display = 'none';
@@ -1760,6 +1750,70 @@ function renderKelolaIncremental(data) {
     tbody.deleteRow(newDataLength);
   }
 }
+
+
+/**
+ * [FUNGSI: BUKA MODAL MAINTENANCE]
+ * 
+ */
+async function openMaintModal(row = "") {
+  const modal = document.getElementById('modalMaint');
+  const btnSubmit = document.getElementById('btnCreateMaint'); 
+  const urlGAS = document.getElementById('iframeGAS').src; // URL Web App Anda
+  
+  if (!modal) return console.error("Gawat! Modal tidak ditemukan.");
+
+  const setVal = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.value = (val !== undefined && val !== null) ? val : "";
+  };
+
+  // Set Baris Index
+  setVal('maintRowIdx', row);
+
+  if (row === "") {
+    // --- MODE: CREATE NEW ---
+    if(btnSubmit) btnSubmit.innerHTML = '<i class="fas fa-plus"></i> CREATE';
+
+    try {
+      // Ganti google.script.run dengan fetch GET
+      const resp = await fetch(`${urlGAS}?action=getNextMaintId`);
+      const nextId = await resp.json();
+
+      // 1. Isi Data Default
+      setVal('m_id', nextId);
+      setVal('m_type', "");
+      setVal('m_as_id', "");
+      setVal('m_as_nama', "");
+      setVal('m_state', "Open");
+      setVal('maint_id_jadwal', "PM");
+      setVal('m_shift_note', "");
+      setVal('m_other_note', "");
+
+      // 2. Set Jam Default 09:00
+      let d = new Date();
+      d.setHours(9, 0, 0, 0);
+      let localTime = new Date(d.getTime() - (d.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
+      setVal('m_plan', localTime);
+
+      // 3. Tampilkan Modal
+      modal.style.display = 'flex';
+      
+      if (typeof speakSenor === "function") speakSenor("Siap buat data baru.");
+
+    } catch (err) {
+      console.error("Gagal mengambil ID baru:", err);
+      alert("Koneksi ke server gagal saat mengambil ID baru.");
+    }
+
+  } else {
+    // --- MODE: UPDATE ---
+    if(btnSubmit) btnSubmit.innerHTML = '<i class="fas fa-save"></i> UPDATE';
+    // Pastikan loadMaintDetail juga sudah kamu ubah ke fetch nantinya
+    loadMaintDetail(row);
+  }
+}
+
 /**=========================================================================================
  * [FUNGSI: MESIN RENDER JADWAL - TRACING: renderJadwalViewIncremental]
  * Update baris tabel secara cerdas dengan tombol aksi di sisi kanan.
