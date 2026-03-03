@@ -1340,6 +1340,10 @@ function renderHistoryTable(data) {
     `;
     tbody.appendChild(tr);
   });
+
+  activeRowData = data; 
+  console.log("🔍 Detail Log Ditemukan:", data);
+  console.table({allHistoryData, activeRowData: data});
 }
 
 //global variable untuk menyimpan data baris yang sedang aktif (dipilih)
@@ -1357,6 +1361,8 @@ function openDetailLog(logId) {
   if (!data) return Swal.fire("Data Ghoib!", "ID Log tidak ditemukan, Señor!", "error");
 
   activeRowData = data; 
+  console.log("🔍 Detail Log Ditemukan:", data);
+  console.table({allHistoryData, activeRowData: data});
 
   var setEl = function(id, val) {
     var el = document.getElementById(id);
@@ -2495,7 +2501,7 @@ function openAssetDetailView(sheetName, row) {
       const label = gallery.querySelector('label');
       if (label) label.innerText = "DOKUMENTASI FOTO (VIEW ONLY)";
     }
-  }, 200); // 200ms cukup untuk memastikan openAssetDetail sudah jalan
+  }, 2000); // 200ms cukup untuk memastikan openAssetDetail sudah jalan
 }
 
 
