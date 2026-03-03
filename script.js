@@ -805,9 +805,16 @@ async function startMaintenanceModeUpdate() {
 
   try {
     // 3. PANGGIL SERVER (GET) - Menggunakan action searchAllAssets
-    // data[5] adalah Asset_ID dari kolom tabel Anda
-    const response = await fetch(`${urlGAS}?action=searchAllAssets&keyword=${encodeURIComponent(data[5])}`);
+    // data[6] adalah Asset_ID dari kolom tabel Anda
+    const response = await fetch(`${urlGAS}?action=searchAllAssets&keyword=${encodeURIComponent(data[6])}`);
     const results = await response.json();
+
+      console.log("console di bawah dari fungsi startMaintenanceLogUpdate :");
+      console.log("isi dari data[] :", data);
+      console.table({allHistoryData, activeRowData: data});
+      console.log("isi data[6] :", data[6]);
+      console.log("rowidxnow :", rowIdx);
+
 
     if (results && results.length > 0) {
       const res = results[0]; 
@@ -816,7 +823,7 @@ async function startMaintenanceModeUpdate() {
       // --- PENGISIAN DATA KE UI MODAL ---
       document.getElementById('log_maint_id').value = data[0]; 
       
-      let pend_sebelum = `Pending [tgl: ${data[2]}] [by: ${data[4]}] [Note: ${data[7]}] - Updated[next]`;
+      let pend_sebelum = `Pending [tgl: ${data[3]}] [by: ${data[5]}] [Note: ${data[8]}] - Updated[next]`;
       document.getElementById('log_as_id_label').value = pend_sebelum; // Sesuaikan ID elemen catatan Anda
 
       // Injeksi Detail Aset dari hasil fetch
@@ -828,15 +835,15 @@ async function startMaintenanceModeUpdate() {
 
       // Set dropdown jadwal (data[6] adalah ID_Jadwal dari tabel)
       const sEl = document.getElementById('jenis_id_jadwal');
-      if (sEl) sEl.value = data[6];
+      if (sEl) sEl.value = data[7];
 
       // --- LOGIKA SINKRONISASI FOTO (MENGGUNAKAN URL LAMA) ---
       // Kita masukkan URL (String) ke dalam array tempPhotos
       // Fungsi renderPhotoPreview Anda harus bisa menangani string URL
-      tempPhotos.PB = data[8]  ? [{ data: data[8], isOld: true }]  : []; 
-      tempPhotos.PO = data[9]  ? [{ data: data[9], isOld: true }]  : [];
-      tempPhotos.PA = data[10] ? [{ data: data[10], isOld: true }] : [];
-      tempPhotos.PC = data[11] ? [{ data: data[11], isOld: true }] : [];
+      tempPhotos.PB = data[8]  ? [{ data: data[9], isOld: true }]  : []; 
+      tempPhotos.PO = data[9]  ? [{ data: data[10], isOld: true }]  : [];
+      tempPhotos.PA = data[10] ? [{ data: data[11], isOld: true }] : [];
+      tempPhotos.PC = data[11] ? [{ data: data[12], isOld: true }] : [];
 
       ['PB', 'PO', 'PA', 'PC'].forEach(cat => renderPhotoPreview(cat));
 
@@ -852,7 +859,7 @@ async function startMaintenanceModeUpdate() {
     } else {
       await Swal.fire({
         title: "Unit Tidak Ada!",
-        text: `ID Aset [${data[5]}] tidak ditemukan, Señor!`,
+        text: `ID Aset [${data[6]}] tidak ditemukan, Señor!`,
         icon: "error",
         width: '80%'
       });
@@ -1341,9 +1348,9 @@ function renderHistoryTable(data) {
     tbody.appendChild(tr);
   });
 
-  activeRowData = data; 
-  console.log("🔍 Detail Log Ditemukan:", data);
-  console.table({allHistoryData, activeRowData: data});
+  //activeRowData = data;   //trap berfungsi dan ada isinya
+  //console.log("🔍 Detail Log Ditemukan:", data); //trap berfungsi dan ada isinya
+  //console.table({allHistoryData, activeRowData: data}); //trap berfungsi dan ada isinya
 }
 
 //global variable untuk menyimpan data baris yang sedang aktif (dipilih)
@@ -1361,8 +1368,8 @@ function openDetailLog(logId) {
   if (!data) return Swal.fire("Data Ghoib!", "ID Log tidak ditemukan, Señor!", "error");
 
   activeRowData = data; 
-  console.log("🔍 Detail Log Ditemukan:", data);
-  console.table({allHistoryData, activeRowData: data});
+  // console.log("🔍 Detail Log Ditemukan:", data); trap ok dan dan isinya
+  //  console.table({allHistoryData, activeRowData: data}); //trap ok dan dan isinya
 
   var setEl = function(id, val) {
     var el = document.getElementById(id);
@@ -1889,6 +1896,13 @@ async function goMaint(rowIdx) {
     allowOutsideClick: false,
     didOpen: () => { Swal.showLoading(); }
   });
+
+  console.log("console di bawah dari fungsi go Maint");
+  console.log("isi dari data[] :", data);
+  console.table({allHistoryData, activeRowData: data});
+  console.log("isi data[6] :", data[6]);
+  console.log("rowidxnow :", rowIdx);
+
 
   try {
     // 3. PANGGIL SERVER (GET) - Menggunakan action searchAllAssets
@@ -3106,4 +3120,503 @@ function closeAssetModal() {
     const label = gallery.querySelector('label');
     if (label) label.innerText = "KELOLA FOTO ASET";
   }
+}
+
+
+/**=========================================================================
+ * [FUNGSI: LOAD USER LIST]
+ * Mengambil data user dari server  dan menampilkannya di tabel dengan logika khusus untuk menangani data yang mungkin kosong atau tidak lengkap.
+ *==========================================================================
+ */
+async function loadUserList() {
+  const tbody = document.getElementById('userListBody');
+  const urlGAS = document.getElementById('iframeGAS').src;
+
+  // Tampilkan loading sebentar
+  if (tbody) tbody.innerHTML = "<tr><td colspan='4' style='text-align:center;'><i class='fas fa-spinner fa-spin'></i> Menghubungi Server...</td></tr>";
+
+  try {
+    // 1. Fetch ke doGet dengan action getAllUsers
+    const response = await fetch(`${urlGAS}?action=getAllUsers`);
+    
+    if (!response.ok) throw new Error("Gagal terhubung ke server (Status: " + response.status + ")");
+
+    // 2. Ambil data JSON (Asumsi server mengembalikan array of array)
+    const data = await response.json();
+
+    // Debugging data di console
+    console.table(data);
+
+    if (!data || data.length <= 1) {
+      tbody.innerHTML = "<tr><td colspan='4' style='text-align:center;'>Data terdeteksi kosong oleh sistem</td></tr>";
+      return;
+    }
+
+    let html = "";
+    // 3. Loop mulai i=1 untuk melewati header (A=0, B=1, C=2, G=6, H=7, I=8)
+    for (let i = 1; i < data.length; i++) {
+      let row = data[i];
+      
+      let username  = row[0] || "Unknown";
+      let role      = (row[2] || "user").toLowerCase();
+      let status    = (row[6] || "aktif").toLowerCase();
+      let lastLogin = row[7] || "-";
+
+      html += `
+        <tr data-role="${role}">
+          <td style="padding:5px;"><input type="checkbox" class="userCheck" value="${i + 1}"></td>
+          <td style="padding:5px;">
+            <b>${username}</b><br>
+            <small style="color:#666;">${role.toUpperCase()}</small><br>
+            <span style="color:${status === 'aktif' ? 'green' : 'red'}; font-weight:bold;">${status.toUpperCase()}</span>
+          </td>
+          <td style="padding:5px; font-size:10px;">${lastLogin}</td>
+          <td style="padding:5px;">
+            <button onclick="openEditModal(${i + 1})"
+                    style="background:#2980b9; color:white; border:none; padding:5px 10px; cursor:pointer; border-radius:3px;">
+              <i class="fa fa-address-card"></i> Edit
+            </button>
+          </td>
+        </tr>`;
+    }
+    
+    tbody.innerHTML = html;
+    console.log("✅ User List berhasil diperbarui.");
+
+  } catch (err) {
+    console.error("Gagal total mengambil user list:", err);
+    
+    // Tampilan Error menggunakan Swal (Sesuai style kamu)
+    Swal.fire({
+      title: "Gagal",
+      text: "Error: " + err.message,
+      icon: "warning",
+      confirmButtonText: "OK, Señor!",
+      width: '80%'
+    });
+
+    if (tbody) tbody.innerHTML = "<tr><td colspan='4' style='text-align:center; color:red;'>Gagal memuat data.</td></tr>";
+  }
+}
+
+
+/**=========================================================================
+ * [FUNGSI: BUKA MODAL EDIT USER]
+ * Mengambil data user berdasarkan row index, lalu menampilkan di modal edit dengan logika khusus untuk menangani data yang mungkin kosong atau tidak lengkap.
+ * = =========================================================================
+ */  
+async function openEditModal(row) {
+  const urlGAS = document.getElementById('iframeGAS').src;
+  
+  try {
+    // 1. Ambil data user spesifik berdasarkan baris (row)
+    const response = await fetch(`${urlGAS}?action=getUserData&row=${row}`);
+    
+    if (!response.ok) throw new Error("Gagal mengambil data dari server.");
+    
+    const d = await response.json(); 
+    // Data urutan: [User, Pass, Role, Phone, Email, Photo, Status, LastLogin, Attempts]
+
+    // 2. Isi Form Modal
+    document.getElementById('m_row_idx').value = row;
+    document.getElementById('m_user').value = d[0] || "";
+    document.getElementById('m_pass').value = ""; // Kosongkan demi keamanan
+    document.getElementById('m_phone').value = d[3] || "";
+    document.getElementById('m_role').value = (d[2] || "user").toLowerCase();
+    document.getElementById('m_email').value = d[4] || "";
+    document.getElementById('m_status').value = (d[6] || "aktif").toLowerCase();
+    document.getElementById('m_attempts').value = d[8] || 0;
+    
+    // --- 3. LOGIKA LOAD GAMBAR (PHOTO) ---
+    const photoFromDB = d[5]; 
+    const nameFromDB = d[0] || "User"; 
+    const imgPreview = document.getElementById('admin_edit_photo');
+    
+    if (imgPreview) {
+      if (photoFromDB && photoFromDB.includes("http")) {
+        // Gunakan link Drive asli + anti-cache
+        imgPreview.src = photoFromDB + (photoFromDB.includes("?") ? "&" : "?") + "t=" + Date.now();
+      } else {
+        // Perbaikan format URL UI-Avatars agar lebih rapi
+        const avatarUrl = `https://ui-avatars.com{encodeURIComponent(nameFromDB)}&background=2980b9&color=fff&size=128`;
+        imgPreview.src = avatarUrl;
+      }
+    }
+
+    // 4. Tampilkan Modal
+    document.getElementById('editModal').style.display = 'flex';
+
+  } catch (err) {
+    console.error("Gagal load detail user:", err);
+    Swal.fire({
+      title: "Gagal",
+      text: "Gagal memproses data: " + err.message,
+      icon: "warning",
+      confirmButtonText: "OK, Señor!",
+      width: '80%'
+    });
+  }
+}
+
+/**=================================================================================================
+ * [FUNGSI: BUKA MODAL UNTUK USER BARU]
+ * Membersihkan field dan memuat placeholder Avatar.
+ * ================================================================================================
+ */
+function openAddUserModal() {
+  document.getElementById('m_row_idx').value = ""; 
+  
+  document.getElementById('m_user').value = "";
+  document.getElementById('m_pass').value = "";
+  document.getElementById('m_phone').value = "";
+  document.getElementById('m_email').value = "";
+  document.getElementById('m_role').value = "user";
+  document.getElementById('m_status').value = "aktif";
+  document.getElementById('m_attempts').value = 0;
+  
+  // Update: Menggunakan format URL stabil temuan Anda
+  var imgPreview = document.getElementById('admin_edit_photo');
+  if (imgPreview) {
+    // Memberikan inisial "New User" (NU) secara default
+    var defaultName = "New User";
+    imgPreview.src = "https://ui-avatars.com/api/?" + encodeURIComponent(defaultName) + "/?" + "&background=2980b9&color=fff";
+  }
+  
+  document.getElementById('editModal').style.display = 'flex';
+}
+
+
+async function loadProf() {
+  const urlGAS = document.getElementById('iframeGAS').src;
+  
+  // Pastikan variabel 'loggedInUser' tersedia (biasanya dari session/global)
+  if (!window.loggedInUser) {
+    console.error("Username tidak ditemukan di sesi browser.");
+    return;
+  }
+
+  try {
+    // 1. Fetch ke doGet dengan parameter action & username
+    const response = await fetch(`${urlGAS}?action=getUserDataByUsername&username=${encodeURIComponent(window.loggedInUser)}`);
+    
+    if (!response.ok) throw new Error("Gagal mengambil profil dari server.");
+
+    const d = await response.json(); 
+    // Struktur: [User, Pass, Role, Phone, Email, Photo, Status, LastLogin, Attempts]
+
+    // 2. Mapping Data ke Input Profil
+    document.getElementById('set_user').value = d[0] || "-";
+    document.getElementById('set_role').value = (d[2] || "user").toUpperCase();
+    document.getElementById('set_status').value = (d[6] || "aktif").toUpperCase();
+    document.getElementById('set_attempts').value = (d[8] || 0) + " / 5";
+    document.getElementById('set_email').value = d[4] || "";
+    document.getElementById('set_phone').value = d[3] || "";
+    
+    // --- 3. LOGIKA ANTI-CACHE FOTO ---
+    const photoUrl = d[5];
+    const userName = d[0] || "User";
+    let finalSrc = "";
+
+    if (photoUrl && photoUrl.includes("http")) {
+      // Tambahkan anti-cache agar foto terbaru langsung muncul
+      const separator = photoUrl.includes("?") ? "&" : "?";
+      finalSrc = photoUrl + separator + "t=" + new Date().getTime();
+    } else {
+      // Perbaikan URL UI-Avatars agar valid
+      finalSrc = `https://ui-avatars.com{encodeURIComponent(userName)}&background=2980b9&color=fff&size=128`;
+    }
+
+    // Update semua elemen foto profil (Desktop, Shared, Mobile)
+    const photoElements = ['set_display_photo', 'user_profile_shared', 'user_profile_mobile'];
+    photoElements.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.src = finalSrc;
+    });
+
+  } catch (err) {
+    console.error("Gagal load profil:", err);
+    Swal.fire({
+      title: "Gagal",
+      text: "Gagal load profil: " + err.message,
+      icon: "warning",
+      confirmButtonText: "OK, Señor!",
+      width: '80%'
+    });
+  }
+}
+
+
+/**===============================================================================
+ * [FUNGSI: SIMPAN PROFIL MANDIRI]
+ * Digunakan oleh user untuk mengupdate profilnya sendiri.
+ * ==================================================================================
+ */
+async function saveProf() {
+  const displayPhoto = document.getElementById('set_display_photo');
+  const iframe = document.getElementById('iframeGAS');
+  const urlGAS = iframe ? iframe.src : "";
+  
+  if (!urlGAS) return alert("URL Server tidak ditemukan!");
+
+  // 1. Susun Payload Utama
+  let payload = {
+    adminAktif: typeof loggedInUser !== 'undefined' ? loggedInUser : document.getElementById('set_user').value,
+    row: "", 
+    username: document.getElementById('set_user').value,
+    phone:    document.getElementById('set_phone').value,
+    email:    document.getElementById('set_email').value,
+    pass:     document.getElementById('set_pass').value,
+    photoData: null,
+    photoUrl:  displayPhoto.src.includes("blob:") ? "" : displayPhoto.src.split('?')[0]
+  };
+
+  // 2. Proses Foto jika ada di laci Temp_Profile
+  if (window.Temp_Profile && window.Temp_Profile[0]) {
+    try {
+      const file = window.Temp_Profile[0];
+      const fileInfo = await getBase64(file); 
+      payload.photoData = fileInfo.base64; 
+      payload.mimeType  = fileInfo.mimeType;
+      payload.fileName  = "Profile_" + payload.username; 
+    } catch (e) {
+      return Swal.fire({ title: "Gagal", text: "Proses foto: " + e.message, icon: "warning" });
+    }
+  }
+
+  // 3. UI FEEDBACK (Loading State)
+  const preview = document.getElementById('set_display_photo'); 
+  const imgSidebar = document.getElementById('user_profile_shared');
+  const btn = document.getElementById('btnsaveprofile');
+  
+  if (preview) preview.style.opacity = "0.3";
+  if (imgSidebar) imgSidebar.style.opacity = "0.3";
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Menyimpan...";
+  }
+
+  // 4. KIRIM KE SERVER VIA POST
+  try {
+    const response = await fetch(urlGAS, {
+      method: "POST",
+      body: JSON.stringify({
+        action: "universalUpdateUser",
+        payload: payload
+      })
+    });
+
+    const res = await response.json(); // Pastikan server kirim { status: 'success', message: '...' }
+
+    // SUCCESS HANDLER
+    Swal.fire({
+      title: "¡Misión Cumplida!",
+      text: res.message || "Profil berhasil diperbarui",
+      icon: "success",
+      confirmButtonText: "OK, Señor!",
+      width: '80%'
+    });
+
+    window.Temp_Profile = [null, null]; 
+    if (typeof syncProfileUI === 'function') syncProfileUI(displayPhoto.src, true); 
+    
+    loadProf(); // Refresh data profil
+
+  } catch (err) {
+    // FAILURE HANDLER
+    console.error("Error Save Profile:", err);
+    Swal.fire({
+      title: "Gagal",
+      text: "Koneksi server bermasalah atau: " + err.message,
+      icon: "error",
+      confirmButtonText: "Coba Lagi",
+      width: '80%'
+    });
+    if (btn) btn.innerHTML = "<i class='fa fa-floppy-o'></i> COBA LAGI";
+  } finally {
+    // Reset UI State
+    if (preview) preview.style.opacity = "1";
+    if (imgSidebar) imgSidebar.style.opacity = "1";
+    if (btn && btn.innerHTML !== "COBA LAGI") {
+      btn.disabled = false;
+      btn.innerHTML = "<i class='fa fa-floppy-o'></i> SIMPAN PERUBAHAN";
+    }
+  }
+}
+
+/**
+ * [FUNGSI: EKSPOR DATA KE CSV]
+ * Mengunduh daftar pengguna dalam format CSV melalui browser.
+ */
+function downloadCSV() {
+  google.script.run.withSuccessHandler(function(base64Content) {
+    var csvData = atob(base64Content);
+    var blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+    var link = document.createElement("a");
+    var url = URL.createObjectURL(blob);
+   
+    link.setAttribute("href", url);
+    link.setAttribute("download", "Data_User_Maintenance_" + new Date().toLocaleDateString() + ".csv");
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }).exportUsersToCSV();
+}
+
+
+/**=============================================================================================
+ * [FUNGSI: UPLOAD FOTO OLEH ADMIN]
+ * Menggunakan logika asli Anda dengan proteksi opacity & Sinkronisasi instan.
+ * =============================================================================================
+ */
+
+function uploadPhotoFromAdmin(input) {
+  const file = input.files[0];
+  
+  if (!file) return;
+  if (file.size > 2 * 1024 * 1024) {
+        Swal.fire({
+          title: "File Gendut!",
+          text: "File terlalu besar! Maksimal 2MB.", // Ini isi pesan 
+          icon: "warning",
+          confirmButtonText: "OK, Señor!",
+          width: '80%' // Biar pas di layar HP Sultan
+        });
+    //alert("File terlalu besar! Maksimal 2MB.");
+    input.value = "";
+    return;
+  }
+
+  if (file) {    
+    // Pastikan variabelnya ada sebelum diisi
+    if (!window.Temp_Profile) window.Temp_Profile = [null, null];
+    
+    window.Temp_Profile[1] = file; // Simpan di indeks 1 sesuai kode Save Anda
+    
+    // Preview
+    document.getElementById("admin_edit_photo").src = URL.createObjectURL(file);
+  }
+}
+
+
+
+/**=============================================================================================
+ * [FUNGSI: SAVE ADMIN EDIT]
+ * SIMPAN USER SIAPAPUN KETIKA BERADA DI LOGIN ADMIN.
+ * =============================================================================================
+ */
+
+async function saveAdminEdit() {
+  const rowIdx = document.getElementById('m_row_idx').value;
+  const username = document.getElementById('m_user').value;
+  const displayPhoto = document.getElementById('admin_edit_photo');
+  const iframe = document.getElementById('iframeGAS');
+  const urlGAS = iframe ? iframe.src : "";
+
+  if (!username) return alert("Username harus diisi!");
+  if (!urlGAS) return alert("URL Server tidak ditemukan!");
+
+  // 1. Susun Payload Universal
+  let payload = {
+    adminAktif: typeof loggedInUser !== 'undefined' ? loggedInUser : "", 
+    row:      rowIdx, 
+    username: username,
+    pass:     document.getElementById('m_pass').value,
+    role:     document.getElementById('m_role').value,
+    phone:    document.getElementById('m_phone').value,
+    email:    document.getElementById('m_email').value,
+    status:   document.getElementById('m_status').value,
+    attempts: document.getElementById('m_attempts').value || 0,
+    photoUrl: displayPhoto.src.includes("blob:") || displayPhoto.src.includes("ui-avatars.com") ? "" : displayPhoto.src.split('?')[0],
+    photoData: null
+  };
+
+  // 2. Cek jika ada foto baru di Temp_Profile[1] (Gunakan async/await)
+  if (window.Temp_Profile && window.Temp_Profile[1]) {
+    try {
+      const fileInfo = await getBase64(window.Temp_Profile[1]);
+      payload.photoData = fileInfo.base64;
+      payload.mimeType = fileInfo.mimeType;
+      payload.fileName = "Profile_" + username;
+    } catch (e) {
+      console.error("Gagal memproses foto:", e);
+    }
+  }
+
+  // 3. UI Feedback & Animasi
+  const btn = document.getElementById('saveprofilmodal');
+  const preview = document.getElementById('admin_edit_photo');
+  const imgSidebar = document.getElementById('user_profile_shared');
+  
+  // Tentukan apakah user sedang mengedit dirinya sendiri
+  const targetUser = username || (document.getElementById('set_user') ? document.getElementById('set_user').value : "");
+  const isSelf = (targetUser.toLowerCase() === (typeof loggedInUser !== 'undefined' ? loggedInUser.toLowerCase() : ""));
+
+  if (preview) preview.style.opacity = "0.3";
+  if (isSelf && imgSidebar) imgSidebar.style.opacity = "0.3";
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Menyimpan...";
+  }
+
+  // 4. KIRIM KE SERVER VIA POST
+  try {
+    const response = await fetch(urlGAS, {
+      method: "POST",
+      body: JSON.stringify({
+        action: "universalUpdateUser",
+        payload: payload
+      })
+    });
+
+    const res = await response.json(); // Server harus mengembalikan JSON
+
+    // --- SUCCESS HANDLER ---
+    Swal.fire({
+      title: "Sukses",
+      text: "¡Misión Cumplida! " + (res.message || res),
+      icon: "success",
+      confirmButtonText: "OK, Señor!",
+      width: '80%'
+    });
+
+    if (window.Temp_Profile) window.Temp_Profile[1] = null; 
+    
+    closeModal();    // Tutup modal edit
+    loadUserList();  // Refresh tabel user
+    
+    // Sinkronisasi UI jika mengedit diri sendiri
+    if (isSelf) {
+      const updatedUrl = displayPhoto.src;
+      syncProfileUI(updatedUrl, true);
+    }
+
+  } catch (err) {
+    // --- FAILURE HANDLER ---
+    console.error("Gagal simpan admin edit:", err);
+    Swal.fire({
+      title: "Gagal",
+      text: "Error: " + err.message,
+      icon: "error",
+      confirmButtonText: "Coba Lagi",
+      width: '80%'
+    });
+  } finally {
+    // Reset UI State
+    if (preview) preview.style.opacity = "1";
+    if (imgSidebar) imgSidebar.style.opacity = "1";
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = "<i class='fa fa-floppy-o'></i> SIMPAN PERUBAHAN";
+    }
+  }
+}
+
+/**=============================================================================================
+ * [FUNGSI: SAVE ADMIN EDIT]
+ * SIMPAN USER SIAPAPUN KETIKA BERADA DI LOGIN ADMIN.
+ * =============================================================================================
+ */
+function closeModal() {
+  document.getElementById('editModal').style.display = 'none';
 }
