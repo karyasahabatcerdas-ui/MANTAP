@@ -3480,14 +3480,14 @@ async function openEditModal(row) {
   
   try {
     // 1. Ambil data user spesifik berdasarkan baris (row)
-    const response = await fetch(`${urlGAS}?action=getUserData=${row}`);
+    const response = await fetch(`${urlGAS}?action=getUserData&row=${row}`);
     
     if (!response.ok) throw new Error("Gagal mengambil data dari server.");
     
     const d = await response.json(); 
     // Data urutan: [User, Pass, Role, Phone, Email, Photo, Status, LastLogin, Attempts]
     if (typeof d === 'string') {
-        d = JSON.parse(data);
+        d = JSON.parse(d);
     }
     // Debugging data di console
     console.table(d);
@@ -3513,7 +3513,7 @@ async function openEditModal(row) {
         imgPreview.src = photoFromDB + (photoFromDB.includes("?") ? "&" : "?") + "t=" + Date.now();
       } else {
         // Perbaikan format URL UI-Avatars agar lebih rapi
-        const avatarUrl = `https://ui-avatars.com{encodeURIComponent(nameFromDB)}&background=2980b9&color=fff&size=128`;
+        const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(nameFromDB)}&background=2980b9&color=fff&size=128`;;
         imgPreview.src = avatarUrl;
       }
     }
@@ -3554,7 +3554,7 @@ function openAddUserModal() {
   if (imgPreview) {
     // Memberikan inisial "New User" (NU) secara default
     var defaultName = "New User";
-    imgPreview.src = "https://ui-avatars.com/api/?" + encodeURIComponent(defaultName) + "/?" + "&background=2980b9&color=fff";
+    imgPreview.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(defaultName)}&background=2980b9&color=fff&size=128`;
   }
   
   document.getElementById('editModal').style.display = 'flex';
@@ -3598,7 +3598,7 @@ async function loadProf() {
       finalSrc = photoUrl + separator + "t=" + new Date().getTime();
     } else {
       // Perbaikan URL UI-Avatars agar valid
-      finalSrc = `https://ui-avatars.com{encodeURIComponent(userName)}&background=2980b9&color=fff&size=128`;
+      finalSrc = `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=2980b9&color=fff&size=128`;;
     }
 
     // Update semua elemen foto profil (Desktop, Shared, Mobile)
