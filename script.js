@@ -3480,7 +3480,7 @@ async function openEditModal(row) {
   
   try {
     // 1. Ambil data user spesifik berdasarkan baris (row)
-    const response = await fetch(`${urlGAS}?action=getUserData&row=${row}`);
+    const response = await fetch(`${urlGAS}?action=getUserData${row}`);
     
     if (!response.ok) throw new Error("Gagal mengambil data dari server.");
     
