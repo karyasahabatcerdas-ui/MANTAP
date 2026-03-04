@@ -1426,9 +1426,13 @@ function openDetailLog(logId) {
     console.log(modal);
     console.log("Display sebelum flex:", getComputedStyle(modal).display);
     console.log("Z-Index ssebelum flex:", getComputedStyle(modal).zIndex);
-  if (modal) modal.style.display = 'flex';
+  if (modal) {
+    modal.style.display = 'flex';
+    modal.style.zIndex = '2000';
+  }
+
   console.log("🔍 Detail Log Dibuka untuk ID:", logId);
-    console.log(modal);
+    console.log(modal.getElementsByClassName.String);
     console.log("Display setelah flex:", getComputedStyle(modal).display);
     console.log("Z-Index setelah flex:", getComputedStyle(modal).zIndex);
 }
@@ -1892,12 +1896,13 @@ function renderJadwalViewIncremental(data) {
  */
 async function goMaint(rowIdx) {
   const urlGAS = document.getElementById('iframeGAS').src;
-
+  console.log("baris pada goMaint :", rowIdx);
+  console.table({activeRowData,rowIdx});
   // 1. VALIDASI DATA AWAL
   if (!activeRowData || activeRowData.length === 0) {
     await Swal.fire({
       title: "Data Tidak Ditemukan!",
-      text: "Silakan pilih baris terlebih dahulu, Señor.",
+      text: "Silakan pilih baris terlebih dahulu, Señor.",  
       icon: "error",
       width: '80%'
     });
@@ -2260,6 +2265,43 @@ function toggleAllAssets() {
 }
 
 
+
+/**=========================================================================
+ * [FUNGSI CLIENT GITHUB: LOAD TABEL LIHAT ASET - READ ONLY]
+ * Menarik data aset spesifik via Fetch GET untuk mode tampilan saja.
+ * Menggunakan action getSpecificAsset dengan parameter sheetName untuk mengambil data dari server, lalu memanggil mesin render khusus untuk mode view aset yang sudah kita buat sebelumnya.
+ * Fokus pada penyajian data yang bersih dan efisien untuk mode tampilan saja (Read-Only), tanpa checkbox atau fitur edit.
+ * Setiap baris memiliki tombol "Lihat Detail" yang memanggil fungsi openAssetDetailView dengan parameter sheetName dan row index untuk menampilkan detail aset di modal.
+ * ==========================================================================
+ */
+async function loadAssetDataView(sheetName) {
+  if (!sheetName) return;
+  
+  const iframe = document.getElementById('iframeGAS');
+  const urlGAS = iframe.src;
+
+  try {
+    // 1. PANGGIL SERVER (GET) - Menggunakan action yang sama dengan Kelola Aset
+    const response = await fetch(`${urlGAS}?action=getSpecificAsset&sheetName=${encodeURIComponent(sheetName)}`);
+    const data = await response.json();
+
+    if (!data || data.length < 2) {
+      const tbody = document.getElementById('viewAssetBody');
+      if (tbody) tbody.innerHTML = "<tr><td colspan='4' style='text-align:center;'>📭 Data Kosong</td></tr>";
+      return;
+    }
+
+    // 2. PANGGIL MESIN RENDER KHUSUS VIEW (READ-ONLY)
+    renderAssetTableIncrementalView(sheetName, data);
+
+  } catch (err) {
+    console.error("Gagal load data aset view:", err);
+    const tbody = document.getElementById('viewAssetBody');
+    if (tbody) tbody.innerHTML = "<tr><td colspan='4' style='text-align:center; color:red;'>⚠️ Gagal memuat data aset.</td></tr>";
+  }
+}
+
+
 /**=========================================================================
  * [FUNGSI: RENDER TABEL VIEW INCREMENTAL]
  * Mesin khusus untuk halaman Lihat Aset (Tanpa Checkbox).
@@ -2299,42 +2341,6 @@ function renderAssetTableIncrementalView(sheetName, data) {
 
   while (tbody.rows.length > newDataLength) {
     tbody.deleteRow(newDataLength);
-  }
-}
-
-
-/**=========================================================================
- * [FUNGSI CLIENT GITHUB: LOAD TABEL LIHAT ASET - READ ONLY]
- * Menarik data aset spesifik via Fetch GET untuk mode tampilan saja.
- * Menggunakan action getSpecificAsset dengan parameter sheetName untuk mengambil data dari server, lalu memanggil mesin render khusus untuk mode view aset yang sudah kita buat sebelumnya.
- * Fokus pada penyajian data yang bersih dan efisien untuk mode tampilan saja (Read-Only), tanpa checkbox atau fitur edit.
- * Setiap baris memiliki tombol "Lihat Detail" yang memanggil fungsi openAssetDetailView dengan parameter sheetName dan row index untuk menampilkan detail aset di modal.
- * ==========================================================================
- */
-async function loadAssetDataView(sheetName) {
-  if (!sheetName) return;
-  
-  const iframe = document.getElementById('iframeGAS');
-  const urlGAS = iframe.src;
-
-  try {
-    // 1. PANGGIL SERVER (GET) - Menggunakan action yang sama dengan Kelola Aset
-    const response = await fetch(`${urlGAS}?action=getSpecificAsset&sheetName=${encodeURIComponent(sheetName)}`);
-    const data = await response.json();
-
-    if (!data || data.length < 2) {
-      const tbody = document.getElementById('viewAssetBody');
-      if (tbody) tbody.innerHTML = "<tr><td colspan='4' style='text-align:center;'>📭 Data Kosong</td></tr>";
-      return;
-    }
-
-    // 2. PANGGIL MESIN RENDER KHUSUS VIEW (READ-ONLY)
-    renderAssetTableIncrementalView(sheetName, data);
-
-  } catch (err) {
-    console.error("Gagal load data aset view:", err);
-    const tbody = document.getElementById('viewAssetBody');
-    if (tbody) tbody.innerHTML = "<tr><td colspan='4' style='text-align:center; color:red;'>⚠️ Gagal memuat data aset.</td></tr>";
   }
 }
 
@@ -2404,6 +2410,9 @@ async function openAssetDetail(sheetName, row) {
   const btnTake = document.querySelector("button[onclick='takeAssetPhoto()']");
   const modal = document.getElementById('assetDetailModal');
 
+  console.log("nama sheet atau type_asset pada openDAssetDetail :", sheetName);
+  console.log("nama sheet atau row pada openDAssetDetail :", row);
+
   // Munculkan elemen yang mungkin tersembunyi
   if (btnSave) btnSave.style.display = "block";
   if (btnTake && btnTake.parentElement) btnTake.parentElement.style.display = "flex";
@@ -2452,6 +2461,8 @@ async function openAssetDetail(sheetName, row) {
     if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
 
     const data = await response.json();
+    console.log("table data di openassetdetai: ");
+    console.table(data);
 
     // Cek jika data kosong atau ada error dari server
     if (!data || data.length === 0 || data.error) {

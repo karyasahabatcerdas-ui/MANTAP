@@ -9,7 +9,7 @@
     top: 0; left: 0;
     width: 100vw; height: 100vh;
     background: var(--bg-main); /* Mengikuti tema gelap aplikasi */
-    z-index: 2000; /* Hirarki di bawah Login/Swal sesuai instruksi */
+    z-index: 3000; /* Hirarki di bawah Login/Swal sesuai instruksi */
     overflow-y: auto;
     padding: 0;
     margin: 0;
@@ -23,7 +23,7 @@
     padding: 15px; /* Jarak aman kanan-kiri agar tidak nempel kaca HP */
     min-height: 100vh;
     position: relative;
-    z-index: 2100;
+    z-index: 3100;
     box-sizing: border-box;
 }
 
@@ -37,7 +37,7 @@
     background: var(--bg-main); /* Harus ada background agar tidak tembus pandang */
     padding-top: 15px;
     padding-bottom: 10px;
-    z-index: 2200;   /* Di atas elemen lain */
+    z-index: 3200;   /* Di atas elemen lain */
 }
 
 .btn-maint-tool {
@@ -80,7 +80,7 @@
     /* JADIKAN STICKY JUGA */
     position: sticky; 
     top: 55px; /* Diletakkan tepat di bawah Top Nav */
-    z-index: 2150;
+    z-index: 3150;
 }
 
 .info-grid-main {
