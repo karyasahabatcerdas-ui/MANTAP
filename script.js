@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadComponent('modalMaint-placeholder', 'modalMaint.html');
     loadComponent('modalDetailHist-placeholder', 'modalDetailHist.html');
     loadComponent('modalAssetDetail-placeholder', 'modalAssetDetail.html');
+    loadComponent('modalPhotoSlider-placeholder','modalPhotoSlider.html')
 
 });
 
@@ -1058,6 +1059,9 @@ function closeMaintenanceMode() {
 
   if (window.isSuccessSave) {
     actionClose();
+     if (document.activeElement) {
+                document.activeElement.blur();
+              } 
   } else {
     Swal.fire({
       title: "Batalkan Input?",
@@ -1072,7 +1076,10 @@ function closeMaintenanceMode() {
       color: "#f8fafc",
       width: '85%'
     }).then((result) => {                
-      if (result.isConfirmed) {               
+      if (result.isConfirmed) {   
+            if (document.activeElement) {
+                document.activeElement.blur();
+              }            
         actionClose();
       }
     });
@@ -1437,6 +1444,109 @@ function openDetailLog(logId) {
     console.log("Z-Index setelah flex:", getComputedStyle(modal).zIndex);
 }
 
+/**================================================================================================
+ * [FUNGSI: TUTUTP MODAL DETAILHIST]
+ * Mengambil data dari window.activeRowData indeks 9-12
+ * ================================================================================================
+ */
+function closeDetailHist() {
+  document.getElementById('modalDetailHist').style.display = 'none';
+}
+
+
+/**================================================================================================
+ * [FUNGSI: INISIALISASI SLIDER]
+ * Mengambil data dari window.activeRowData indeks 9-12
+ * ================================================================================================
+ */
+function initPhotoSlider(category) {
+  var rawUrls = "";
+  var data = window.activeRowData;
+  
+  if (!data) return alert("Data log belum termuat sempurna, Bro!");
+
+  // Mapping indeks kolom I=8, J=9, K=10, L=11
+  if (category === 'BEFORE') rawUrls = data[9];
+  if (category === 'ON')     rawUrls = data[10];
+  if (category === 'AFTER')  rawUrls = data[11];
+  if (category === 'CHECK')  rawUrls = data[12];
+
+  if (!rawUrls || rawUrls.toString().trim() === "") {
+    return alert("Foto kategori " + category + " kosong!");
+  }
+
+  // Pecah string jadi array dan konversi ke direct link
+  var tempArray = rawUrls.toString().split(",");
+  currentPhotoList = tempArray.map(function(item) {
+    return driveLinkToDirect(item.trim());
+  });
+  
+  currentSliderIdx = 0;
+  showPhotoInSlider();
+  
+  var modal = document.getElementById('modalPhotoSlider');
+  if (modal) modal.style.display = 'flex';
+}
+
+/**================================================================================================
+ * [FUNGSI: TAMPILKAN FOTO]
+ * Hanya manipulasi SRC dan InnerText (Sangat Aman)
+ * ================================================================================================
+ */
+function showPhotoInSlider() {
+  var img = document.getElementById("fullPhotoView");
+  var count = document.getElementById("photoCounter");
+  
+  if (!img) return;
+
+  if (!currentPhotoList || currentPhotoList.length === 0) {
+    img.src = "";
+    if (count) count.innerText = "0 / 0";
+    return;
+  }
+
+  // Ambil URL sesuai indeks
+  var fotoUrl = currentPhotoList[currentSliderIdx];
+  img.src = fotoUrl;
+
+  // Update counter angka
+  if (count) {
+    var total = currentPhotoList.length;
+    var sekarang = currentSliderIdx + 1;
+    count.innerText = sekarang + " / " + total;
+  }
+}
+
+/**================================================================================================
+ * [FUNGSI: NAVIGASI FOTO]
+ * Geser kanan atau kiri
+ * ================================================================================================
+ */
+function changePhoto(step) {
+  if (!currentPhotoList || currentPhotoList.length === 0) return;
+
+  currentSliderIdx += step;
+
+  if (currentSliderIdx < 0) {
+    currentSliderIdx = currentPhotoList.length - 1;
+  } else if (currentSliderIdx >= currentPhotoList.length) {
+    currentSliderIdx = 0;
+  }
+
+  showPhotoInSlider();
+}
+
+/**================================================================================================
+ * [FUNGSI: TUTUP PHOTO SLIDER]
+ * ================================================================================================
+ */
+function closePhotoSlider() {
+  var modal = document.getElementById('modalPhotoSlider');
+  if (modal) modal.style.display = 'none';
+  
+  var img = document.getElementById('fullPhotoView');
+  if (img) img.src = "";
+}
 
 /**=========================================================================
  * [FUNGSI: UPDATE THUMBNAIL FOTO ASET]
@@ -1786,9 +1896,10 @@ function renderKelolaIncremental(data) {
 }
 
 
-/**
+/**===========================================================================
  * [FUNGSI: BUKA MODAL MAINTENANCE]
- * 
+ * BUKA JENDELA DETAIL MODAL LOG KEGIATAN MAINTENANCE 
+ * ===========================================================================
  */
 async function openMaintModal(row = "") {
   const modal = document.getElementById('modalMaint');
@@ -1845,6 +1956,126 @@ async function openMaintModal(row = "") {
     if(btnSubmit) btnSubmit.innerHTML = '<i class="fas fa-save"></i> UPDATE';
     // Pastikan loadMaintDetail juga sudah kamu ubah ke fetch nantinya
     loadMaintDetail(row);
+  }
+}
+
+
+/**
+ * [FUNGSI UI: EKSEKUSI TOMBOL CREATE/UPDATE - SWAL EDITION]
+ * Menjamin Fullscreen Tetap Aktif & Notifikasi Elegan
+ */
+async function saveMaintData() {
+  try {
+    // 1. PENGAMBILAN DATA
+    const row = document.getElementById('maintRowIdx').value || "";             
+    const asId = document.getElementById('m_as_id').value || "";                
+    const mId = document.getElementById('m_id').value || "";                    
+    const mType = document.getElementById('m_type').value || "";                
+    const mNama = document.getElementById('m_as_nama').value || "";             
+    const mPlan = document.getElementById('m_plan').value || "";                
+    const mShift = document.getElementById('m_shift_note').value || "";         
+    const mOther = document.getElementById('m_other_note').value || "";         
+    const mstate = document.getElementById('m_state').value || "";              
+    const mIDjad = document.getElementById('maint_id_jadwal').value || "";       
+
+    const user = typeof loggedInUser !== 'undefined' ? loggedInUser : "Unknown";
+    const btn = document.getElementById('btnCreateMaint'); 
+
+    // URL Web App Señor (Pastikan ini sudah benar)
+    const WEB_APP_URL = "URL_WEB_APP_SENOR_DI_SINI";
+
+    if (!asId || !mPlan) {
+      speakSenor("Señor, data belum lengkap!");
+      return Swal.fire({ title: "Warning", text: "Isi Aset & Plan Date!", icon: "warning", background: "#1e293b", color: "#fff" });
+    }
+
+    // 2. KONFIRMASI
+    const confirm = await Swal.fire({
+      title: (row === "") ? 'Buat Jadwal Baru?' : 'Simpan Perubahan?',
+      text: "Data akan ditembak ke API server.",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, Tembak!',
+      background: "#0f172a",
+      color: "#fff"
+    });
+
+    if (!confirm.isConfirmed) return;
+
+    // 3. UI LOADING
+    Swal.fire({
+      title: 'Tembak Data...',
+      didOpen: () => { Swal.showLoading(); },
+      background: "#0f172a",
+      color: "#fff",
+      allowOutsideClick: false
+    });
+
+    if(btn) { btn.disabled = true; btn.innerHTML = 'TEMBAK...'; }
+
+    // 4. PREPARE PAYLOAD (Disesuaikan dengan urutan Array fungsi lama)
+    const payload = {
+      action: "saveMaintData", // Menanda agar server tahu fungsi mana yang dipanggil
+      row: row,
+      data: [mId, mType, asId, mNama, "", "", user, mPlan, "", mstate, mIDjad, mShift, mOther]
+    };
+
+    // 5. EKSEKUSI FETCH
+    const response = await fetch(WEB_APP_URL, {
+      method: "POST",
+      mode: "no-cors", // Gunakan no-cors jika menembak langsung dari domain berbeda
+      cache: "no-cache",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    // Karena mode no-cors tidak bisa baca response body, 
+    // kita asumsikan sukses jika tidak ada error throw.
+    speakSenor("Misión Cumplida, Señor!");
+    Swal.fire({ title: "BERHASIL!", icon: "success", timer: 2000, background: "#0f172a", color: "#fff" });
+
+    if(btn) { 
+      btn.disabled = false; 
+      btn.innerHTML = (row === "") ? 'CREATE' : 'UPDATE'; 
+    }
+    
+    closeMaintModal();
+    if (typeof loadJad === 'function') loadJad();
+
+  } catch (err) {
+    speakSenor("Gagal tembak, Señor!");
+    Swal.fire({ title: "API Error", text: err.message, icon: "error", background: "#0f172a", color: "#fff" });
+  }
+}
+
+/**===========================================================================
+ * [FUNGSI: TUTUP MODAL MAINTENANCE]
+ * TUTUP JENDELA DETAIL MODAL LOG KEGIATAN MAINTENANCE 
+ * ===========================================================================
+ */
+
+function closeMaintModal() {
+  document.getElementById('modalMaint').style.display = 'none';
+
+  // Balikkan mode ADMIN
+  const btnCreate = document.getElementById('btnCreateMaint');
+  const btnSearchInModal = document.getElementById('btnMaintSearch');
+  
+  if (btnCreate) btnCreate.style.display = "block";
+  if (btnSearchInModal) btnSearchInModal.style.display = "block"; // Munculin lagi buat Admin
+
+  // Buka kunci input
+  ['m_plan', 'm_shift_note', 'm_other_note', 'm_state'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.disabled = false;
+  });
+
+  // Kembalikan tombol Batal ke posisi semula (2 kolom)
+  const btnCancel = document.getElementById('btnCancelMaint');
+  if (btnCancel) {
+    btnCancel.parentElement.style.gridTemplateColumns = "1fr 1fr";
+    btnCancel.style.width = "";
+    btnCancel.innerHTML = 'BATAL';
   }
 }
 

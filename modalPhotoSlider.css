@@ -1,0 +1,88 @@
+/* --- [MODAL PHOTO SLIDER: STEALTH EDITION] --- */
+.modal-slider-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.95); /* Hitam pekat agar foto menonjol */
+    backdrop-filter: blur(10px);
+    z-index: 10005; /* Paling atas di atas semua modal */
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+/* Tombol Close di Atas */
+.btn-slider-close {
+    position: absolute;
+    top: 25px; right: 25px;
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border: 2px solid #ef4444;
+    width: 45px; height: 45px;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 10006;
+    transition: 0.3s;
+    display: flex; align-items: center; justify-content: center;
+}
+.btn-slider-close:hover { background: #ef4444; color: white; }
+
+/* Viewport Utama */
+.slider-main-viewport {
+    width: 90%;
+    height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.img-full-neon {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(56, 189, 248, 0.3);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    animation: zoomIn 0.3s ease-out;
+}
+
+@keyframes zoomIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Navigasi Bawah */
+.slider-nav-container {
+    position: absolute;
+    bottom: 40px;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    background: rgba(30, 41, 59, 0.6);
+    padding: 10px 25px;
+    border-radius: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+}
+
+.btn-nav-neon {
+    background: none;
+    border: none;
+    color: var(--neon-blue, #38bdf8);
+    font-size: 24px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.btn-nav-neon:active { transform: scale(1.3); }
+
+.badge-counter-neon {
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    letter-spacing: 2px;
+    min-width: 80px;
+    text-align: center;
+}
