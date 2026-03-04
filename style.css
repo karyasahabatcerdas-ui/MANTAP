@@ -76,6 +76,14 @@
   --btn-cancel-shadow: #1e293b;
 
 
+  /* ... (Dasar Stealth tetap sama) ... */
+  
+  /* Slider Specific */
+  --slider-bg: rgba(0, 0, 0, 0.95);
+  --neon-red: #ef4444;
+  --neon-red-glow: rgba(239, 68, 68, 0.4);
+  --nav-bg: rgba(15, 23, 42, 0.8);
+
   /* ... (Variable sebelumnya tetap ada) ... */
   
   /* Search Specific */

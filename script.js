@@ -1346,7 +1346,7 @@ function renderHistoryTable(data) {
       </td>
       <td style="padding:5px;min-width:100px ;vertical-align:middle;">
         <button onclick="openDetailLog('${row[0]}')" 
-                style="background: ${statusColor}; color:white; border:none; border-radius:8px; cursor:pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                style="font-size:10px; height:40px; background: ${statusColor}; color:white; border:none; border-radius:8px; cursor:pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
           <span class="status-badge-indicator" > ${statusLabel} </span>
         </button>
       </td>
@@ -1412,7 +1412,7 @@ if (btn) {
     btn.innerHTML = '<i class="fa-solid fa-calendar-alt"></i> SELESAI';
     btn.className = "btn-base btn-green"; // Class aslimu
     btn.style.opacity = "0.6"; // Lebih baik pakai opacity untuk efek disabled
-    btn.style.cursor = "not-allowed";
+    btn.style.cursor = "none";
   } else {
     // KONDISI: PENDING (AKTIF/BISA UPDATE)
     btn.innerHTML = '<i class="fa-solid fa-sync-alt"></i> UPDATE'; // Pakai innerHTML agar ikon muncul
