@@ -3415,8 +3415,7 @@ async function loadUserList() {
         data = JSON.parse(data);
     }
 
-    // Debugging data di console
-    console.table(data);
+    
 
     if (!data || data.length <= 1) {
       tbody.innerHTML = "<tr><td colspan='4' style='text-align:center;'>Data terdeteksi kosong oleh sistem</td></tr>";
@@ -3490,6 +3489,8 @@ async function openEditModal(row) {
     if (typeof d === 'string') {
         d = JSON.parse(data);
     }
+    // Debugging data di console
+    console.table(d);
 
     // 2. Isi Form Modal
     document.getElementById('m_row_idx').value = row;
