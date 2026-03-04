@@ -1346,7 +1346,7 @@ function renderHistoryTable(data) {
       </td>
       <td style="padding:10px; text-align:center;">
         <button onclick="openDetailLog('${row[0]}')" 
-                style="width:80px; height:40px; background: ${statusColor}; color:white; border:none; border-radius:8px; cursor:pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                style="width:90px; height:40px; background: ${statusColor}; color:white; border:none; border-radius:8px; cursor:pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
           <span class="status-badge-indicator" > ${statusLabel} </span>
         </button>
       <td>
