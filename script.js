@@ -1327,26 +1327,26 @@ function renderHistoryTable(data) {
     }
 
     tr.innerHTML = `
-      <td style="padding:12px; vertical-align:top;">
+      <td style="padding:5px; vertical-align:middle;">
         <div style="font-weight:bold; color:#2c3e50; font-size:13px;">${row[0]}</div>
         <div style="font-size:10px; color:#95a5a6; margin-top:4px;">
           <i class="far fa-clock"></i> ${row[2] || "-"}
         </div>
       </td>
-      <td style="padding:12px; vertical-align:top;">
+      <td style="padding:5px; vertical-align:middle;">
         <div style="font-size:11px; margin-bottom:4px;">
           <i class="fas fa-user-circle" style="color:#3498db;"></i> ${row[5] || "Unknown"}
         </div>
-        <div style="font-size:11px; margin-bottom:4px;">
+        <div style="padding:5px; vertical-align:middle;font-size:11px; margin-bottom:4px;">
           <i class="fas fa-tag" style="color:#9b59b6;"></i> ${row[6] || "-"}
         </div>
-        <div style="font-size:10px; color:#7f8c8d;">
+        <div style="padding:5px; font-size:10px; color:#7f8c8d;vertical-align:middle;">
           <i class="fas fa-calendar-alt"></i> JDW: ${row[7] || "-"}
         </div>
       </td>
-      <td style="padding:12px; vertical-align:top;">
+      <td style="padding:5px; vertical-align:top;min-width:100px ;vertical-align:middle;">
         <button onclick="openDetailLog('${row[0]}')" 
-                style="width:100px; height:40px; background: ${statusColor}; color:white; border:none; border-radius:8px; cursor:pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                style="height:40px; background: ${statusColor}; color:white; border:none; border-radius:8px; cursor:pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
           <span class="status-badge-indicator" > ${statusLabel} </span>
         </button>
       <td>
