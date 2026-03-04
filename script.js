@@ -1356,6 +1356,7 @@ function renderHistoryTable(data) {
                 style="width:80px; height:40px; background: ${statusColor}; color:white; border:none; border-radius:8px; cursor:pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
           <i class="fas fa-eye"> </i><span class="status-badge-indicator" > ${statusLabel} </span>
         </button>
+      <td>
     `;
     tbody.appendChild(tr);
   });
