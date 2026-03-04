@@ -1344,7 +1344,7 @@ function renderHistoryTable(data) {
           <i class="fas fa-calendar-alt"></i> JDW: ${row[7] || "-"}
         </div>
       </td>
-      <td style="padding:10px; text-align:center;">
+      <td style="padding:12px; vertical-align:top;">
         <button onclick="openDetailLog('${row[0]}')" 
                 style="width:100px; height:40px; background: ${statusColor}; color:white; border:none; border-radius:8px; cursor:pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
           <span class="status-badge-indicator" > ${statusLabel} </span>
