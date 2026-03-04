@@ -1314,7 +1314,6 @@ function renderHistoryTable(data) {
     // --- LOGIKA STATUS WARNA SULTAN ---
     let statusLabel = "🚀 START";
     let statusColor = "#e67e22"; // Orange
-    let statusclick = ;
 
     // Cek Kolom E (Index 4) buat SELESAI
     if (row[4] && row[4] !== "" && row[4] !== "-") { 
