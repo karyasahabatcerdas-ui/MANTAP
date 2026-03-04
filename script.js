@@ -806,16 +806,9 @@ async function startMaintenanceModeUpdate() {
 
   try {
     // 3. PANGGIL SERVER (GET) - Menggunakan action searchAllAssets
-    // data[6] adalah Asset_ID dari kolom tabel Anda
+    // data[6] adalah Asset_ID dari kolom tabel Anda diambil dari database db_mainte sheet Maintenance
     const response = await fetch(`${urlGAS}?action=searchAllAssets&keyword=${encodeURIComponent(data[6])}`);
     const results = await response.json();
-
-      console.log("console di bawah dari fungsi startMaintenanceLogUpdate :");
-      console.log("isi dari data[] :", data);
-      console.table({allHistoryData, activeRowData: data});
-      console.log("isi data[6] :", data[6]);
-      console.log("rowidxnow :", rowIdx);
-
 
     if (results && results.length > 0) {
       const res = results[0]; 
@@ -1354,7 +1347,7 @@ function renderHistoryTable(data) {
       <td style="padding:10px; text-align:center;">
         <button onclick="openDetailLog('${row[0]}')" 
                 style="width:80px; height:40px; background: ${statusColor}; color:white; border:none; border-radius:8px; cursor:pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
-          <i class="fas fa-eye"> </i><span class="status-badge-indicator" > ${statusLabel} </span>
+          <span class="status-badge-indicator" > ${statusLabel} </span>
         </button>
       <td>
     `;
@@ -1388,7 +1381,7 @@ function openDetailLog(logId) {
     var el = document.getElementById(id);
     if (el) el.innerText = val || "-";
   };
-
+  
   // --- INDEKS SESUAI HEADER 13 KOLOM ---
   setEl('det_log_id',    data[0]); // A: ID_Log
   setEl('det_maint_id',  data[1]); // B: Maint_ID (Tambahkan di UI jika perlu)
