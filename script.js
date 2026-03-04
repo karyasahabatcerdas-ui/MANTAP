@@ -3414,7 +3414,7 @@ async function loadUserList() {
     if (typeof data === 'string') {
         data = JSON.parse(data);
     }
-    
+
     // Debugging data di console
     console.table(data);
 
@@ -3487,6 +3487,9 @@ async function openEditModal(row) {
     
     const d = await response.json(); 
     // Data urutan: [User, Pass, Role, Phone, Email, Photo, Status, LastLogin, Attempts]
+    if (typeof d === 'string') {
+        d = JSON.parse(data);
+    }
 
     // 2. Isi Form Modal
     document.getElementById('m_row_idx').value = row;
