@@ -3481,7 +3481,10 @@ async function openEditModal(row) {
   try {
     // 1. Ambil data user spesifik berdasarkan baris (row)
     //const response = await fetch(`${urlGAS}?action=getUserData&row=${row}`);
-    const response = await fetch(urlGAS + "?action=getUserData&row=" + row);
+    const response = await fetch(`${urlGAS}?action=getUserData&row=${row}`, {
+        method: "GET", // Pakai GET untuk ambil data
+        redirect: "follow", // WAJIB ada agar mengikuti redirect dari Google
+      });
     
     if (!response.ok) throw new Error("Gagal mengambil data dari server.");
     
