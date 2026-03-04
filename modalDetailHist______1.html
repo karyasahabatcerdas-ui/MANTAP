@@ -1,0 +1,82 @@
+<div id="modalDetailHist" class="modal-overlay-custom" style="display:none;">
+  <div class="modal-content-profile detail-hist-window">
+
+    <div class="header-log-neon">
+      <div class="header-title-box">
+        <i class="fas fa-fingerprint"></i> 
+        <span>LOG ID: <strong id="det_log_id">#</strong></span>
+      </div>
+      <button onclick="closeDetailHist()" class="btn-close-neon">&times;</button>
+    </div>
+
+    <div class="detail-body-scroll scroll-dark-mini">
+      
+      <div class="info-grid-dark shadow-inset">
+        <div class="info-item">
+          <label>PETUGAS</label>
+          <b id="det_petugas">-</b>
+        </div>
+        <div class="info-item">
+          <label>ASSET ID</label>
+          <b id="det_asset_id">-</b>
+        </div>
+        <div class="info-item border-none">
+          <label>JADWAL</label>
+          <b id="det_id_jadwal">-</b>
+        </div>
+      </div>
+
+      <div class="info-grid-dark shadow-inset mt-10">
+        <div class="info-item">
+          <label class="text-green">START</label>
+          <span id="det_start" class="time-val">-</span>
+        </div>
+        <div class="info-item">
+          <label class="text-orange">PENDING</label>
+          <span id="det_pending" class="time-val">-</span>
+        </div>
+        <div class="info-item border-none">
+          <label class="text-blue">SELESAI</label>
+          <span id="det_selesai" class="time-val">-</span>
+        </div>
+      </div>
+
+      <div class="note-box-neon">
+        <label><i class="fas fa-file-alt"></i> CATATAN AKTIVITAS</label>
+        <div id="det_note" class="note-content">-</div>
+      </div>
+
+      <div class="doc-label-container">
+         <span class="line-neon"></span>
+         <label class="label-neon-center">DOKUMENTASI FOTO</label>
+         <span class="line-neon"></span>
+      </div>
+
+      <div class="gallery-grid-history">
+        <div onclick="initPhotoSlider('BEFORE')" class="photo-card-log br-blue">
+          <div id="gal_before" class="photo-placeholder"><i class="fas fa-image"></i></div>
+          <div class="photo-badge-top"><span id="cnt_before">0</span> | <span id="time_before">-</span></div>
+          <div class="photo-label-bottom bg-blue">BEFORE</div>
+        </div>
+
+        <div onclick="initPhotoSlider('ON')" class="photo-card-log br-orange">
+          <div id="gal_on" class="photo-placeholder"><i class="fas fa-image"></i></div>
+          <div class="photo-badge-top"><span id="cnt_on">0</span> | <span id="time_on">-</span></div>
+          <div class="photo-label-bottom bg-orange">ON-PROCESS</div>
+        </div>
+
+        <div onclick="initPhotoSlider('AFTER')" class="photo-card-log br-green">
+          <div id="gal_after" class="photo-placeholder"><i class="fas fa-image"></i></div>
+          <div class="photo-badge-top"><span id="cnt_after">0</span> | <span id="time_after">-</span></div>
+          <div class="photo-label-bottom bg-green">AFTER</div>
+        </div>
+
+        <div onclick="initPhotoSlider('CHECK')" class="photo-card-log br-gold">
+          <div id="gal_check" class="photo-placeholder"><i class="fas fa-image"></i></div>
+          <div class="photo-badge-top"><span id="cnt_check">0</span> | <span id="time_check">-</span></div>
+          <div class="photo-label-bottom bg-gold">FINAL CHECK</div>
+        </div>
+      </div>
+
+    </div> </div>
+</div>

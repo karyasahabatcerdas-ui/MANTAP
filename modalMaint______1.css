@@ -1,0 +1,84 @@
+/* Container Window */
+.maint-form-window {
+    max-width: 430px;
+    width: 95%;
+    padding: 0 !important; /* Hilangkan padding bawaan agar header nempel */
+    background: var(--bg-main);
+    border-radius: 15px;
+    border: 1px solid var(--border-dim);
+    overflow: hidden;
+    z-index: 999999;
+}
+
+/* Header Grid */
+.maint-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: rgba(15, 23, 42, 0.5);
+    border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+}
+
+.header-title h3 { margin: 0; font-size: 16px; color: var(--neon-blue); }
+
+.maint-id-box { width: 100px; }
+.label-neon-small { font-size: 8px; color: var(--text-dim); display: block; margin-bottom: 3px; }
+
+/* Body & Grids */
+.maint-body-scroll {
+    padding: 15px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.form-grid-maint-2 { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; margin-bottom: 12px; }
+.form-grid-equal { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+
+.form-grid-maint-search {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 10px;
+    align-items: flex-end;
+    margin-bottom: 15px;
+    background: rgba(251, 146, 60, 0.05);
+    padding: 8px;
+    border-radius: 8px;
+}
+
+/* Inputs & Selects */
+.input-neon-slim {
+    width: 100%; padding: 6px; background: #0f172a; 
+    border: 1px solid var(--border-dim); color: #fff; border-radius: 5px; font-size: 12px;
+}
+
+.select-neon-orange {
+    width: 100%; padding: 8px; background: #1a202c;
+    border: 1px solid rgba(251, 146, 60, 0.4); color: #fff; border-radius: 6px;
+}
+
+.text-area-slim { height: 60px; resize: none; font-size: 12px; }
+
+/* Readonly Variations */
+.readonly-blue { border-color: var(--neon-blue); color: var(--neon-blue); opacity: 0.8; }
+.readonly-dim { background: rgba(0,0,0,0.3); color: #a0aec0; border-color: transparent; }
+
+/* Buttons */
+.btn-neon-gold-search {
+    height: 38px; background: #d97706; color: #fff; border: none; 
+    border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px;
+}
+
+.maint-footer-row {
+    display: flex; gap: 0; border-top: 1px solid var(--border-dim);
+}
+
+.btn-footer-neon {
+    flex: 1; padding: 15px; border: none; cursor: pointer; 
+    font-weight: bold; font-size: 14px; transition: 0.3s;
+}
+
+.btn-create { background: #059669; color: #fff; border-right: 1px solid rgba(0,0,0,0.1); }
+.btn-cancel { background: #334155; color: #fff; }
+
+.btn-footer-neon:hover { filter: brightness(1.2); }

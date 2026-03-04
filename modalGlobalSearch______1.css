@@ -1,0 +1,131 @@
+/* --- GLOBAL SEARCH MODAL OVERLAY --- */
+.modal-overlay-gahar {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(15, 23, 42, 0.9); /* Overlay gelap transparan */
+    backdrop-filter: blur(4px); /* Efek blur kaca */
+    z-index: 5000; /* Lebih tinggi dari modal maintenance (1000) */
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+/* KONTEN MODAL */
+.search-modal-content {
+    background: var(--bg-main);
+    width: 100%;
+    max-width: 500px;
+    border-radius: 15px;
+    border: 1px solid var(--border-dim);
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    animation: slideInDown 0.3s ease;
+}
+
+.search-modal-content h3 {
+    color: var(--neon-gold);
+    margin-top: 0;
+    font-size: 1.2rem;
+    border-bottom: 1px solid var(--border-dim);
+    padding-bottom: 10px;
+}
+
+/* INPUT WRAPPER */
+.search-input-wrapper {
+    position: relative;
+    margin: 20px 0;
+}
+
+.search-icon-inside {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--neon-gold);
+}
+
+.input-search-neon {
+    width: 100%;
+    padding: 12px 12px 12px 40px;
+    background: #1a202c;
+    border: 1px solid var(--border-dim);
+    border-radius: 10px;
+    color: #fff;
+    outline: none;
+    box-sizing: border-box;
+    transition: 0.3s;
+}
+
+.input-search-neon:focus {
+    border-color: var(--neon-gold);
+    box-shadow: 0 0 8px rgba(230, 126, 34, 0.3);
+}
+
+/* TABEL HASIL PENCARIAN */
+.table-responsive-aset {
+    overflow-y: auto;
+    border: 1px solid var(--border-dim);
+    border-radius: 8px;
+    background: #0f172a;
+}
+
+.tabel-main-content {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.tabel-main-content th {
+    background: #1e293b;
+    color: var(--neon-gold);
+    padding: 10px;
+    text-align: left;
+    position: sticky;
+    top: 0;
+}
+
+.tabel-main-content td {
+    padding: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: #cbd5e1;
+}
+
+.tabel-main-content tr:hover {
+    background: rgba(230, 126, 34, 0.1);
+    cursor: pointer;
+}
+
+/* Tombol Footer */
+.modal-footer-action {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn-aktif-neon, .btn-nonaktif-neon {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-green-neon { background: #059669; color: white; }
+.btn-grey-dark { background: #334155; color: white; }
+
+/* Scrollbar Style */
+.scroll-dark-mini::-webkit-scrollbar { width: 5px; }
+.scroll-dark-mini::-webkit-scrollbar-thumb { background: var(--neon-gold); border-radius: 10px; }
+
+@keyframes slideInDown {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}

@@ -1,88 +1,105 @@
-/* --- [MODAL PHOTO SLIDER: STEALTH EDITION] --- */
+:root {
+  /* ... (Dasar Stealth tetap sama) ... */
+  
+  /* Slider Specific */
+  --slider-bg: rgba(0, 0, 0, 0.95);
+  --neon-red: #ef4444;
+  --neon-red-glow: rgba(239, 68, 68, 0.4);
+  --nav-bg: rgba(15, 23, 42, 0.8);
+}
+
+/* OVERLAY SLIDER (Hampir Hitam Total) */
 .modal-slider-overlay {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.95); /* Hitam pekat agar foto menonjol */
-    backdrop-filter: blur(10px);
-    z-index: 6001; /* Paling atas di atas semua modal */
-    display: none;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: var(--slider-bg);
+  backdrop-filter: blur(15px);
+  z-index: 11000; /* Paling tinggi di atas semua modal */
+  display: none; align-items: center; justify-content: center;
 }
 
-/* Tombol Close di Atas */
+/* TOMBOL CLOSE (Neon Red Floating) */
 .btn-slider-close {
-    position: absolute;
-    top: 25px; right: 25px;
-    background: rgba(239, 68, 68, 0.2);
-    color: #ef4444;
-    border: 2px solid #ef4444;
-    width: 45px; height: 45px;
-    border-radius: 50%;
-    font-size: 24px;
-    cursor: pointer;
-    z-index: 60002;
-    transition: 0.3s;
-    display: flex; align-items: center; justify-content: center;
+  position: absolute;
+  top: 20px; right: 20px;
+  width: 45px; height: 45px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.5);
+  border: 2px solid var(--neon-red);
+  color: var(--neon-red);
+  font-size: 28px;
+  cursor: pointer;
+  z-index: 11001;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 15px var(--neon-red-glow);
+  transition: all 0.3s ease;
 }
-.btn-slider-close:hover { background: #ef4444; color: white; }
+.btn-slider-close:hover {
+  background: var(--neon-red);
+  color: #fff;
+  box-shadow: 0 0 25px var(--neon-red);
+  transform: rotate(90deg);
+}
 
-/* Viewport Utama */
+/* VIEWPORT FOTO UTAMA */
 .slider-main-viewport {
-    width: 90%;
-    height: 70vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
 }
 
 .img-full-neon {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    border-radius: 10px;
-    box-shadow: 0 0 30px rgba(56, 189, 248, 0.3);
-    border: 1px solid rgba(56, 189, 248, 0.2);
-    animation: zoomIn 0.3s ease-out;
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 0 50px rgba(0,0,0,1);
+  animation: zoomIn 0.3s ease-out;
 }
 
-@keyframes zoomIn {
-    from { opacity: 0; transform: scale(0.8); }
-    to { opacity: 1; transform: scale(1); }
-}
-
-/* Navigasi Bawah */
+/* NAVIGASI BAWAH (Floating Neon) */
 .slider-nav-container {
-    position: absolute;
-    bottom: 40px;
-    display: flex;
-    align-items: center;
-    gap: 30px;
-    background: rgba(30, 41, 59, 0.6);
-    padding: 10px 25px;
-    border-radius: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(5px);
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: var(--nav-bg);
+  padding: 10px 25px;
+  border-radius: 50px;
+  border: 1px solid var(--neon-border);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  backdrop-filter: blur(5px);
 }
 
 .btn-nav-neon {
-    background: none;
-    border: none;
-    color: var(--neon-blue, #38bdf8);
-    font-size: 24px;
-    cursor: pointer;
-    transition: 0.2s;
+  background: none;
+  border: none;
+  color: var(--neon-blue);
+  font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.2s;
 }
-.btn-nav-neon:active { transform: scale(1.3); }
+.btn-nav-neon:hover {
+  transform: scale(1.2);
+  text-shadow: 0 0 10px var(--neon-blue);
+}
 
 .badge-counter-neon {
-    color: white;
-    font-family: 'Courier New', Courier, monospace;
-    font-weight: bold;
-    letter-spacing: 2px;
-    min-width: 80px;
-    text-align: center;
+  color: #fff;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  min-width: 80px;
+  text-align: center;
+}
+
+/* ANIMASI ZOOM */
+@keyframes zoomIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
 }

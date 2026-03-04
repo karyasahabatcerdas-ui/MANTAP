@@ -1,0 +1,87 @@
+/* Container Window */
+.admin-edit-window {
+    max-width: 430px;
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 20px;
+    padding: 0 !important;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+}
+
+.admin-header-neon {
+    padding: 15px 20px;
+    background: rgba(30, 41, 59, 0.7);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--neon-blue);
+}
+
+.admin-header-neon h3 { margin: 0; font-size: 15px; color: var(--neon-blue); letter-spacing: 1px; }
+
+/* Scroll Body */
+.admin-scroll-body {
+    padding: 20px;
+    max-height: 65vh;
+    overflow-y: auto;
+}
+
+/* Photo Section */
+.profile-photo-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.avatar-container {
+    position: relative;
+    width: 90px; height: 90px;
+}
+
+.avatar-neon-border {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    border: 3px solid var(--neon-blue);
+    object-fit: cover;
+    padding: 3px;
+    background: #000;
+}
+
+.photo-edit-badge {
+    position: absolute; bottom: 0; right: 0;
+    background: var(--neon-blue); color: #000;
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; cursor: pointer; border: 2px solid #0f172a;
+}
+
+/* Forms */
+.field-group-admin { margin-bottom: 15px; }
+
+.input-neon-admin {
+    width: 100%; padding: 10px; background: #1e293b;
+    border: 1px solid #334155; border-radius: 8px;
+    color: #fff; font-size: 14px;
+}
+
+.admin-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+
+.select-admin {
+    width: 100%; padding: 10px; background: #1e293b;
+    border: 1px solid #334155; border-radius: 8px; color: #fff;
+}
+
+.attempts-reset-box { display: flex; gap: 10px; }
+
+.btn-reset-neon {
+    background: #d97706; color: white; border: none;
+    padding: 0 15px; border-radius: 8px; font-weight: bold; cursor: pointer;
+}
+
+/* Footer Buttons */
+.modal-action-footer-row { display: flex; border-top: 1px solid #1e293b; }
+
+.btn-admin-save { flex: 1; padding: 15px; background: #059669; color: #fff; border: none; font-weight: bold; }
+.btn-admin-cancel { flex: 1; padding: 15px; background: #334155; color: #fff; border: none; font-weight: bold; }

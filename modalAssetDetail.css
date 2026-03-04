@@ -1,27 +1,3 @@
-:root {
-  /* Dasar Stealth */
-  --bg-overlay: rgba(2, 6, 23, 0.9);
-  --bg-content: #0f172a;
-  --bg-input: #1e293b;
-  --bg-readonly: #020617;
-  
-  /* Aksentuasi Neon */
-  --neon-blue: #38bdf8;
-  --neon-border: #1e293b;
-  --text-main: #f8fafc;
-  --text-dim: #94a3b8;
-  --text-readonly: #64748b;
-
-  /* Tombol Timbul Logic */
-  --btn-blue: #0ea5e9;
-  --btn-blue-shadow: #0369a1;
-  --btn-red: #ef4444;
-  --btn-red-shadow: #b91c1c;
-  --btn-green: #22c55e;
-  --btn-green-shadow: #15803d;
-}
-
-
 /* OVERLAY & CONTAINER */
 /** dipindahkan ke rightbar
 .modal-overlay-custom {

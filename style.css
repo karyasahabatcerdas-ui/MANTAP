@@ -9,6 +9,68 @@
             display : none ;
         }
 
+:root {
+  /* Dasar Stealth */
+  --bg-overlay: rgba(2, 6, 23, 0.9);
+  --bg-content: #0f172a;
+  --bg-input: #1e293b;
+  --bg-readonly: #020617;
+  
+  /* Aksentuasi Neon */
+  --neon-blue: #38bdf8;
+  --neon-border: #1e293b;
+  --text-main: #f8fafc;
+  --text-dim: #94a3b8;
+  --text-readonly: #64748b;
+
+  /* Tombol Timbul Logic */
+  --btn-blue: #0ea5e9;
+  --btn-blue-shadow: #0369a1;
+  --btn-red: #ef4444;
+  --btn-red-shadow: #b91c1c;
+  --btn-green: #22c55e;
+  --btn-green-shadow: #15803d;
+
+  /* ... (Warna Dasar dari sebelumnya tetap ada) ... */
+  
+  /* Status History Colors */
+  --status-start: #22c55e;
+  --status-pending: #fb923c;
+  --status-finish: #38bdf8;
+  --status-check: #fbbf24;
+  
+  /* Log Industrial Colors */
+  --bg-grid-dark: rgba(30, 41, 59, 0.5);
+  --border-item: #334155;
+
+  
+  /* ... (Dasar Stealth & Neon Blue tetap sama) ... */
+  
+  /* Admin Specific */
+  --avatar-border: #38bdf8;
+  --status-active: #22c55e;
+  --status-nonactive: #ef4444;
+  --bg-admin-input: #0f172a;
+
+  /* ... (Dasar Stealth & Neon Blue tetap sama) ... */
+  
+  /* Tambahan Aksen Orange/Gold Maintenance */
+  --neon-orange: #fb923c;
+  --neon-orange-glow: rgba(251, 146, 60, 0.3);
+  --btn-gold: #d4af37;
+  --btn-gold-shadow: #996515;
+  --btn-cancel: #475569;
+  --btn-cancel-shadow: #1e293b;
+
+
+  /* ... (Variable sebelumnya tetap ada) ... */
+  
+  /* Search Specific */
+  --bg-search-input: #020617;
+  --bg-table-header: #1e293b;
+  --row-hover: rgba(56, 189, 248, 0.1);
+  --btn-grey: #334155;
+}
 
 :root {
     /* Surface Colors */   /* --- UNTUK RIGHTBAR DAN LEFTBAR --- */
@@ -46,8 +108,7 @@
   
   /* --- KHUSUS LEFTBAR (TAMBAHAN) --- */
   --leftbar-width: 10.0rem; /* rumusnya sekitar = 260px jika font html dibuat 16 untuk semua*/
-  --leftbar-collapsed-width:  3.5rem; /* 70px */
-    
+  --leftbar-collapsed-width:  3.5rem; /* 70px */  
 
 }
 

@@ -1,87 +1,115 @@
-/* Container Window */
-.admin-edit-window {
-    max-width: 430px;
-    background: #0f172a;
-    border: 1px solid #1e293b;
-    border-radius: 20px;
-    padding: 0 !important;
-    overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+/* PHOTO SECTION & AVATAR */
+.profile-photo-wrapper, .profile-photo-section {
+  text-align: center;
+  padding: 20px 0;
+  position: relative;
 }
 
-.admin-header-neon {
-    padding: 15px 20px;
-    background: rgba(30, 41, 59, 0.7);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid var(--neon-blue);
+.avatar-neon, .avatar-neon-border {
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  border: 3px solid var(--avatar-border);
+  padding: 5px;
+  background: var(--bg-readonly);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+  object-fit: cover;
 }
 
-.admin-header-neon h3 { margin: 0; font-size: 15px; color: var(--neon-blue); letter-spacing: 1px; }
-
-/* Scroll Body */
-.admin-scroll-body {
-    padding: 20px;
-    max-height: 65vh;
-    overflow-y: auto;
-}
-
-/* Photo Section */
-.profile-photo-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.avatar-container {
-    position: relative;
-    width: 90px; height: 90px;
-}
-
-.avatar-neon-border {
-    width: 100%; height: 100%;
-    border-radius: 50%;
-    border: 3px solid var(--neon-blue);
-    object-fit: cover;
-    padding: 3px;
-    background: #000;
+.avatar-neon:hover, .avatar-neon-border:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px var(--neon-blue);
 }
 
 .photo-edit-badge {
-    position: absolute; bottom: 0; right: 0;
-    background: var(--neon-blue); color: #000;
-    width: 28px; height: 28px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; cursor: pointer; border: 2px solid #0f172a;
+  position: absolute;
+  bottom: 25px; right: calc(50% - 50px);
+  background: var(--neon-blue);
+  color: #000;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; border: 2px solid var(--bg-content);
 }
 
-/* Forms */
-.field-group-admin { margin-bottom: 15px; }
-
-.input-neon-admin {
-    width: 100%; padding: 10px; background: #1e293b;
-    border: 1px solid #334155; border-radius: 8px;
-    color: #fff; font-size: 14px;
+/* ADMIN BODY SCROLL */
+.admin-scroll-body {
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 0 20px;
 }
 
-.admin-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+.scroll-dark-mini::-webkit-scrollbar { width: 5px; }
+.scroll-dark-mini::-webkit-scrollbar-track { background: var(--bg-readonly); }
+.scroll-dark-mini::-webkit-scrollbar-thumb { background: var(--neon-border); border-radius: 10px; }
 
-.select-admin {
-    width: 100%; padding: 10px; background: #1e293b;
-    border: 1px solid #334155; border-radius: 8px; color: #fff;
+/* FIELD GROUP & INPUT ADMIN */
+.field-group-admin, .modal-field-neon {
+  margin-bottom: 15px;
 }
 
-.attempts-reset-box { display: flex; gap: 10px; }
+.input-neon-admin, .input-neon {
+  width: 100%;
+  background: var(--bg-admin-input);
+  border: 1px solid var(--neon-border);
+  border-radius: 8px;
+  padding: 10px;
+  color: #fff;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+.select-admin, .select-custom {
+  width: 100%;
+  background: var(--bg-admin-input);
+  border: 1px solid var(--neon-border);
+  border-radius: 8px;
+  padding: 10px;
+  color: #fff;
+}
+
+/* ATTEMPTS BOX */
+.attempts-reset-box, .form-row-neon {
+  display: flex;
+  gap: 10px;
+}
 
 .btn-reset-neon {
-    background: #d97706; color: white; border: none;
-    padding: 0 15px; border-radius: 8px; font-weight: bold; cursor: pointer;
+  background: var(--bg-readonly);
+  border: 1px solid var(--btn-gold);
+  color: var(--btn-gold);
+  border-radius: 8px;
+  padding: 0 15px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: bold;
 }
 
-/* Footer Buttons */
-.modal-action-footer-row { display: flex; border-top: 1px solid #1e293b; }
+/* ADMIN GRID & COLUMN */
+.admin-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 15px;
+}
 
-.btn-admin-save { flex: 1; padding: 15px; background: #059669; color: #fff; border: none; font-weight: bold; }
-.btn-admin-cancel { flex: 1; padding: 15px; background: #334155; color: #fff; border: none; font-weight: bold; }
+/* BUTTONS ADMIN SAVE/CANCEL (PENGGANTI TIMBUL) */
+.btn-admin-save {
+  background: var(--btn-green);
+  box-shadow: 0 4px 0 var(--btn-green-shadow);
+  border: none; border-radius: 8px; padding: 12px;
+  color: #fff; font-weight: bold; cursor: pointer;
+}
+
+.btn-admin-cancel {
+  background: var(--btn-red);
+  box-shadow: 0 4px 0 var(--btn-red-shadow);
+  border: none; border-radius: 8px; padding: 12px;
+  color: #fff; font-weight: bold; cursor: pointer;
+}
+
+.btn-admin-save:active, .btn-admin-cancel:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 transparent;
+}
