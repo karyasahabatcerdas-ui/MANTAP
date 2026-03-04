@@ -9,6 +9,18 @@
             display : none ;
         }
 
+
+    /* Tambahan CSS agar tampilan pas di Sidebar GAS */
+      .select2-container--default .select2-selection--single {
+        height: 38px;
+        line-height: 38px;
+        z-index :9000;
+      }
+        /* Berikan nilai z-index yang sangat tinggi */
+        .swal2-container {
+        z-index: 9000 !important;
+        }
+
 :root {
     /*=====================================MENGEMBALIKAN WARNA SEMPURNA===================*/
   /* Dasar Stealth */
