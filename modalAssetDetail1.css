@@ -1,0 +1,101 @@
+/* Container Utama */
+.asset-stealth-window {
+    max-width: 430px;
+    background: #0f172a; /* Midnight Blue-Black */
+    border: 1px solid #1e293b;
+    border-radius: 20px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.8);
+    overflow: hidden;
+    /*z-index: 2000; */
+}
+
+/* QR Panel Section */
+.qr-panel-stealth {
+    background: radial-gradient(circle, #1e293b 0%, #0f172a 100%);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-bottom: 1px dashed #334155;
+}
+
+.qr-frame {
+    position: relative;
+    padding: 10px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--neon-blue);
+    border-radius: 12px;
+}
+
+.qr-scan-line {
+    position: absolute;
+    width: 90%; height: 2px;
+    background: var(--neon-blue);
+    box-shadow: 0 0 10px var(--neon-blue);
+    top: 10%; left: 5%;
+    animation: scanLine 3s infinite linear;
+}
+
+@keyframes scanLine {
+    0% { top: 10%; opacity: 0; }
+    50% { opacity: 1; }
+    100% { top: 90%; opacity: 0; }
+}
+
+/* Grid & Inputs */
+.form-grid-stealth-2-1 {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.readonly-stealth {
+    background: rgba(0,0,0,0.4) !important;
+    border-color: #334155 !important;
+    color: #64748b !important;
+}
+
+.select-stealth {
+    width: 100%; padding: 10px;
+    background: #1e293b; color: #fff;
+    border: 1px solid #334155; border-radius: 8px;
+}
+
+/* Gallery Slider */
+.gallery-viewer-stealth {
+    display: flex; align-items: center; gap: 10px;
+    margin-top: 10px; background: #000;
+    padding: 5px; border-radius: 12px;
+}
+
+.img-frame {
+    flex: 1; height: 180px; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+}
+
+.img-asset-neon {
+    max-height: 100%; border-radius: 8px;
+    object-fit: contain;
+}
+
+.nav-asset {
+    background: #1e293b; color: var(--neon-blue);
+    border: none; width: 35px; height: 35px;
+    border-radius: 50%; cursor: pointer;
+}
+
+/* Footer Buttons */
+.asset-footer-stealth {
+    display: flex;
+}
+
+.btn-action-save {
+    flex: 2; padding: 18px; background: #0ea5e9;
+    color: #fff; border: none; font-weight: bold;
+}
+
+.btn-action-cancel {
+    flex: 1; padding: 18px; background: #1e293b;
+    color: #ef4444; border: none; font-weight: bold;
+}

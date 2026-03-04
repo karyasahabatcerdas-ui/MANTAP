@@ -1,80 +1,72 @@
+<!-- [UI BLOCK: MODAL DETAIL ASSET - REVISI MIDNIGHT STEALTH] -->
 <div id="assetDetailModal" class="modal-overlay-custom" style="display:none;">
-  <div class="modal-content-aset asset-stealth-window">
+  <div class="modal-content-aset">
     
-    <div class="asset-header-stealth">
-      <h3 id="assetModalTitle"><i class="fas fa-info-circle"></i> DETAIL ASSET</h3>
-      <button onclick="closeAssetModal()" class="btn-close-stealth">&times;</button>
-    </div>
+    <h3 id="assetModalTitle"><i class="fas fa-info-circle"></i> DETAIL ASSET</h3>
 
-    <div class="qr-panel-stealth">
-      <div class="qr-frame">
-        <img id="assetQRCode" src="" class="qr-image-neon">
-        <div class="qr-scan-line"></div> </div>
-      <p id="qrText" class="qr-label-neon">SCAN-ID-READY</p>
+    <!-- QR CODE ASSET (Panel Glassmorphism) -->
+    <div class="qr-container-neon">
+      <img id="assetQRCode" src="" class="qr-image-neon">
+      <p id="qrText" class="qr-label-neon"></p>
     </div>
 
     <input type="hidden" id="assetRowIdx">
 
-    <div class="asset-scroll-body scroll-dark-mini">
-      <div class="form-grid-stealth-2-1">
-        <div>
-          <label class="label-neon">TIPE ASSET</label>
-          <input type="text" id="as_type" readonly class="input-neon readonly-stealth">
-        </div>
-        <div>
-          <label class="label-neon">ID ASSET</label>
-          <input type="text" id="as_id" readonly class="input-neon readonly-stealth">
-        </div>
+    <!-- BARIS 1: TIPE & ID (Grid 2:1) -->
+    <div class="form-row-grid">
+      <div class="flex-2">
+        <label class="label-neon">TIPE ASSET</label>
+        <input type="text" id="as_type" readonly class="input-neon readonly-neon">
       </div>
-
-      <div class="form-grid-stealth-2-1">
-        <div>
-          <label class="label-neon">NAMA ASSET</label>
-          <input type="text" id="as_nama" class="input-neon active-neon">
-        </div>
-        <div>
-          <label class="label-neon text-gold">STATUS</label>
-          <select id="as_status" class="select-stealth">
-            <option value="Baik">🟢 BAIK</option>
-            <option value="Rusak">🔴 RUSAK</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="field-group-stealth">
-        <label class="label-neon">LOKASI ASSET</label>
-        <input type="text" id="as_lokasi" class="input-neon active-neon">
-      </div>
-
-      <div class="gallery-stealth-box">
-        <label class="label-neon-center">ASSET VISUAL DOCUMENTATION</label>
-        <div class="gallery-viewer-stealth">
-          <button type="button" onclick="prevAssetImg()" class="nav-asset"><i class="fas fa-chevron-left"></i></button>
-          <div class="img-frame">
-            <img id="currAssetImg" src="" class="img-asset-neon">
-          </div>
-          <button type="button" onclick="nextAssetImg()" class="nav-asset"><i class="fas fa-chevron-right"></i></button>
-        </div>
-        
-        <div class="gallery-controls">
-          <button onclick="takeAssetPhoto()" class="btn-stealth-blue flex-1">
-            <i class="fas fa-camera"></i> TAKE/LOAD
-          </button>
-          <button onclick="deleteAssetPhoto()" class="btn-stealth-red flex-1">
-            <i class="fas fa-trash"></i> DELETE
-          </button>
-        </div>
+      <div class="flex-1">
+        <label class="label-neon">ID ASSET</label>
+        <input type="text" id="as_id" readonly class="input-neon readonly-neon">
       </div>
     </div>
 
-    <div class="asset-footer-stealth">
-      <button id="btnSaveAsset" onclick="saveAssetEdit()" class="btn-action-save">
-        <i class="fas fa-save"></i> UPDATE DATA
-      </button>
-      <button onclick="closeAssetModal()" class="btn-action-cancel">
-        <i class="fas fa-times"></i> KELUAR
-      </button>
+    <!-- BARIS 2: NAMA & STATUS (Grid 2:1) -->
+    <div class="form-row-grid">
+      <div class="flex-2">
+        <label class="label-neon">NAMA ASSET</label>
+        <input type="text" id="as_nama" class="input-neon">
+      </div>
+      <div class="flex-1">
+        <label class="label-neon">STATUS</label>
+        <select id="as_status" class="select-custom">
+          <option value="Baik">Baik</option>
+          <option value="Rusak">Rusak</option>
+        </select>
+      </div>
     </div>
 
+    <!-- BARIS 3: LOKASI -->
+    <div class="modal-field-neon">
+      <label class="label-neon">LOKASI ASSET</label>
+      <input type="text" id="as_lokasi" class="input-neon">
+    </div>
+
+    <!-- GALERI FOTO (Industrial Panel) -->
+    <div class="gallery-container-neon">
+      <label class="label-neon">GALERI FOTO ASSET</label>
+      <div class="gallery-viewer">
+        <button type="button" onclick="prevAssetImg()" class="btn-gallery-nav"><i class="fas fa-chevron-left"></i></button>
+        <img id="currAssetImg" src="https://lh3.googleusercontent.com/d/13Q4RtDMmEMVvErifoZOa_yKiAACUpg7a=s1000" class="img-asset-neon">
+        <button type="button" onclick="nextAssetImg()" class="btn-gallery-nav"><i class="fas fa-chevron-right"></i></button>
+      </div>
+      <div class="form-row-grid" style="margin-top: 10px;">
+        <button onclick="takeAssetPhoto()" class="btn-timbul btn-refresh flex-1"><i class="fas fa-camera"></i> TAKE/LOAD</button>
+        <button onclick="deleteAssetPhoto()" class="btn-timbul btn-hapus flex-1"><i class="fas fa-trash"></i> DELETE</button>
+      </div>
+    </div>
+
+    <!-- TOMBOL AKSI -->
+    <div class="form-row-grid" style="margin-top: 15px;">
+      <button id="btnSaveAsset" onclick="saveAssetEdit()" class="btn-timbul btn-backup flex-1">
+        <i class="fas fa-save"></i> SIMPAN
+      </button>
+      <button id="btnCancelAsset" onclick="closeAssetModal()" class="btn-timbul btn-hapus flex-2">
+        <i class="fas fa-times"></i> BATAL/KELUAR
+      </button>
+    </div>
   </div>
 </div>
