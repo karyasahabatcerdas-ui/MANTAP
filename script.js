@@ -1009,13 +1009,27 @@ function closeMaintenanceMode() {
   const btnSelesai = document.getElementById('btnLogSelesai');
   const btnPending = document.getElementById('btnLogPending');
   
-  // Reset Global State
+  // Ambil placeholder/parent modal jika ada untuk 'inert'
+  const modalPlaceholder = document.getElementById('modalMaintenanceLog-placeholder');
+  
   update_man_status = false; 
 
-  // Fungsi internal untuk eksekusi penutupan
   const actionClose = () => {
+    // 1. MELEPAS FOKUS (Solusi Error F12)
+    // Memaksa browser melepas fokus dari tombol Close/Batal sebelum elemen disembunyikan
+    if (document.activeElement) {
+      document.activeElement.blur();
+    }
+
     modal.style.display = 'none';
     
+    // 2. MENGUNCI INTERAKSI (Aksesibilitas Modern)
+    // Mencegah screen reader atau keyboard "melihat" ke dalam modal yang sudah tutup
+    if (modalPlaceholder) {
+      modalPlaceholder.setAttribute('inert', '');
+      modalPlaceholder.removeAttribute('aria-hidden'); // Buang aria-hidden yang bermasalah
+    }
+
     // --- RESET STATUS TOMBOL KE DEFAULT ---
     if(btnSelesai) {
       btnSelesai.disabled = false;
@@ -1028,36 +1042,33 @@ function closeMaintenanceMode() {
       btnPending.style.opacity = "1";
     }
     
-    // --- RESET UI & DATA ---
     modal.style.pointerEvents = "auto";
     modal.style.opacity = "1"; 
-    
     window.isSuccessSave = false;
     
-    // Membersihkan semua input, dropdown, dan tempPhotos
     if (typeof resetLogModalTotal === 'function') {
       resetLogModalTotal(); 
     }
     
-    console.log("🚪 Maintenance Mode Closed & Cleaned.");
+    // Kembalikan fokus ke body atau tombol pemicu utama agar teknisi bisa lanjut scroll
+    document.body.focus();
+
+    console.log("🚪 Maintenance Mode Closed & Cleaned (A11y Fixed).");
   };
 
-  // 1. Jika penutupan karena BERHASIL SIMPAN (Langsung tutup tanpa tanya)
   if (window.isSuccessSave) {
     actionClose();
-  } 
-  // 2. Jika klik tombol BATAL/CLOSE manual (Tampilkan Peringatan)
-  else {
+  } else {
     Swal.fire({
       title: "Batalkan Input?",
       text: "Data dan foto yang belum dikirim akan hilang.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#ef4444", // Merah Industrial
-      cancelButtonColor: "#64748b",  // Slate Gray
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#64748b",
       confirmButtonText: "Ya, Batalkan",
       cancelButtonText: "Kembali",
-      background: "#1e293b",         // Dark theme Swal
+      background: "#1e293b",
       color: "#f8fafc",
       width: '85%'
     }).then((result) => {                
@@ -1412,8 +1423,14 @@ function openDetailLog(logId) {
   }
 
   var modal = document.getElementById('modalDetailHist');
+    console.log(modal);
+    console.log("Display sebelum flex:", getComputedStyle(modal).display);
+    console.log("Z-Index ssebelum flex:", getComputedStyle(modal).zIndex);
   if (modal) modal.style.display = 'flex';
   console.log("🔍 Detail Log Dibuka untuk ID:", logId);
+    console.log(modal);
+    console.log("Display setelah flex:", getComputedStyle(modal).display);
+    console.log("Z-Index setelah flex:", getComputedStyle(modal).zIndex);
 }
 
 
@@ -1897,28 +1914,28 @@ async function goMaint(rowIdx) {
     didOpen: () => { Swal.showLoading(); }
   });
 
-  console.log("console di bawah dari fungsi go Maint");
-  console.log("isi dari data[] :", data);
-  console.table({allHistoryData, activeRowData: data});
-  console.log("isi data[6] :", data[6]);
-  console.log("rowidxnow :", rowIdx);
-
 
   try {
     // 3. PANGGIL SERVER (GET) - Menggunakan action searchAllAssets
     // data[5] adalah Asset_ID dari kolom tabel Anda
-    const response = await fetch(`${urlGAS}?action=searchAllAssets&keyword=${encodeURIComponent(data[5])}`);
+    const response = await fetch(`${urlGAS}?action=searchAllAssets&keyword=${encodeURIComponent(data[6])}`);
     const results = await response.json();
 
     if (results && results.length > 0) {
       const res = results[0]; 
       Swal.close();
 
+        console.log("console di bawah dari fungsi goMaint dari dalam json");
+        console.log("isi dari data[] :", data);
+        console.log("isi data[",rowIdx,"6] :", data[rowIdx]);
+        console.table(res);
+       
+
       // --- PENGISIAN DATA KE UI MODAL ---
       document.getElementById('log_maint_id').value = data[0]; //pengisian Maint_ID ke form maintenance log
       
-      let pend_sebelum = `Pending [tgl: ${data[2]}] [by: ${data[4]}] [Note: ${data[7]}] - Updated[next]`; 
-      document.getElementById('log_as_id_label').value = pend_sebelum; // Sesuaikan ID elemen catatan Anda
+      //let pend_sebelum = `Pending [tgl: ${data[3]}] [by: ${data[5]}] [Note: ${data[8]}] - Updated[next]`; 
+      //document.getElementById('log_as_id_label').value = pend_sebelum; // Sesuaikan ID elemen catatan Anda
 
       // Injeksi Detail Aset dari hasil fetch
       document.getElementById('log_as_id').innerText = res.type + "-" + res.id;
@@ -2030,8 +2047,8 @@ async function loadMaintDetail(row) {
     };
 
     // 2. INJEKSI DATA DASAR
-    setVal('maintRowIdx', row);
-    setVal('m_id', data[0]);
+    setVal('maintRowIdx', row); 
+    setVal('m_id', data[0]);  //M-0000X
     setVal('m_type', data[1]);
     setVal('m_as_id', data[2]);
     setVal('m_as_nama', data[3]);
@@ -2056,8 +2073,14 @@ async function loadMaintDetail(row) {
 
     // 5. TAMPILKAN MODAL
     const modal = document.getElementById('modalMaint');
+    console.log(modal);
+    console.log("Display sebelumflex:", getComputedStyle(modal).display);
+    console.log("Z-Index ssebelumflex:", getComputedStyle(modal).zIndex);
     if (modal) {
       modal.style.display = 'flex';
+      console.log(modal);
+      console.log("Display setelahflex:", getComputedStyle(modal).display);
+      console.log("Z-Index setelahflex:", getComputedStyle(modal).zIndex);
       if (typeof speakSenor === "function") speakSenor("Data dimuat.");
     }
 
