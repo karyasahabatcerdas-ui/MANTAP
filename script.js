@@ -1187,7 +1187,7 @@ async function saveLog(status) {
             modal.style.pointerEvents = "auto";
             
             // Jeda 2 detik sebelum refresh history agar server selesai menulis
-            setTimeout(loadHist, 2000);
+            setTimeout(loadHist, 200);
 
         } catch (err) {
             await Swal.fire({
@@ -1360,6 +1360,12 @@ function renderHistoryTable(data) {
         <button onclick="openDetailLog('${row[0]}')" 
                 style="width:40px; height:40px; background:#34495e; color:white; border:none; border-radius:8px; cursor:pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
           <i class="fas fa-eye"></i>
+        </button>
+        <button class="btn-timbul btn-refresh" style="gap: 10px;">
+            <i class="fas fa-info-circle"></i> 
+              <span class="status-badge-indicator" style="background: ${statusColor};">
+                ${statusLabel}
+             </span>
         </button>
       </td>
     `;
