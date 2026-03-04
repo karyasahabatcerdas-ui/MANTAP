@@ -10,6 +10,7 @@
         }
 
 :root {
+    /*=====================================MENGEMBALIKAN WARNA SEMPURNA===================*/
   /* Dasar Stealth */
   --bg-overlay: rgba(2, 6, 23, 0.9);
   --bg-content: #0f172a;
@@ -70,9 +71,11 @@
   --bg-table-header: #1e293b;
   --row-hover: rgba(56, 189, 248, 0.1);
   --btn-grey: #334155;
-}
 
-:root {
+
+
+/**============================w WARNA BARU PERLU PERUBAHAN =================================*/
+  /** warna2 baru  */
     /* Surface Colors */   /* --- UNTUK RIGHTBAR DAN LEFTBAR --- */
   --bg-main: #0f172a;           /* Midnight Slate */  /* Latar Belakang Utama */
   --bg-card: #1e293b;           /* Lighter Slate */  /* Warna leftbar & Card */
