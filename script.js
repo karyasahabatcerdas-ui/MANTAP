@@ -3409,6 +3409,12 @@ async function loadUserList() {
     // 2. Ambil data JSON (Asumsi server mengembalikan array of array)
     const data = await response.json();
 
+    // JIKA data ternyata masih String (akibat double stringify di server), 
+    // maka kita paksa jadi Object/Array
+    if (typeof data === 'string') {
+        data = JSON.parse(data);
+    }
+    
     // Debugging data di console
     console.table(data);
 
