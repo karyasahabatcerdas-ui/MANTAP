@@ -1339,11 +1339,6 @@ function renderHistoryTable(data) {
         <div style="font-size:10px; color:#95a5a6; margin-top:4px;">
           <i class="far fa-clock"></i> ${row[2] || "-"}
         </div>
-        <div style="margin-top:5px;">
-          <span style="background:${statusColor}; color:white; padding:2px 6px; border-radius:4px; font-size:9px; font-weight:bold;">
-            ${statusLabel}
-          </span>
-        </div>
       </td>
       <td style="padding:12px; vertical-align:top;">
         <div style="font-size:11px; margin-bottom:4px;">
