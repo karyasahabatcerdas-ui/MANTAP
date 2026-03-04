@@ -1354,12 +1354,8 @@ function renderHistoryTable(data) {
       <td style="padding:10px; text-align:center;">
         <button onclick="openDetailLog('${row[0]}')" 
                 style="width:40px; height:40px; background: ${statusColor}; color:white; border:none; border-radius:8px; cursor:pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
-          <i class="fas fa-eye"></i>
+          <i class="fas fa-eye"></i><span class="status-badge-indicator" > ${statusLabel} </span>
         </button>
-        <button class="btn-timbul btn-refresh" style=" style="background: ${statusColor}; gap: 10px;">
-         <span class="status-badge-indicator" > ${statusLabel} </span>
-        </button>
-      </td>
     `;
     tbody.appendChild(tr);
   });
