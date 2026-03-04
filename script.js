@@ -1351,16 +1351,13 @@ function renderHistoryTable(data) {
           <i class="fas fa-calendar-alt"></i> JDW: ${row[7] || "-"}
         </div>
       </td>
-      <td style="padding:12px; text-align:center; vertical-align:middle;">
+      <td style="padding:10px; text-align:center;">
         <button onclick="openDetailLog('${row[0]}')" 
-                style="width:40px; height:40px; background:#34495e; color:white; border:none; border-radius:8px; cursor:pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                style="width:40px; height:40px; background: ${statusColor}; color:white; border:none; border-radius:8px; cursor:pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
           <i class="fas fa-eye"></i>
         </button>
-        <button class="btn-timbul btn-refresh" style="gap: 10px;">
-            <i class="fas fa-info-circle"></i> 
-              <span class="status-badge-indicator" style="background: ${statusColor};">
-                ${statusLabel}
-             </span>
+        <button class="btn-timbul btn-refresh" style=" style="background: ${statusColor}; gap: 10px;">
+            <i class="fas fa-info-circle"></i>  <span class="status-badge-indicator" > ${statusLabel} </span>
         </button>
       </td>
     `;
