@@ -1357,7 +1357,7 @@ function renderHistoryTable(data) {
           <i class="fas fa-eye"></i>
         </button>
         <button class="btn-timbul btn-refresh" style=" style="background: ${statusColor}; gap: 10px;">
-            <i class="fas fa-info-circle"></i>  <span class="status-badge-indicator" > ${statusLabel} </span>
+         <span class="status-badge-indicator" > ${statusLabel} </span>
         </button>
       </td>
     `;
