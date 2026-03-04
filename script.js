@@ -1314,6 +1314,7 @@ function renderHistoryTable(data) {
     // --- LOGIKA STATUS WARNA SULTAN ---
     let statusLabel = "🚀 START";
     let statusColor = "#e67e22"; // Orange
+    let statusclick = ;
 
     // Cek Kolom E (Index 4) buat SELESAI
     if (row[4] && row[4] !== "" && row[4] !== "-") { 
@@ -1399,37 +1400,34 @@ function openDetailLog(logId) {
   updateThumbnail('gal_after',  data[11]); // L: P_After
   updateThumbnail('gal_check',  data[12]); // M: P_Check
 
-  // --- LOGIKA TOMBOL UPDATE (PENDING CHECK) ---
-  const btn = document.getElementById('btnupdateMaintenance');
-  if (btn) {
-    // Tombol aktif HANYA jika kolom 'pending' (data[3]) TIDAK KOSONG
-    const isPending = (data[3] !== "" && data[3] !== "-"); 
-    
-    btn.disabled = !isPending; 
-    if (!isPending) {
-      btn.style.backgroundColor = "#cccccc"; 
-      btn.style.color = "#666666";
-      btn.style.cursor = "not-allowed";
-    } else {
-      btn.style.backgroundColor = "#e67e22"; 
-      btn.style.color = "#ffffff";
-      btn.style.cursor = "pointer";
-    }
+// --- LOGIKA TOMBOL UPDATE (PENDING CHECK) ---
+const btn = document.getElementById('btnupdateMaintenance');
+if (btn) {
+  // Tombol aktif HANYA jika kolom 'pending' (data[3]) TIDAK KOSONG
+  const isPending = (data[3] !== "" && data[3] !== "-"); 
+  
+  btn.disabled = !isPending; 
+  
+  if (!isPending) {
+    // KONDISI: TIDAK PENDING (MATI)
+    btn.innerHTML = '<i class="fa-solid fa-calendar-alt"></i> SELESAI';
+    btn.className = "btn-base btn-green"; // Class aslimu
+    btn.style.opacity = "0.6"; // Lebih baik pakai opacity untuk efek disabled
+    btn.style.cursor = "not-allowed";
+  } else {
+    // KONDISI: PENDING (AKTIF/BISA UPDATE)
+    btn.innerHTML = '<i class="fa-solid fa-sync-alt"></i> UPDATE'; // Pakai innerHTML agar ikon muncul
+    btn.className = "btn-base btn-gold"; // Tetap pakai class dasar
+    btn.style.opacity = "1";
+    btn.style.cursor = "pointer";
   }
+}
 
   var modal = document.getElementById('modalDetailHist');
-    console.log(modal);
-    console.log("Display sebelum flex:", getComputedStyle(modal).display);
-    console.log("Z-Index ssebelum flex:", getComputedStyle(modal).zIndex);
   if (modal) {
     modal.style.display = 'flex';
-    modal.style.zIndex = '2000';
   }
 
-  console.log("🔍 Detail Log Dibuka untuk ID:", logId);
-    console.log(modal.getElementsByClassName.String);
-    console.log("Display setelah flex:", getComputedStyle(modal).display);
-    console.log("Z-Index setelah flex:", getComputedStyle(modal).zIndex);
 }
 
 /**================================================================================================
