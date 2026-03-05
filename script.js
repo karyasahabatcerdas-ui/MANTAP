@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Simpan URL Iframe GAS untuk referensi di fungsi lain (opsional, tergantung kebutuhan navigasi)
-const urlGAS = APPSCRIPT_ID;
+const urlGAS = APPSCRIPT_URL;
   let cachedAssetTypes = null; 
   //let loggedInUser = "";
   //let userRole = "";
@@ -798,7 +798,7 @@ function startMaintenanceMode() {
  * ===================================================================
  */
 async function startMaintenanceModeUpdate() {
-  const urlGAS = APPSCRIPT_ID;
+  const urlGAS = APPSCRIPT_URL;
 
   // 1. VALIDASI DATA AWAL
   if (!activeRowData || activeRowData.length === 0) {
@@ -1114,7 +1114,7 @@ async function saveLog(status) {
     const btnPending = document.getElementById('btnLogPending');
     const modal = document.getElementById('modalMaintenanceLog');
     const piljadwal = document.getElementById('jenis_id_jadwal');
-    const urlGAS = APPSCRIPT_ID;
+    const urlGAS = APPSCRIPT_URL;
 
     // --- VALIDASI (Tetap Sama Seperti Kodemu) ---
     let pil_err = (piljadwal.value === '');
@@ -1470,7 +1470,7 @@ function closeDetailHist() {
  */
 function initPhotoSlider(category) {
   var rawUrls = "";
-  var data = window.activeRowData;
+  var data = activeRowData;
   
   if (!data) return alert("Data log belum termuat sempurna, Bro!");
 
@@ -1817,7 +1817,7 @@ function renderKelolaIncremental(data) {
 async function openMaintModal(row = "") {
   const modal = document.getElementById('modalMaint');
   const btnSubmit = document.getElementById('btnCreateMaint'); 
-  const urlGAS = APPSCRIPT_ID; // URL Web App Anda
+  const urlGAS = APPSCRIPT_URL; // URL Web App Anda
   
   if (!modal) return console.error("Gawat! Modal tidak ditemukan.");
 
@@ -2039,7 +2039,7 @@ function renderJadwalViewIncremental(data) {
  * ===================================================================
  */
 async function goMaint(rowIdx) {
-  const urlGAS = APPSCRIPT_ID;
+  const urlGAS = APPSCRIPT_URL;
   console.log("baris pada goMaint :", rowIdx);
   console.table({activeRowData,rowIdx});
   // 1. VALIDASI DATA AWAL
@@ -2112,7 +2112,7 @@ async function goMaint(rowIdx) {
     } else {
       await Swal.fire({
         title: "Unit Tidak Ada!",
-        text: `ID Aset [${data[5]}] tidak ditemukan, Señor!`,
+        text: `ID Aset [${data[6]}] tidak ditemukan, Señor!`,
         icon: "error",
         width: '80%'
       });
@@ -4023,25 +4023,40 @@ async function openEditModal(row) {
  * ================================================================================================
  */
 function openAddUserModal() {
-  document.getElementById('m_row_idx').value = ""; 
+  // Gunakan helper function sederhana agar kode lebih bersih
+  const setVal = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.value = val;
+    } else {
+      console.warn(`⚠️ Señor, elemen dengan ID "${id}" tidak ditemukan di HTML!`);
+    }
+  };
+
+  // 1. Reset Semua Input dengan Aman
+  setVal('m_row_idx', ""); 
+  setVal('m_user', "");
+  setVal('m_pass', "");
+  setVal('m_phone', "");
+  setVal('m_email', "");
+  setVal('m_role', "user");
+  setVal('m_status', "aktif");
+  setVal('m_attempts', 0);
   
-  document.getElementById('m_user').value = "";
-  document.getElementById('m_pass').value = "";
-  document.getElementById('m_phone').value = "";
-  document.getElementById('m_email').value = "";
-  document.getElementById('m_role').value = "user";
-  document.getElementById('m_status').value = "aktif";
-  document.getElementById('m_attempts').value = 0;
-  
-  // Update: Menggunakan format URL stabil temuan Anda
+  // 2. Update Foto Preview
   var imgPreview = document.getElementById('admin_edit_photo');
   if (imgPreview) {
-    // Memberikan inisial "New User" (NU) secara default
     var defaultName = "New User";
     imgPreview.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(defaultName)}&background=2980b9&color=fff&size=128`;
   }
   
-  document.getElementById('editModal').style.display = 'flex';
+  // 3. Tampilkan Modal
+  const modal = document.getElementById('editModal');
+  if (modal) {
+    modal.style.display = 'flex';
+  } else {
+    Swal.fire("Error UI", "Modal 'editModal' tidak ditemukan!", "error");
+  }
 }
 
 

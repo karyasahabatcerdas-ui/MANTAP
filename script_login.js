@@ -15,8 +15,8 @@ function login() {
         //showPage('history');
 
         // 4. Identity Management
-        let loggedInUser = "ujicoba"; 
-        let userRole = "admin"; 
+        window.loggedInUser = "ujicoba"; 
+        window.userRole = "admin"; 
         
         const leftbar = document.getElementById('leftbar');
         if (leftbar) leftbar.classList.remove('collapsed');
@@ -140,19 +140,23 @@ async function initAssetDropdowns() {
 
     console.log("data dari fetch untuk dropdown "+ elements.elTgl.id);
     console.table(data.filterTgl);
-    console.table(delements.elTgl);
+    console.table(elements.elTgl);
+    console.log("Isi Opsi di dalam Dropdown:", elements.elTgl.innerHTML);
 
     console.log("data dari fetch untuk dropdown "+elements.elLog.id);
     console.table(data.statusMaint);
     console.table(delements.elTgl);
+    console.log("Isi Opsi di dalam Dropdown:", elements.elLog.innerHTML);
 
     console.log("data dari fetch untuk dropdown "+elements.elJadwal.id);
     console.table(data.statusMaint);
     console.table(elements.elJadwal);
+    console.log("Isi Opsi di dalam Dropdown:", elements.elJadwal.innerHTML);
 
     console.log("data dari fetch untuk dropdown " + elements.elAsset.id);
     console.table(data.statusAsset);
     console.table(elements.elAsset);
+    console.log("Isi Opsi di dalam Dropdown:", elements.elJadwal.elAsset);
 
     console.log("✅ Asset Dropdowns Synchronized via single fetch hore.");
 

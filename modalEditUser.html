@@ -1,15 +1,4 @@
-<div id="editModal" class="modal-overlay-custom" style="display:none;">
-  <div class="modal-content-profile admin-edit-window"> 
-    
-    <div class="admin-header-neon">
-      <h3><i class="fa-solid fa-user-gear"></i> USER PRIVILEGE</h3>
-      <button onclick="closeModal()" class="btn-close-neon">&times;</button>
-    </div>
-    
-    <div class="admin-scroll-body scroll-dark-mini">
-      <div class="profile-photo-section">
-        <div class="avatar-container">
-          <img id="admin_edit_photo"> <!-- [UI BLOCK: MODAL EDIT USER - SLIM 430PX BUTTONS ROW] -->
+<!-- [UI BLOCK: MODAL EDIT USER - SLIM 430PX BUTTONS ROW] -->
 <div id="editModal" class="modal-overlay-custom" style="display:none;">
   <div class="modal-content-profile" style="max-width: 430px !important;"> 
     
@@ -80,80 +69,6 @@
         <i class="fa fa-floppy-o"></i> SIMPAN 
       </button>
       <button type="button" onclick="closeModal()" class="btn-timbul btn-maintenance"> 
-        <i class="fa fa-close"></i> BATAL
-      </button>
-    </div>
-
-  </div>
-</div>
-
-               src="https://lh3.googleusercontent.com"
-               onclick="document.getElementById('adminFileInput').click()"
-               class="avatar-neon-border"
-               title="Klik untuk ganti foto">
-          <div class="photo-edit-badge" onclick="document.getElementById('adminFileInput').click()">
-            <i class="fas fa-camera"></i>
-          </div>
-        </div>
-        <input type="file" id="adminFileInput" accept="image/*" style="display:none" onchange="uploadPhotoFromAdmin(this)">
-        <p class="label-neon-small">ID: <span id="m_row_idx_display" style="color:var(--neon-blue);">#</span></p>
-      </div>
-
-      <input type="hidden" id="m_row_idx">
-
-      <div class="field-group-admin">
-        <label class="label-neon">USERNAME</label>
-        <input type="text" id="m_user" autocomplete="off" class="input-neon-admin">
-      </div>
-
-      <div class="field-group-admin">
-        <label class="label-neon">PASSWORD BARU</label>
-        <input type="password" id="m_pass" placeholder="Kosongkan jika tetap" autocomplete="new-password" class="input-neon-admin">
-      </div>
-
-      <div class="field-group-admin">
-        <label class="label-neon">NOMOR TELEPON</label>
-        <input type="text" id="m_phone" placeholder="0812..." class="input-neon-admin">
-      </div>
-
-      <div class="admin-grid-2">
-        <div class="col">
-          <label class="label-neon">ROLE</label>
-          <select id="m_role" class="select-admin">
-            <option value="user">USER</option>
-            <option value="admin">ADMIN</option>
-          </select>
-        </div>
-        <div class="col">
-          <label class="label-neon">STATUS</label>
-          <select id="m_status" class="select-admin">
-            <option value="aktif">🟢 AKTIF</option>
-            <option value="nonaktif">🔴 NON-AKTIF</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="field-group-admin">
-        <label class="label-neon">EMAIL ADDRESS</label>
-        <input type="email" id="m_email" class="input-neon-admin">
-      </div>
-
-      <div class="field-group-admin">
-        <label class="label-neon">LOGIN ATTEMPTS (MAX 5)</label>
-        <div class="attempts-reset-box">
-          <input type="number" id="m_attempts" min="0" max="5" class="input-neon-admin flex-1">
-          <button type="button" onclick="doResetAttempts()" class="btn-reset-neon">
-            <i class="fas fa-undo"></i> RESET
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal-action-footer-row">
-      <button id="saveprofilmodal" type="button" onclick="saveAdminEdit()" class="btn-admin-save"> 
-        <i class="fa fa-floppy-o"></i> SIMPAN 
-      </button>
-      <button type="button" onclick="closeModal()" class="btn-admin-cancel"> 
         <i class="fa fa-close"></i> BATAL
       </button>
     </div>
