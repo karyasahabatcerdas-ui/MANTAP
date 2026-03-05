@@ -1,6 +1,6 @@
-login();
 
-function login() {
+
+//function login() {
             // UI Reset
         //document.getElementById('loginOverlay').style.display = 'none';
 
@@ -15,7 +15,7 @@ function login() {
         let userRole = "admin"; //sementara nanti ditentukan login
 
 
-}
+//}
 /**=========================================================
  * Mengisi SEMUA Dropdown ID Jadwal via Fetch (GitHub Mode)
  * ============================================================
