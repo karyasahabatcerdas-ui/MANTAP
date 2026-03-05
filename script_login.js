@@ -154,7 +154,7 @@ async function initAssetDropdowns() {
     console.table(data.statusAsset);
     console.table(elements.elAsset);
 
-    console.log("✅ Asset Dropdowns Synchronized via single fetch.");
+    console.log("✅ Asset Dropdowns Synchronized via single fetch hore.");
 
   } catch (err) {
     console.error("❌ Gagal:", err);
