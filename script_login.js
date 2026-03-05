@@ -1,3 +1,5 @@
+login();
+
 function login() {
             // UI Reset
         //document.getElementById('loginOverlay').style.display = 'none';
