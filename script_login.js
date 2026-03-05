@@ -12,7 +12,7 @@ function login() {
         loadAssetTypes();
 
         // 3. Navigasi
-        showPage('history');
+        //showPage('history');
 
         // 4. Identity Management
         let loggedInUser = "ujicoba"; 
