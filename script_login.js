@@ -104,28 +104,23 @@ async function initAllJadwalDropdowns() {
 async function initAssetDropdowns() {
   const urlGAS = APPSCRIPT_URL;
   
-  // ID elemen dropdown di HTML Señor (sesuaikan jika namanya berbeda)
+  // GUNAKAN NAMA KEY YANG BERBEDA
   const elements = {
-    filterTgl: document.getElementById('sortJadwal'), 
-    statusMaint: document.getElementById('filterStatusLog'),
-    statusMaint: document.getElementById('filterStateJadwal'),
-    statusAsset: document.getElementById('as_status')
+    elTgl: document.getElementById('sortJadwal'), 
+    elLog: document.getElementById('filterStatusLog'),   // Nama unik
+    elJadwal: document.getElementById('filterStateJadwal'), // Nama unik
+    elAsset: document.getElementById('as_status')
   };
 
-  // 1. Set Loading Status
+  // 1. Set Loading Status (Ini akan bekerja karena semua key unik)
   Object.values(elements).forEach(el => {
     if (el) el.innerHTML = '<option value="">⏳ Loading...</option>';
   });
 
   try {
-    // 2. Satu kali Fetch untuk semua data (Efisien!)
     const response = await fetch(`${urlGAS}?action=getAssetDropdowns`);
     const data = await response.json();
 
-    console.log("data dari fetch untuk dropdoen");
-    console.table(data);
-
-    // 3. Fungsi pembantu untuk merender opsi
     const renderOptions = (el, list, defaultText) => {
       if (!el) return;
       let html = `<option value="">-- ${defaultText} --</option>`;
@@ -135,11 +130,11 @@ async function initAssetDropdowns() {
       el.innerHTML = html;
     };
 
-    // 4. Tebarkan data ke masing-masing dropdown
-    renderOptions(elements.filterTgl, data.filterTgl, "Pilih Tanggal");
-    renderOptions(elements.statusMaint, data.statusMaint, "Status Maintenance");
-    renderOptions(elements.statusMaint, data.statusMaint, "Status Jadwal");
-    renderOptions(elements.statusAsset, data.statusAsset, "Status Aset");
+    // 4. Tebarkan data menggunakan KEY yang sudah unik tadi
+    renderOptions(elements.elTgl, data.filterTgl, "Pilih Tanggal");
+    renderOptions(elements.elLog, data.statusMaint, "Status Log");    // Mengisi filterStatusLog
+    renderOptions(elements.elJadwal, data.statusMaint, "Status Jadwal"); // Mengisi filterStateJadwal
+    renderOptions(elements.elAsset, data.statusAsset, "Status Aset");
 
     console.log("data dari fetch untuk dropdown filtertgl;"+ elements.filterTgl);
     console.table(data.filterTgl);
@@ -153,9 +148,6 @@ async function initAssetDropdowns() {
     console.log("✅ Asset Dropdowns Synchronized via single fetch.");
 
   } catch (err) {
-    console.error("❌ Gagal Fetch Dropdown Asset:", err);
-    Object.values(elements).forEach(el => {
-      if (el) el.innerHTML = '<option value="">⚠️ Error Load</option>';
-    });
+    console.error("❌ Gagal:", err);
   }
 }
