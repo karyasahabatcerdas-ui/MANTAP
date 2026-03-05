@@ -737,7 +737,6 @@ async function getMMDDYY() {
  */
 function startMaintenanceMode() {
     const modal = document.getElementById('modalMaintenanceLog');
-    const computedStyle = window.getComputedStyle(modal);
     if (!modal) {
         console.error("❌ Modal Maintenance tidak ditemukan!");
         return;
@@ -2294,14 +2293,8 @@ async function loadMaintDetail(row) {
 
     // 5. TAMPILKAN MODAL
     const modal = document.getElementById('modalMaint');
-    console.log(modal);
-    console.log("Display sebelumflex:", getComputedStyle(modal).display);
-    console.log("Z-Index ssebelumflex:", getComputedStyle(modal).zIndex);
     if (modal) {
       modal.style.display = 'flex';
-      console.log(modal);
-      console.log("Display setelahflex:", getComputedStyle(modal).display);
-      console.log("Z-Index setelahflex:", getComputedStyle(modal).zIndex);
       if (typeof speakSenor === "function") speakSenor("Data dimuat.");
     }
 

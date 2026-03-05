@@ -5,7 +5,7 @@
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   background: var(--slider-bg);
   backdrop-filter: blur(15px);
-  z-index: 11000; /* Paling tinggi di atas semua modal */
+  z-index: 7000; /* Paling tinggi di atas semua modal */
   display: none; align-items: center; justify-content: center;
 }
 
@@ -20,7 +20,7 @@
   color: var(--neon-red);
   font-size: 28px;
   cursor: pointer;
-  z-index: 11001;
+  z-index: 7001;
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 0 15px var(--neon-red-glow);
   transition: all 0.3s ease;
