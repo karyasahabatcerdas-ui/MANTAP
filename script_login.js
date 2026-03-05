@@ -1,23 +1,47 @@
 
+function login() {
+    // Gunakan try-catch agar jika satu ID tidak ketemu, yang lain tidak mati
+    try {
+        // 1. UI Reset - Pastikan ID loginOverlay ada di HTML
+        const overlay = document.getElementById('loginOverlay');
+        if (overlay) overlay.style.display = 'none';
 
-//function login() {
-            // UI Reset
-        //document.getElementById('loginOverlay').style.display = 'none';
-
-
+        // 2. Load Data dari Server (GitHub to GAS)
         initAllJadwalDropdowns();
         initAssetDropdowns();
         loadAssetTypes();
-        //initHistoryDropdown;      
+
+        // 3. Navigasi
         showPage('history');
-        let loggedInUser = "ujicoba"; //sementara nanti ditentukan login
-        let userRole = "admin"; //sementara nanti ditentukan login
-        document.getElementById('leftbar').classList.remove('collapsed');
-        document.getElementById('headerUser').innerText = u + " (" + userRole + ")";
 
+        // 4. Identity Management
+        let loggedInUser = "ujicoba"; 
+        let userRole = "admin"; 
+        
+        const leftbar = document.getElementById('leftbar');
+        if (leftbar) leftbar.classList.remove('collapsed');
 
+        const headerUser = document.getElementById('headerUser');
+        if (headerUser) {
+            // Pastikan variabel 'u' (username) sudah didefinisikan sebelumnya
+            headerUser.innerText = loggedInUser + " (" + userRole + ")";
+        }
 
-//}
+        console.log("✅ Login Success & UI Initialized.");
+
+    } catch (error) {
+        console.error("❌ Error saat login initialization:", error);
+    }
+}
+
+// EKSEKUSI SAAT SEMUA SIAP
+window.onload = function() {
+    // Jika ingin langsung login otomatis saat refresh (untuk dev):
+    // login(); 
+    
+    // Atau pasang listener ke form login asli
+    console.log("🖥️ System Ready.");
+};
 /**=========================================================
  * Mengisi SEMUA Dropdown ID Jadwal via Fetch (GitHub Mode)
  * ============================================================
