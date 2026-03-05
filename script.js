@@ -37,8 +37,8 @@ document.addEventListener("DOMContentLoaded", () => {
 // Simpan URL Iframe GAS untuk referensi di fungsi lain (opsional, tergantung kebutuhan navigasi)
 const urlGAS = document.getElementById('iframeGAS').src;
   let cachedAssetTypes = null; 
-  let loggedInUser = "";
-  let userRole = "";
+  //let loggedInUser = "";
+  //let userRole = "";
   let update_man_status ="";
 
 /**
