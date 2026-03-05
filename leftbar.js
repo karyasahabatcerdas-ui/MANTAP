@@ -32,7 +32,7 @@ function showPage(id) {
     setTimeout(() => {
       side.classList.remove('side-glow-flash');
       side.style.transform = "translateX(0px)";
-    }, 200);
+    }, 500);
   }
 
   // --- 2. SECURITY CHECK (ADMIN ONLY) ---
