@@ -145,7 +145,7 @@ async function initAssetDropdowns() {
 
     console.log("data dari fetch untuk dropdown "+elements.elLog.id);
     console.table(data.statusMaint);
-    console.table(delements.elTgl);
+    console.table(elements.elTgl);
     console.log("Isi Opsi di dalam Dropdown:", elements.elLog.innerHTML);
 
     console.log("data dari fetch untuk dropdown "+elements.elJadwal.id);
@@ -156,7 +156,7 @@ async function initAssetDropdowns() {
     console.log("data dari fetch untuk dropdown " + elements.elAsset.id);
     console.table(data.statusAsset);
     console.table(elements.elAsset);
-    console.log("Isi Opsi di dalam Dropdown:", elements.elJadwal.elAsset);
+    console.log("Isi Opsi di dalam Dropdown:", elements.elAsset.innerHTML);
 
     console.log("✅ Asset Dropdowns Synchronized via single fetch hore.");
 
