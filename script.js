@@ -829,12 +829,19 @@ async function startMaintenanceModeUpdate() {
     const response = await fetch(`${urlGAS}?action=searchAllAssets&keyword=${encodeURIComponent(data[6])}`);
     const results = await response.json();
 
+    console.log("catatan data dari opendetaillog setelah fetch:");
+    console.table(results);
+    //console.log("data index 6 ID_Asset :", data[6])
+
     if (results && results.length > 0) {
       const res = results[0]; 
       Swal.close();
 
+      console.log("catatan data dari opendetaillog setelah fetch di dalam if:");
+      console.table(results);
+      console.log("data index 0 ID_Log :", data[0])
       // --- PENGISIAN DATA KE UI MODAL ---
-      document.getElementById('log_maint_id').value = data[0]; 
+      document.getElementById('log_maint_id').value = data[0];
       
       let pend_sebelum = `Pending [tgl: ${data[3]}] [by: ${data[5]}] [Note: ${data[8]}] - Updated[next]`;
       document.getElementById('log_as_id_label').value = pend_sebelum; // Sesuaikan ID elemen catatan Anda
@@ -1399,8 +1406,8 @@ function openDetailLog(logId) {
   activeRowData = data; 
   // console.log("🔍 Detail Log Ditemukan:", data); trap ok dan dan isinya
   //  console.table({allHistoryData, activeRowData: data}); //trap ok dan dan isinya
-  console.log("data dari opendetail.log :");
-  console.table(data);
+  //console.log("data dari opendetail.log :");
+  //console.table(data);
   var setEl = function(id, val) {
     var el = document.getElementById(id);
     if (el) el.innerText = val || "-";
