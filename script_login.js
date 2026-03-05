@@ -5,6 +5,7 @@ function login() {
         document.getElementById('leftbar').classList.remove('collapsed');
         document.getElementById('headerUser').innerText = u + " (" + userRole + ")";
         initAllJadwalDropdowns();
+        initAssetDropdowns();
         loadAssetTypes();
         //initHistoryDropdown;      
         showPage('history');
