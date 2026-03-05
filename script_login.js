@@ -141,13 +141,13 @@ async function initAssetDropdowns() {
     renderOptions(elements.statusMaint, data.statusMaint, "Status Jadwal");
     renderOptions(elements.statusAsset, data.statusAsset, "Status Aset");
 
-    console.log("data dari fetch untuk dropdown filtertgl;", );
+    console.log("data dari fetch untuk dropdown filtertgl;", elements.filterTgl);
     console.table(data.filterTgl);
 
-    console.log("data dari fetch untuk dropdown status log dan jadwal maint;", );
+    console.log("data dari fetch untuk dropdown status log dan jadwal maint;",elements.statusMaint );
     console.table(data.statusMaint);
 
-     console.log("data dari fetch untuk dropdown status asset;", );
+     console.log("data dari fetch untuk dropdown status asset;", elements.statusAsset, data.statusAsset);
     console.table(data.statusAsset);
 
     console.log("✅ Asset Dropdowns Synchronized via single fetch.");
