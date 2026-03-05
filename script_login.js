@@ -127,7 +127,9 @@ async function initAssetDropdowns() {
       if (list && list.length > 0) {
         html += list.map(item => `<option value="${item.id}">${item.nama}</option>`).join('');
       }
+      
       el.innerHTML = html;
+      cconsole.log("Mengisi elemen ID: " + el.id, "dengan HTML: ", html);
     };
 
     // 4. Tebarkan data menggunakan KEY yang sudah unik tadi
