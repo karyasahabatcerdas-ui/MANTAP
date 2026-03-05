@@ -92,6 +92,19 @@
   --row-hover: rgba(56, 189, 248, 0.1);
   --btn-grey: #334155;
 
+  /* tema dari halaman import */
+  /* Variabel Warna Utama - Sesuaikan dengan tema Smart Import */
+
+  --import-bg-overlay: rgba(0, 0, 0, 0.85);
+  --import-modal-bg: #ffffff;
+  --import-primary: #3498db;
+  --import-success: #27ae60;
+  --import-danger: #e74c3c;
+  --import-text-dark: #2c3e50;
+  --import-text-muted: #7f8c8d;
+  --import-border: #dcdde1;
+  --import-shadow: 0 10px 25px rgba(0,0,0,0.5);
+
 
 
 /**============================w WARNA BARU PERLU PERUBAHAN =================================*/

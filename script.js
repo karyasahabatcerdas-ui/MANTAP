@@ -30,8 +30,8 @@ document.addEventListener("DOMContentLoaded", () => {
     loadComponent('modalMaint-placeholder', 'modalMaint.html');
     loadComponent('modalDetailHist-placeholder', 'modalDetailHist.html');
     loadComponent('modalAssetDetail-placeholder', 'modalAssetDetail.html');
-    loadComponent('modalPhotoSlider-placeholder','modalPhotoSlider.html')
-
+    loadComponent('modalPhotoSlider-placeholder','modalPhotoSlider.html'); 
+    loadComponent('modalImport-placeholder','modalImport.html');
 });
 
 // Simpan URL Iframe GAS untuk referensi di fungsi lain (opsional, tergantung kebutuhan navigasi)
@@ -1633,74 +1633,6 @@ function driveLinkToDirect(url) {
  * =================================================================================
  */
 let timerPencarian; 
-/**
-async function loadJad() {
-  clearTimeout(timerPencarian);
-  
-  timerPencarian = setTimeout(async function() {
-    const urlGAS = document.getElementById('iframeGAS').src;
-    
-    const fType = document.getElementById('filterType')?.value || "";   
-    const fState = document.getElementById('filterState')?.value || ""; 
-    const sortBy = document.getElementById('sortJadwal')?.value || "";   
-    const keyword = document.getElementById('cari_jadwal')?.value.toUpperCase() || "";
-
-    try {
-      const response = await fetch(`${urlGAS}?action=getJadwal`);
-      const data = await response.json();
-
-      if (!data || data.length < 2) return;
-      
-      let rawData = data.slice(1); 
-
-      // 3. FILTERING
-      if (fType) rawData = rawData.filter(d => String(d[1]) === fType);
-      if (fState) rawData = rawData.filter(d => String(d[9]) === fState);
-      if (keyword) rawData = rawData.filter(d => d.join(" ").toUpperCase().includes(keyword));
-
-      const now = new Date();
-      
-      // HELPER KONVERSI TANGGAL (Format: dd/mm/yyyy hh:mm)
-      const toDate = (val) => {
-        if (!val || val === "-") return new Date(0);
-        const p = String(val).split(/[\/\s:]/); 
-        if (p.length < 3) return new Date(0);
-        // Date(tahun, bulan-1, tanggal, jam, menit)
-        return new Date(p[2], p[1] - 1, p[0], p[3] || 0, p[4] || 0);
-      };
-
-      // 4. SORTING Berdasarkan Kolom Plan (Index 7)
-      if (sortBy === 'newest') {
-        rawData.sort((a, b) => toDate(b[7]) - toDate(a[7]));
-      } 
-      else if (sortBy === 'oldest') {
-        rawData.sort((a, b) => toDate(a[7]) - toDate(b[7]));
-      } 
-      else if (sortBy === 'two_weeks_ahead') {
-        const limitAhead = new Date();
-        limitAhead.setDate(now.getDate() + 14);
-        rawData = rawData.filter(d => {
-          const dDate = toDate(d[7]);
-          return dDate >= now && dDate <= limitAhead;
-        });
-      } 
-      else if (sortBy === 'two_weeks_back') {
-        const limitBack = new Date();
-        limitBack.setDate(now.getDate() - 14);
-        rawData = rawData.filter(d => {
-          const dDate = toDate(d[7]);
-          return dDate <= now && dDate >= limitBack;
-        });
-      }
-
-      renderJadwalViewIncremental(rawData);
-
-    } catch (err) {
-      console.error("Gagal load jadwal:", err);
-    }
-  }, 400); 
-}
-  */
 
 async function loadJad() {
   clearTimeout(timerPencarian);
@@ -1781,34 +1713,6 @@ async function loadJad() {
  * Mengambil data jadwal dari server dan memanggil fungsi render khusus untuk panel kelola
  * =======================================================================================================
  */
-/**
-async function loadKel() {
-  const tbody = document.getElementById('kelolaBody');
-  if (!tbody) return;
-
-  const urlGAS = document.getElementById('iframeGAS').src;
-  tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'><i class='fas fa-spinner fa-spin'></i> Memuat panel kelola...</td></tr>";
-
-  try {
-    const response = await fetch(`${urlGAS}?action=getJadwal`);
-    
-    if (!response.ok) throw new Error("Gagal mengambil data dari server");
-    
-    const data = await response.json(); // Mengambil hasil JSON dari GAS
-
-    if (!data || data.length < 2) {
-      tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>Belum ada jadwal maintenance.</td></tr>";
-      return;
-    }
-    
-    renderKelolaIncremental(data);
-
-  } catch (err) {
-    console.error("CORS atau Network Error:", err);
-    tbody.innerHTML = `<tr><td colspan='5' style='text-align:center; color:red;'>⚠️ Error: ${err.message}</td></tr>`;
-  }
-}
-*/
 
 async function loadKel() {
   const tbody = document.getElementById('kelolaBody');
@@ -2193,16 +2097,6 @@ async function goMaint(rowIdx) {
       const sEl = document.getElementById('jenis_id_jadwal');
       if (sEl) sEl.value = data[6];
 
-      // --- LOGIKA DARI lIHAT JADWAL ADALAH SEMUA JADWAL OPEN ADALAH BARU TIDAK ADA PENDING, HANYA ADA OPEN DAN CLOSE) ---
-      // Jadi kita asumsikan jika statusnya "Open" maka kita anggap sebagai "Pending" untuk keperluan update log
-      // Jika statusnya "Close" maka kita anggap sebagai "Selesai" dan tidak bisa diupdate lagi (tombol update akan dinonaktifkan)
-      // Kita masukkan URL (String) ke dalam array tempPhotos
-      // Fungsi renderPhotoPreview Anda harus bisa menangani string URL
-      //tempPhotos.PB = data[8]  ? [{ data: data[8], isOld: true }]  : []; 
-      //tempPhotos.PO = data[9]  ? [{ data: data[9], isOld: true }]  : [];
-      //tempPhotos.PA = data[10] ? [{ data: data[10], isOld: true }] : [];
-      //tempPhotos.PC = data[11] ? [{ data: data[11], isOld: true }] : [];
-
       //['PB', 'PO', 'PA', 'PC'].forEach(cat => renderPhotoPreview(cat));
       resetTempPhotos(); // mengosongkan karena goMaint adalah jadwal baru, bukan update, jadi kita reset dulu tempPhotos agar tidak tercampur dengan data lama
 
@@ -2328,6 +2222,481 @@ async function loadMaintDetail(row) {
     if (typeof speakSenor === "function") speakSenor("Koneksi bermasalah Señor.");
   }
 }
+
+
+//=======================================================================================
+//                    FUNGSI EXPORT JADWAL KE CSV
+//==========================================================================================
+/**
+ * [FUNGSI UI: EXPORT JADWAL - CLEAN VERSION]
+ * Menghapus semua tanda petik agar data siap di-Import kembali
+ */
+async function exportToExcel() {
+  const konfirmasi = await Swal.fire({
+    title: "Export Laporan?",
+    text: "Semua tanda petik akan dibersihkan agar format aman untuk Import.",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Ya, Export",
+    cancelButtonText: "Batal",
+    width: '80%'
+  });
+
+  if (konfirmasi.isConfirmed) {
+    Swal.fire({ 
+      title: 'Menyiapkan Data...', 
+      allowOutsideClick: false, 
+      didOpen: () => Swal.showLoading() 
+    });
+
+    try {
+      const urlGAS = APPSCRIPT_URL;
+      
+      // Susun parameter untuk GET
+      const params = new URLSearchParams({
+        action: 'exportJadwal',
+        user: loggedInUser // Audit user yang melakukan export
+      });
+
+      const finalUrl = `${urlGAS}?${params.toString()}`;
+
+      // Ambil data CSV dari server
+      const response = await fetch(finalUrl);
+      
+      if (!response.ok) throw new Error("Gagal mengambil data dari server.");
+      
+      // Jika Apps Script mengembalikan teks CSV langsung
+      const csvContent = await response.text();
+
+      Swal.close();
+      
+      // Proses Pembuatan File Download
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      
+      // Penamaan file dengan tanggal hari ini
+      const tgl = new Date().toLocaleDateString('id-ID').replace(/\//g, '-');
+      
+      a.href = url;
+      a.download = `Export_Jadwal_Bersih_${tgl}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      
+      setTimeout(() => {
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        speakSenor("Laporan bersih berhasil diekspor, Señor.");
+      }, 1000);
+
+    } catch (err) {
+      console.error("Export Error:", err);
+      Swal.fire("Gagal!", "Server sedang sibuk atau koneksi terputus: " + err.message, "error");
+    }
+  }
+}
+
+
+//=======================================================================================
+//                    FUNGSI IMPORT JADWAL
+//==========================================================================================
+
+// Global variable untuk simpan data sementara
+let dataToImport = []; // Memory penampung sementara
+let lastValidatedData = []; 
+
+/**
+ * [FUNGSI CLIENT: EKSEKUSI PROSES IMPORT JADWAL ENYUNTIKAN DATA KE DATABASE]
+ * Mengirim data hasil validasi ke server dengan progress visual & Voice AI
+ * Logika: Filter OK Only, Progress Bar, & Voice AI
+ */
+async function processImport() {
+  // 1. FILTER AKHIR: Hanya ambil yang statusnya OK
+  const finalPayload = dataToImport.filter(item => item.status === "OK");
+
+  if (finalPayload.length === 0) {
+    speakSenor("Waduh Señor, tidak ada data valid yang bisa disuntikkan.");
+    return Swal.fire({
+      title: "Data Kosong!",
+      text: "Semua data berstatus NG (Duplikat atau Tidak Terdaftar).",
+      icon: "warning",
+      width: '80%'
+    });
+  }
+
+  const btn = document.getElementById('btnConfirmImport');
+  const prog = document.getElementById('importProgress');
+  const bar = document.getElementById('progressBar');
+  
+  // 2. KUNCI TOMBOL & TAMPILKAN LOADING UI
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sinking Data...';
+  }
+  
+  if (prog) prog.style.display = "block";
+  
+  Swal.fire({
+    title: 'Sinking Data...',
+    text: `Menyuntikkan ${finalPayload.length} jadwal baru ke database, Señor.`,
+    allowOutsideClick: false,
+    didOpen: () => { Swal.showLoading(); }
+  });
+
+  // Animasi Progress Bar Palsu
+  let w = 0;
+  let interval = setInterval(() => {
+    if (w < 90 && bar) { 
+      w += 2; 
+      bar.style.width = w + "%"; 
+    }
+  }, 100);
+
+  // 3. TRANSMISI KE SERVER (MENGGUNAKAN FETCH POST)
+  try {
+    const urlGAS = APPSCRIPT_URL; // Variabel global Anda
+    
+    // Kita kirim lewat POST karena data payload bisa sangat besar
+    const response = await fetch(urlGAS, {
+      method: 'POST',
+      mode: 'no-cors', // Penting: GAS sering butuh mode ini untuk POST sederhana
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        action: 'processImportBulk',
+        payload: finalPayload,
+        user: loggedInUser // Pastikan variabel ini ada
+      })
+    });
+
+    // Karena mode 'no-cors', kita tidak bisa baca response body secara detail, 
+    // tapi kita asumsikan jika tidak throw error berarti sukses.
+    
+    clearInterval(interval);
+    if (bar) bar.style.width = "100%";
+    
+    speakSenor("Misión Cumplida! Data sudah mendarat di database, aman Señor!");
+
+    await Swal.fire({
+      title: "Import Berhasil!",
+      text: `Berhasil memproses ${finalPayload.length} data ke server.`,
+      icon: "success",
+      width: '80%'
+    });
+    
+    closeImportModal(); 
+    if (typeof loadKel === 'function') loadKel(); 
+
+  } catch (err) {
+    clearInterval(interval);
+    if (bar) bar.style.width = "0%";
+    
+    console.error("Error Import:", err);
+    speakSenor("Gagal Señor, server sedang kewalahan.");
+
+    await Swal.fire({
+      title: "Server Error!",
+      text: "Gagal memproses data ke server GitHub/GAS. Cek koneksi.",
+      icon: "error",
+      width: '80%'
+    });
+
+    if(btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-redo"></i> PROSES ULANG';
+    }
+  }
+}
+
+
+/**=========================================================================================
+ * [FUNGSI UI: RENDER PREVIEW JADWAL]
+ * =========================================================================================
+ */
+function renderImportPreview(data) {
+  lastValidatedData = data || [];
+  const pArea = document.getElementById('previewArea');
+  if (pArea) pArea.style.display = "block";
+  
+  filterPreview('ALL');
+}
+
+/**=========================================================================================
+ * [FUNGSI UI: FILTER PREVIEW DENGAN DETAIL PESAN ERROR]
+ * =========================================================================================
+ */
+function filterPreview(mode) {
+  const pBody = document.getElementById('previewBody');
+  if (!pBody) return;
+
+  let html = `
+    <thead style="background:#f1f2f6; position:sticky; top:0; z-index:10;">
+      <tr style="text-align:left; font-size:10px; color:#7f8c8d;">
+        <th style="padding:8px; width:30px;">#</th>
+        <th style="padding:8px;">DETAIL JADWAL</th>
+        <th style="padding:8px; text-align:right;">STATUS</th>
+      </tr>
+    </thead><tbody>`;
+
+  let okCount = 0;
+
+  lastValidatedData.forEach((item, index) => {
+    const isOK = (item.status === "OK");
+    if (isOK) okCount++;
+    
+    // Logika Filter Radio (ALL / OK / NG)
+    if (mode !== 'ALL' && item.status !== mode) return;
+
+    html += `
+      <tr style="border-bottom:1px solid #eee; background:${isOK ? 'white' : '#fff5f5'}">
+        <td style="padding:10px; color:#bdc3c7; vertical-align:top;">${index + 1}</td>
+        <td style="padding:10px;">
+          <div style="font-weight:bold; font-size:11px; color:#2c3e50;">${item.idJad || 'N/A'}</div>
+          <div style="font-size:10px; color:#3498db; margin-top:2px;">ID Aset: ${item.asId || 'N/A'}</div>
+          <div style="font-size:9px; color:#95a5a6; margin-top:2px;"><i class="far fa-clock"></i> ${item.plan || '-'}</div>
+        </td>
+        <td style="padding:10px; text-align:right; vertical-align:middle;">
+          <!-- STATUS INDICATOR -->
+          <div style="font-size:10px; font-weight:bold; color:${isOK ? '#27ae60' : '#e74c3c'}">
+            ${isOK ? '<i class="fas fa-check-circle"></i> OK' : '<i class="fas fa-times-circle"></i> NG'}
+          </div>
+          <!-- PESAN ERROR SPESIFIK (Penting buat Admin!) -->
+          <div style="font-size:8px; color:#e74c3c; line-height:1.2; margin-top:3px; max-width:80px; margin-left:auto;">
+            ${isOK ? '' : (item.msg || 'Error')}
+          </div>
+        </td>
+      </tr>`;
+  });
+
+  html += `</tbody>`;
+  
+  // Update Konten Tabel
+  const tableWrap = document.getElementById('tableScrollContainer'); 
+  if (tableWrap) {
+    tableWrap.innerHTML = `<table id="mainPreviewTable" style="width:100%; border-collapse:collapse;">${html}</table>`;
+  }
+
+  // Update Counter Valid
+  const elCount = document.getElementById('countPreview');
+  if (elCount) elCount.innerText = okCount;
+
+  // Kunci Tombol Import: Hanya nyala kalau ada minimal 1 data OK
+  const btn = document.getElementById('btnConfirmImport');
+  if (btn) btn.disabled = (okCount === 0);
+  
+}
+
+/** =========================================================================================
+ * [FUNGSI CLIENT: PENGHUBUNG & EKSEKUSI IMPORT]
+ * Menangani alur dari File Picker -> Parser -> Server
+ * =========================================================================================
+ */
+
+// 1. HANDLE FILE: Pintu masuk pertama saat file dipilih
+function handleFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const dropText = document.querySelector('#dropZone p');
+  if(dropText) dropText.innerText = "Membaca: " + file.name + "...";
+
+  const reader = new FileReader();
+  reader.onload = (e) => parseCSV(e.target.result); // Lempar ke Parser
+  reader.onerror = () => Swal.fire("Gagal!", "Waduh Kang, gagal baca filenya!", "error");
+  reader.readAsText(file);
+}
+
+// 2. PARSE CSV: Validasi Header & Koordinat (3, 8, 11)
+/**=========================================================================================
+ * [FUNGSI CLIENT: PARSE CSV - VERSI FINAL ULTRA-STABIL]
+ * Update: Fix toLowerCase, Case-Insensitive, & Standard 09:00:00
+ * =========================================================================================
+ */
+async function parseCSV(text) {
+  // 1. UI FEEDBACK
+  const dropZone = document.getElementById('dropZone');
+  const animasi = document.getElementById('animasiValidasi');
+  const errorArea = document.getElementById('errorArea');
+
+  if (dropZone) dropZone.style.display = "none";
+  if (errorArea) errorArea.style.display = "none";
+  if (animasi) animasi.style.display = "block";
+
+  // 2. NORMALISASI TEKS
+  // Hati-hati: .toLowerCase() akan mengubah semua ID menjadi huruf kecil
+  const lines = text.split(/\r?\n/).filter(l => l.trim() !== "");
+
+  if (lines.length < 2) {
+    if (animasi) animasi.style.display = "none";
+    if (dropZone) dropZone.style.display = "block";
+    speakSenor("Waduh Señor, filenya kosong.");
+    return Swal.fire("File Kosong", "Tidak ada data di dalam CSV.", "error");
+  }
+
+  // 3. DETEKSI DELIMITER & HEADER (Gunakan baris pertama asli tanpa lowerCase dulu)
+  const firstLine = lines[0].toLowerCase();
+  const delimiter = (firstLine.includes(",")) ? "," : ";";
+  const headers = firstLine.split(delimiter).map(h => h.trim());
+
+  const idxID = headers.indexOf("asset_id");
+  const idxPlan = headers.indexOf("plan");
+  const idxJad = headers.indexOf("id_jadwal");
+
+  if (idxID === -1 || idxPlan === -1 || idxJad === -1) {
+    setTimeout(() => {
+      if (animasi) animasi.style.display = "none";
+      if (errorArea) errorArea.style.display = "block";
+      speakSenor("Header tidak valid Señor.");
+      Swal.fire({ title: "Header Salah!", html: "Wajib ada: <b>id_jadwal, asset_id, plan</b>", icon: "error" });
+      if (dropZone) dropZone.style.display = "block";
+    }, 1500);
+    return;
+  }
+
+  // 4. PEMBENTUKAN PAYLOAD
+  let rawList = lines.slice(1).map(line => {
+    const cols = line.split(delimiter);
+    // Membersihkan format tanggal (titik/strip jadi slash)
+    let rawDate = (cols[idxPlan] || "").replace(/[\.-]/g, "/").trim().substring(0, 10);
+    
+    return {
+      idJad: (cols[idxJad] || "").trim(),
+      asId: (cols[idxID] || "").trim(),
+      plan: rawDate + " 09:00:00"
+    };
+  }).filter(item => item.idJad && item.asId);
+
+  // 5. TRANSMISI KE SERVER UNTUK VALIDASI (FETCH POST)
+  try {
+    const urlGAS = APPSCRIPT_URL;
+    
+    // Kita panggil action: 'validateImportJadwal'
+    const response = await fetch(urlGAS, {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'validateImportJadwal',
+        payload: rawList
+      })
+    });
+
+    // Karena ini proses validasi, kita butuh datanya kembali (Response JSON)
+    // Catatan: Jika Apps Script Anda mengembalikan JSON, pastikan CORS di GAS sudah OK
+    const res = await response.json();
+
+    if (animasi) animasi.style.display = "none";
+    
+    // Simpan ke variabel global
+    dataToImport = res || []; 
+    
+    const okCount = dataToImport.filter(d => d.status === "OK").length;
+    
+    if (okCount > 0) {
+      speakSenor(`Validasi selesai Señor. Ditemukan ${okCount} data baru.`);
+    } else {
+      speakSenor("Semua data duplikat atau tidak terdaftar.");
+    }
+
+    renderImportPreview(dataToImport); 
+
+  } catch (err) {
+    console.error("Error Validasi:", err);
+    if (animasi) animasi.style.display = "none";
+    if (dropZone) dropZone.style.display = "block";
+    Swal.fire("Error Server", "Gagal menghubungi validator server.", "error");
+  }
+}
+
+
+/**=========================================================================================
+ * [FUNGSI UI: RESET & DOWNLOAD]
+ * Bagian pelengkap agar UI tidak error saat tutup/buka
+ * =========================================================================================
+ */
+
+// A. RESET AREA: Membersihkan cache sebelum import baru
+function resetImport() {
+  const ids = ['fileInput', 'previewArea', 'importProgress'];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if(el) id === 'fileInput' ? el.value = "" : el.style.display = "none";
+  });
+  
+  const dropZone = document.getElementById('dropZone');
+  if(dropZone) {
+    dropZone.style.display = "block";
+    dropZone.querySelector('p').innerText = "Klik atau Taruh CSV di sini";
+  }
+  
+  dataToImport = []; // Kosongkan laci data global
+  console.log("🧹 Cache Import Bersih!");
+}
+
+// B. CLOSE MODAL: Tutup dan tarik Fullscreen
+/**=========================================================================================
+ * [FUNGSI: CLOSE MODAL IMPORT]
+ * Langsung memicu download tanpa ribet, anti-blokir browser.
+ * =========================================================================================
+ */
+function closeImportModal() {
+  resetImport();
+  const modal = document.getElementById('modalImport');
+  if (modal) modal.style.display = 'none';
+  //activateFullscreen(); // Kunci layar penuh lagi
+}
+
+// C. DOWNLOAD TEMPLATE: Sesuai standar Header (3 Kolom Wajib)
+/**=========================================================================================
+ * [FUNGSI: GENERATE & DOWNLOAD CSV TEMPLATE]
+ * Langsung memicu download tanpa ribet, anti-blokir browser.
+ * =========================================================================================
+ */
+function downloadTemplate() {
+  // 1. Siapkan Isi Data
+  const csvRows = [
+    ["id_jadwal", "asset_id", "plan", "shift_note", "other_note"], // Header
+    ["JAD-001", "AC-001", "19/02/2026 09:00", "Servis rutin", "Filter udara"] // Contoh
+  ];
+
+  // 2. Gabungkan jadi string CSV
+  const csvContent = csvRows.map(e => e.join(",")).join("\n");
+
+  // 3. Bungkus jadi Blob (File Bayangan)
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = window.URL.createObjectURL(blob);
+
+  // 4. Buat Link "Siluman"
+  const link = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", "Template_Maintenance.csv");
+  
+  // 5. EKSEKUSI (Tempel - Klik - Buang)
+  document.body.appendChild(link);
+  link.click();
+  
+  // Kasih waktu 500ms (setengah detik) baru dibuang dari halaman
+  setTimeout(() => {
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  }, 500);
+
+  // 6. Notifikasi SweetAlert
+  Swal.fire({
+    title: "Template Terunduh",
+    text: "Silakan cek folder Download di HP Anda, Mas Bro!",
+    icon: "success",
+    timer: 2000,
+    showConfirmButton: false,
+    width: '80%'
+  });
+
+  // Tarik Fullscreen lagi biar tetep ganteng
+  //activateFullscreen();
+}
+
+
+
+
 
 /**=========================================================================
  * [FUNGSI CLIENT GITHUB: LOAD TIPE ASET]
@@ -2498,7 +2867,113 @@ function toggleAllAssets() {
   });
 }
 
+/**=========================================================================
+ * [FUNGSI: UPDATE GAMBAR QR]
+ * =========================================================================
+*/
+function updateQRCode(type, id) {
+  // 1. Sanitasi: Ambil bagian pertama saja jika ada tanda "-" (Mencegah Tipe-ID-Tipe-ID)
+  let cleanType = type.split('-')[0].trim();
+  let cleanId = id.toString().split('-')[0].trim();
+  
+  // 2. Bentuk string QR yang baku
+  const code = cleanType + "-" + cleanId;
+  
+  // 3. Format URL API stabil Anda
+  const qrUrl = "https://api.qrserver.com/v1/create-qr-code/?data=" + encodeURIComponent(code) + "&size=150x150";
+  
+  const imgQr = document.getElementById('assetQRCode');
+  const txtQr = document.getElementById('qrText');
+  
+  if (imgQr) imgQr.src = qrUrl;
+  if (txtQr) txtQr.innerText = code;
+  
+  console.log("✅ QR Clean Generated: " + code);
+}
+/**=========================================================================
+ * [FUNGSI: UPDATE GAMBAR QR]
+ * =========================================================================
+*/
+async function openAddAssetModal() {
+  const type = document.getElementById('assetTypeSelect').value;
+  if (!type) {
+    return Swal.fire({
+      title: "Pilih Tipe!",
+      text: "Pilih Tipe Aset dulu bos!",
+      icon: "warning",
+      width: '80%'
+    });
+  }
 
+  // a. KUNCI GALERI (Tambahan Kunci)
+  const gallery = document.getElementById('as_gallery_box');
+  if (gallery) {
+    gallery.style.opacity = "0.4"; // Bikin redup
+    gallery.style.pointerEvents = "none"; // Matikan klik
+  }
+
+  // Tampilkan Loading sebentar karena kita akan "nanya" ID ke server
+  Swal.fire({
+    title: 'Mengambil ID...',
+    allowOutsideClick: false,
+    didOpen: () => { Swal.showLoading(); }
+  });
+
+  try {
+    const urlGAS = APPSCRIPT_URL;
+    const params = new URLSearchParams({
+      action: 'getNextAssetId',
+      type: type
+    });
+
+    const response = await fetch(`${urlGAS}?${params.toString()}`);
+    if (!response.ok) throw new Error("Gagal terhubung ke server.");
+    
+    const nextId = await response.text(); // Mengambil ID baru (misal: "ELC-001")
+
+    Swal.close(); // Tutup loading
+
+    // 1. Reset Penanda Baris (Kosong = Tambah Baru)
+    document.getElementById('assetRowIdx').value = ""; 
+    
+    // 2. RESET TOTAL CACHE GAMBAR
+    assetImages = [];    
+    currentImgIdx = 0;   
+    
+    // 3. Kembalikan Tampilan Slider ke Placeholder
+    const imgEl = document.getElementById('currAssetImg');
+    if (imgEl) {
+      imgEl.src = "https://lh3.googleusercontent.com/d/0"; // Placeholder standar
+      imgEl.style.opacity = "1";
+    }
+    
+    // 5. Reset Input Lainnya & Isi ID Otomatis
+    document.getElementById('as_type').value = type;
+    document.getElementById('as_id').value = nextId; // ID dari server mendarat di sini
+    document.getElementById('as_nama').value = "";
+    document.getElementById('as_lokasi').value = "";
+    document.getElementById('as_status').value = "Baik";    
+
+    // Update QR Code (Fungsi lokal Anda)
+    if (typeof updateQRCode === 'function') updateQRCode(type, nextId);
+
+    // Buka Modal
+    document.getElementById('assetDetailModal').style.display = 'flex';
+
+  } catch (err) {
+    console.error("Gagal ambil ID:", err);
+    Swal.fire("Error", "Gagal mengambil ID otomatis dari server: " + err.message, "error");
+  }
+}
+
+
+/** =========================================================================
+ * Fungsi Tambahan: Centang Semua 
+ *  =========================================================================
+ */
+function toggleSelectAset(master) {
+  document.querySelectorAll('.asetCheck').forEach(cb => cb.checked = master.checked);
+}
 
 /**=========================================================================
  * [FUNGSI CLIENT GITHUB: LOAD TABEL LIHAT ASET - READ ONLY]
@@ -3570,6 +4045,176 @@ function openAddUserModal() {
 }
 
 
+/**=================================================================================================
+ * [FUNGSI: DELETE USER ]
+ * Membersihkan field dan memuat placeholder Avatar.
+ * ================================================================================================
+ */
+async function doBulkAction(status) {
+  let selected = getSelectedRows(); // Pastikan fungsi ini mereturn Array ID
+  if (selected.length === 0) {
+    Swal.fire({ 
+      title: "Pilih User", 
+      text: "Silahkan centang user terlebih dahulu.", 
+      icon: "info", 
+      width: '80%' 
+    });
+    return;
+  }
+
+  const result = await Swal.fire({
+    title: (status === "aktif" ? "Aktifkan" : "Non-aktifkan") + " User",
+    text: "Ubah status " + selected.length + " user menjadi " + status + "?",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonColor: status === "aktif" ? "#28a745" : "#d33",
+    confirmButtonText: "Ya, Lanjutkan",
+    cancelButtonText: "Batal",
+    width: '80%'
+  });
+
+  if (result.isConfirmed) {
+    // Tampilkan loading overlay
+    Swal.fire({ 
+      title: 'Memproses...', 
+      allowOutsideClick: false, 
+      didOpen: () => { Swal.showLoading(); } 
+    });
+
+    try {
+      const urlGAS = APPSCRIPT_URL;
+
+      const response = await fetch(urlGAS, {
+        method: "POST",
+        // Menggunakan mode default (cors) agar bisa membaca JSON response jika GAS mendukung
+        // Jika gagal, ganti ke 'no-cors' tapi res tidak bisa dibaca detail
+        body: JSON.stringify({
+          action: "bulkUpdateStatus",
+          ids: selected,
+          status: status,
+          user: loggedInUser
+        })
+      });
+
+      // Jika Apps Script return ContentService.MimeType.JSON
+      const res = await response.json();
+
+      await Swal.fire({ 
+        title: "Berhasil", 
+        text: res.message || "Status user berhasil diperbarui.", 
+        icon: "success", 
+        width: '80%' 
+      });
+
+      if (typeof loadUserList === 'function') loadUserList(); // Segarkan tabel
+
+    } catch (err) {
+      console.error("Bulk Action Error:", err);
+      await Swal.fire({ 
+        title: "Gagal", 
+        text: "Terjadi kesalahan koneksi atau server: " + err.message, 
+        icon: "error", 
+        width: '80%' 
+      });
+    }
+  }
+}
+
+
+function getSelectedRows() {
+  let rows = [];
+  document.querySelectorAll('.userCheck:checked').forEach(cb => rows.push(parseInt(cb.value)));
+  return rows;
+}
+
+function toggleSelectAll() {
+    let master = document.getElementById('selectAll');
+    document.querySelectorAll('.userCheck').forEach(cb => cb.checked = master.checked);
+}
+
+/**=================================================================================================
+ * [FUNGSI: HAPUS MASSAL USER]
+ * Menghapus baris di Spreadsheet dan file foto di Google Drive.
+ * ===================================================================================================
+ */
+async function doBulkDelete() {
+  let selected = [];
+  // Mengambil semua ID dari baris yang dicentang
+  document.querySelectorAll('.userCheck:checked').forEach(cb => {
+    selected.push(parseInt(cb.value));
+  });
+   
+  if (selected.length === 0) { 
+    return Swal.fire({
+      title: "Pilih Dulu!",
+      text: "Pilih user dulu Yuk!",
+      icon: "warning", 
+      confirmButtonText: "OK", 
+      width: '80%' 
+    });
+  }
+    
+  const result = await Swal.fire({
+    title: "Hapus User(s)",
+    text: "⚠️ HAPUS " + selected.length + " USER?\n\nSemua data dan foto profil di Drive akan dihapus secara permanen.",
+    icon: "warning", 
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    confirmButtonText: "Ya, Hapus",
+    cancelButtonText: "Batal",
+    width: '80%'
+  });
+
+  if (result.isConfirmed) {
+    // Tampilkan loading overlay
+    Swal.fire({
+      title: 'Mohon Tunggu',
+      text: 'Sedang menghapus data secara permanen...',
+      allowOutsideClick: false,
+      didOpen: () => { Swal.showLoading(); }
+    });
+
+    try {
+      const urlGAS = APPSCRIPT_URL;
+
+      const response = await fetch(urlGAS, {
+        method: "POST",
+        body: JSON.stringify({
+          action: "deleteSelectedUsers",
+          ids: selected,
+          user: loggedInUser // Audit: Siapa yang menghapus
+        })
+      });
+
+      // Menunggu respon dari server
+      const res = await response.json();
+
+      await Swal.fire({
+        title: "Berhasil!",
+        text: res.message || "Data berhasil dihapus dari database dan Drive.",
+        icon: "success",
+        width: '80%'
+      });
+
+      if (typeof loadUserList === 'function') loadUserList(); 
+
+    } catch (err) {
+      console.error("Delete Error:", err);
+      await Swal.fire({
+        title: "Gagal",
+        text: "Gagal menghapus: " + err.message,
+        icon: "error",
+        width: '80%'
+      });
+    }
+  } 
+}
+
+/**=================================================================================================
+ * [FUNGSI: LOAD USER PROFILE]
+ * Menghapus baris di Spreadsheet dan file foto di Google Drive.
+ * ===================================================================================================
+ */
 async function loadProf() {
   const urlGAS = APPSCRIPT_URL;
   
@@ -3731,20 +4376,50 @@ async function saveProf() {
  * [FUNGSI: EKSPOR DATA KE CSV]
  * Mengunduh daftar pengguna dalam format CSV melalui browser.
  */
-function downloadCSV() {
-  google.script.run.withSuccessHandler(function(base64Content) {
-    var csvData = atob(base64Content);
-    var blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
-    var link = document.createElement("a");
-    var url = URL.createObjectURL(blob);
-   
+async function downloadCSV() {
+  // Beri feedback loading kecil agar user tahu proses dimulai
+  speakSenor("Menyiapkan data user, Señor.");
+
+  try {
+    const urlGAS = APPSCRIPT_URL;
+    const params = new URLSearchParams({
+      action: 'exportUsersToCSV' // Sesuaikan dengan action di doGet GAS
+    });
+
+    const response = await fetch(`${urlGAS}?${params.toString()}`);
+    
+    if (!response.ok) throw new Error("Gagal mengambil data user.");
+
+    // Kita asumsikan server mengirim teks CSV murni (lebih efisien daripada Base64)
+    const csvData = await response.text();
+
+    // Proses Download
+    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    
+    // Penamaan file yang rapi
+    const tgl = new Date().toLocaleDateString('id-ID').replace(/\//g, '-');
+    const fileName = `Data_User_Maintenance_${tgl}.csv`;
+
     link.setAttribute("href", url);
-    link.setAttribute("download", "Data_User_Maintenance_" + new Date().toLocaleDateString() + ".csv");
+    link.setAttribute("download", fileName);
     link.style.visibility = 'hidden';
+    
     document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
-  }).exportUsersToCSV();
+    
+    // Cleanup
+    setTimeout(() => {
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      speakSenor("Data user berhasil diunduh.");
+    }, 1000);
+
+  } catch (err) {
+    console.error("Download Error:", err);
+    Swal.fire("Gagal!", "Tidak bisa mengunduh data user: " + err.message, "error");
+  }
 }
 
 
