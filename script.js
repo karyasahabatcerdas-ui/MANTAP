@@ -781,8 +781,13 @@ function startMaintenanceMode() {
         }
     });
 
+
     // 3. Tampilkan Modal
     modal.style.display = 'block';
+
+    // 4. Pastikan tombol QR dan ID man terbuka 
+    document.getElementById("btnCekQR").disabled = false ; // kunci klo sudah dibuka
+    document.getElementById("btnCekMan").disabled = false ; // kunci klo sudah dibuka
     // Optional: Auto-scroll ke atas jika modal sangat panjang
     modal.scrollTop = 0;
 }
@@ -807,11 +812,13 @@ async function startMaintenanceModeUpdate() {
   }
 
   const data = activeRowData; 
-
+  console.log("catatan data dari opendetaillog sebelum fetch:");
+  console.table(data);
+  console.log("data index 6 ID_Asset :", data[6])
   // 2. TAMPILKAN LOADING
   Swal.fire({
     title: 'Mencari Detail Aset...',
-    text: 'Sik Tak Wocone Dilit...',
+    text: 'SMembaca dari Database...',
     allowOutsideClick: false,
     didOpen: () => { Swal.showLoading(); }
   });
@@ -994,6 +1001,9 @@ async function unlockMaintenanceForm() {
       setTimeout(() => picInput.style.boxShadow = "none", 1000);
     }
     
+    document.getElementById("btnCekQR").disabled = true ; // kunci klo sudah dibuka
+    document.getElementById("btnCekMan").disabled = true ; // kunci klo sudah dibuka
+
     console.log("🔓 Form Maintenance dibuka. Waktu Server:", fullTimestamp);
 
   } catch (err) {
@@ -1087,6 +1097,8 @@ function closeMaintenanceMode() {
         actionClose();
       }
     });
+
+
   }
 }
 
@@ -1387,7 +1399,8 @@ function openDetailLog(logId) {
   activeRowData = data; 
   // console.log("🔍 Detail Log Ditemukan:", data); trap ok dan dan isinya
   //  console.table({allHistoryData, activeRowData: data}); //trap ok dan dan isinya
-
+  console.log("data dari opendetail.log :");
+  console.table(data);
   var setEl = function(id, val) {
     var el = document.getElementById(id);
     if (el) el.innerText = val || "-";

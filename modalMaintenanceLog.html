@@ -2,10 +2,10 @@
   <div class="maint-container">
 
     <div class="maint-top-nav">
-      <button onclick="openCustomScanner();" class="btn-maint-tool btn-scan">
+      <button id="btnCekQR" onclick="openCustomScanner();" class="btn-maint-tool btn-scan">
         <i class="fas fa-qrcode"></i> SCAN QR
       </button> 
-      <button onclick="openGlobalSearch(); window.isMaintMode=true;" class="btn-maint-tool btn-manual">
+      <button id="btnCekMan" onclick="openGlobalSearch(); window.isMaintMode=true;" class="btn-maint-tool btn-manual">
         <i class="fas fa-list"></i> MANUAL
       </button>
       <button onclick="closeMaintenanceMode()" class="btn-close-maint">BATAL</button>
@@ -20,7 +20,7 @@
         <div>
           <label style="font-size: 11px; color: var(--neon-gold); font-weight: bold;">ID JADWAL</label>
           <select id="jenis_id_jadwal" class="select-maint-neon">
-            <option value=""> Memuat...</option>
+            <option value=""> MEMUAT JENIS JADWAL...</option>
           </select>
         </div>
       </div>
@@ -41,7 +41,7 @@
     <input type="hidden" id="Act_online"> 
 
     <canvas id="photoCanvas" style="display:none;"></canvas>
-    
+
     <div class="maint-section">
       <label class="section-label">CATATAN KERJA (NOTE)</label>
       <textarea id="log_pekerjaan" placeholder="Tuliskan detail perbaikan..." class="textarea-maint"></textarea>
