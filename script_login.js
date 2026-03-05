@@ -129,7 +129,7 @@ async function initAssetDropdowns() {
       }
       
       el.innerHTML = html;
-      cconsole.log("Mengisi elemen ID: " + el.id, "dengan HTML: ", html);
+      console.log("Mengisi elemen ID: " + el.id, "dengan HTML: ", html);
     };
 
     // 4. Tebarkan data menggunakan KEY yang sudah unik tadi
