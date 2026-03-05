@@ -106,10 +106,10 @@ async function initAssetDropdowns() {
   
   // ID elemen dropdown di HTML Señor (sesuaikan jika namanya berbeda)
   const elements = {
-    filterTgl: document.getElementById('filter_tanggal'), 
+    filterTgl: document.getElementById('sortJadwal'), 
     statusMaint: document.getElementById('filterStatusLog'),
     statusMaint: document.getElementById('filterStateJadwal'),
-    statusAsset: document.getElementById('filter_status_asset')
+    statusAsset: document.getElementById('as_status')
   };
 
   // 1. Set Loading Status
@@ -141,13 +141,13 @@ async function initAssetDropdowns() {
     renderOptions(elements.statusMaint, data.statusMaint, "Status Jadwal");
     renderOptions(elements.statusAsset, data.statusAsset, "Status Aset");
 
-    console.log("data dari fetch untuk dropdown filtertgl;", elements.filterTgl);
+    console.log("data dari fetch untuk dropdown filtertgl;"+ elements.filterTgl);
     console.table(data.filterTgl);
 
-    console.log("data dari fetch untuk dropdown status log dan jadwal maint;",elements.statusMaint );
+    console.log("data dari fetch untuk dropdown status log dan jadwal maint;"+elements.statusMaint );
     console.table(data.statusMaint);
 
-     console.log("data dari fetch untuk dropdown status asset;", elements.statusAsset, data.statusAsset);
+     console.log("data dari fetch untuk dropdown status asset;" + elements.statusAsset);
     console.table(data.statusAsset);
 
     console.log("✅ Asset Dropdowns Synchronized via single fetch.");
