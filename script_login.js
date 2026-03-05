@@ -159,28 +159,3 @@ async function initAssetDropdowns() {
     });
   }
 }
-
-/**
- * Fungsi Global untuk mengisi elemen <select> dengan data
- * @param {HTMLElement} el - Elemen Select
- * @param {Array} list - Data dari GAS (id & nama)
- * @param {string} defaultText - Teks awal (Placeholder)
- */
-function renderOptions(el, list, defaultText) {
-  if (!el) return;
-  
-  let html = `<option value="">-- ${defaultText} --</option>`;
-  
-  if (list && list.length > 0) {
-    html += list.map(item => {
-      // Pastikan properti 'id' dan 'nama' sesuai dengan yang dikirim Code.gs
-      const id = item.id || "";
-      const nama = item.nama || "";
-      return `<option value="${id}">${nama}</option>`;
-    }).join('');
-  } else {
-    html += `<option value="" disabled>Data tidak tersedia</option>`;
-  }
-  
-  el.innerHTML = html;
-}
