@@ -37,7 +37,7 @@ function login() {
 // EKSEKUSI SAAT SEMUA SIAP
 window.onload = function() {
     // Jika ingin langsung login otomatis saat refresh (untuk dev):
-    // login(); 
+    login(); 
     
     // Atau pasang listener ke form login asli
     console.log("🖥️ System Ready.");
