@@ -36,6 +36,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Simpan URL Iframe GAS untuk referensi di fungsi lain (opsional, tergantung kebutuhan navigasi)
 const urlGAS = document.getElementById('iframeGAS').src;
+  let cachedAssetTypes = null; 
+  let loggedInUser = "";
+  let userRole = "";
+  let update_man_status ="";
 
 /**
  * [FUNGSI AI: UNIVERSAL VOICE NOTIFICATION]
@@ -737,6 +741,15 @@ async function getMMDDYY() {
  */
 function startMaintenanceMode() {
     const modal = document.getElementById('modalMaintenanceLog');
+    const modalPlaceholder = document.getElementById('modalMaintenanceLog-placeholder');
+
+    // FIX KLIK TEMBUS: Pastikan placeholder bisa berinteraksi kembali
+    if (modalPlaceholder) {
+        modalPlaceholder.removeAttribute('inert');
+        modalPlaceholder.style.zIndex = "2900"; // Pastikan di depan layer lain
+                                                // di atas yang alin di bawah holder dalam 3000
+    }
+
     if (!modal) {
         console.error("❌ Modal Maintenance tidak ditemukan!");
         return;
@@ -973,7 +986,7 @@ async function unlockMaintenanceForm() {
     
     // Gunakan variabel global 'loggedInUser' yang ada di GitHub
     if(picInput) {
-      picInput.value = (typeof window.loggedInUser !== 'undefined') ? window.loggedInUser : "Admin"; 
+      picInput.value = (typeof loggedInUser !== 'undefined') ? loggedInUser : "Admin"; 
 
       // 3. EFEK VISUAL (Industrial Feel)
       picInput.style.transition = "0.5s";
@@ -1005,7 +1018,7 @@ function closeMaintenanceMode() {
   // Ambil placeholder/parent modal jika ada untuk 'inert'
   const modalPlaceholder = document.getElementById('modalMaintenanceLog-placeholder');
   
-  update_man_status = false; 
+  
 
   const actionClose = () => {
     // 1. MELEPAS FOKUS (Solusi Error F12)
@@ -1021,6 +1034,7 @@ function closeMaintenanceMode() {
     if (modalPlaceholder) {
       modalPlaceholder.setAttribute('inert', '');
       modalPlaceholder.removeAttribute('aria-hidden'); // Buang aria-hidden yang bermasalah
+      modalPlaceholder.style.zIndex ="-1";
     }
 
     // --- RESET STATUS TOMBOL KE DEFAULT ---
@@ -1037,23 +1051,21 @@ function closeMaintenanceMode() {
     
     modal.style.pointerEvents = "auto";
     modal.style.opacity = "1"; 
-    window.isSuccessSave = false;
+    window.isSuccessSave = false; //reset status apakah ad kegiatan saving atau pending jik ay a= true
+    
     
     if (typeof resetLogModalTotal === 'function') {
       resetLogModalTotal(); 
     }
-    
+    //reset kembali menjadi baru
+    update_man_status = false; 
     // Kembalikan fokus ke body atau tombol pemicu utama agar teknisi bisa lanjut scroll
     document.body.focus();
-
     console.log("🚪 Maintenance Mode Closed & Cleaned (A11y Fixed).");
   };
 
-  if (window.isSuccessSave) {
-    actionClose();
-     if (document.activeElement) {
-                document.activeElement.blur();
-              } 
+  if (window.isSuccessSave) {    //jika true artinnya tutup dari tombol savelog()
+      actionClose();
   } else {
     Swal.fire({
       title: "Batalkan Input?",
@@ -1174,7 +1186,7 @@ async function saveLog(status) {
                 width: '80%'
             });
 
-            window.isSuccessSave = true;
+            window.isSuccessSave = true;  // memanggol closemaintenancemode tanpa peringatan
             closeMaintenanceMode(); 
             modal.style.pointerEvents = "auto";
             
