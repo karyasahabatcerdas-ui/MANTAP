@@ -42,11 +42,24 @@
 
 </head>
 <body>
+    <!--
 <iframe id="iframeGAS" class="iframe-container"
   src="https://script.google.com/macros/s/AKfycbwUtk-JxiQUUO0wyJA72OaWZf_MPiNHkcSZJbkCcpKt5mVfUuTlop8IYQ4c-hE6EFpG/exec"
   ></iframe>
 
-<!--Konten utama di sini -->
+  -->
+
+<!--Konten utama di sini kita tidak pakai iframe lagi karena komunikasi langsung ke GAS sisi server-->
+
+<script>
+  // Cukup ganti ID ini saja setiap kali deploy ulang
+  var APPSCRIPT_ID = "AKfycbwUtk-JxiQUUO0wyJA72OaWZf_MPiNHkcSZJbkCcpKt5mVfUuTlop8IYQ4c-hE6EFpG";
+  
+  // URL akan otomatis terbentuk menggunakan ID di atas
+  var APPSCRIPT_URL = "https://script.google.com/macros/s/" + APPSCRIPT_ID + "/exec";
+
+  console.log("🔗 GAS URL Ready: " + APPSCRIPT_URL);
+</script>
 
 <main id="main-content" class="cmain-content">
     <div id="leftbar-placeholder"></div>

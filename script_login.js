@@ -50,7 +50,7 @@ async function initAllJadwalDropdowns() {
   const ids = ["filterJadwalLog", "jenis_id_jadwal", "maint_id_jadwal"];
   
   // Ambil URL GAS dari elemen atau variabel global
-  const urlGAS = document.getElementById('iframeGAS') ? document.getElementById('iframeGAS').src : "URL_WEBAPP_KAMU_DISINI";
+  const urlGAS = APPSCRIPT_URL;
 
   // 1. Loading State
   ids.forEach(id => {
@@ -102,7 +102,7 @@ async function initAllJadwalDropdowns() {
  * ========================================================================
  */
 async function initAssetDropdowns() {
-  const urlGAS = document.getElementById('iframeGAS').src;
+  const urlGAS = APPSCRIPT_URL;
   
   // ID elemen dropdown di HTML Señor (sesuaikan jika namanya berbeda)
   const elements = {

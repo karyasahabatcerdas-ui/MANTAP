@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Simpan URL Iframe GAS untuk referensi di fungsi lain (opsional, tergantung kebutuhan navigasi)
-const urlGAS = document.getElementById('iframeGAS').src;
+const urlGAS = APPSCRIPT_ID;
   let cachedAssetTypes = null; 
   //let loggedInUser = "";
   //let userRole = "";
@@ -70,8 +70,8 @@ function speakSenor(pesan) {
 async function openGlobalSearch() {
   const tbody = document.getElementById('globalResultBody');
   const input = document.getElementById('masterSearchInput');
-  const iframe = document.getElementById('iframeGAS');
-  const urlGAS = iframe.src;
+  //const iframe = document.getElementById('iframeGAS');
+  const urlGAS = APPSCRIPT_URL;
   
   tbody.innerHTML = "<tr><td colspan='5' style='text-align:center; padding:20px;'><i class='fas fa-spinner fa-spin'></i> Menyisir seluruh database...</td></tr>";
   input.value = "";
@@ -143,7 +143,7 @@ async function navigateAsset() {
   
   const [type, row] = selected.value.split('|');
   const unitID = selected.getAttribute('data-asid');   
-  const urlGAS = document.getElementById('iframeGAS').src; // URL Web App Anda
+  const urlGAS = APPSCRIPT_URL; //document.getElementById('iframeGAS').src; // URL Web App Anda
 
   // --- LOGIKA 1: MODAL MAINTENANCE LOG (SEARCH UNIT ID) ---
   const modalMaintLog = document.getElementById('modalMaintenanceLog');
@@ -211,8 +211,8 @@ function closeGlobalSearch() {
 async function fetchAssetDetailForLog(unitID) {
   if (!unitID) return;    
   const uiNama = document.getElementById('log_as_id');    
-  const iframe = document.getElementById('iframeGAS');
-  const urlGAS = iframe.src;
+  //const iframe = document.getElementById('iframeGAS');
+  const urlGAS = APPSCRIPT_URL;
   
   if(uiNama) uiNama.innerHTML = `<span class="text-gradient">Baca Database...</span>`;
 
@@ -706,8 +706,8 @@ function resetTempPhotos() {
  * Mengambil string waktu dari doGet(?action=getServerTime)
  */
 async function getMMDDYY() {
-  const iframe = document.getElementById('iframeGAS');
-  const urlGAS = iframe.src;
+  //const iframe = document.getElementById('iframeGAS');
+  const urlGAS = APPSCRIPT_URL;
 
   try {
     // 1. Fetch ke server
@@ -798,7 +798,7 @@ function startMaintenanceMode() {
  * ===================================================================
  */
 async function startMaintenanceModeUpdate() {
-  const urlGAS = document.getElementById('iframeGAS').src;
+  const urlGAS = APPSCRIPT_ID;
 
   // 1. VALIDASI DATA AWAL
   if (!activeRowData || activeRowData.length === 0) {
@@ -962,8 +962,8 @@ function resetLogModalTotal() {
  * Mengaktifkan input & sinkronisasi waktu/petugas via Fetch
  */
 async function unlockMaintenanceForm() {
-  const iframe = document.getElementById('iframeGAS');
-  const urlGAS = iframe.src;
+  //const iframe = document.getElementById('iframeGAS');
+  const urlGAS = APPSCRIPT_URL;
   
   const toUnlock = [
     'log_pekerjaan', 'btn_PB', 'btn_PO', 'btn_PA', 'btn_PC', 
@@ -1114,7 +1114,7 @@ async function saveLog(status) {
     const btnPending = document.getElementById('btnLogPending');
     const modal = document.getElementById('modalMaintenanceLog');
     const piljadwal = document.getElementById('jenis_id_jadwal');
-    const urlGAS = document.getElementById('iframeGAS').src;
+    const urlGAS = APPSCRIPT_ID;
 
     // --- VALIDASI (Tetap Sama Seperti Kodemu) ---
     let pil_err = (piljadwal.value === '');
@@ -1234,8 +1234,8 @@ let allHistoryData = []; //variabel global untuk menyimpan data log history ment
  */
 async function loadHist() {
   const tbody = document.getElementById("historyBody");
-  const iframe = document.getElementById('iframeGAS');
-  const urlGAS = iframe.src;
+  //const iframe = document.getElementById('iframeGAS');
+  const urlGAS = APPSCRIPT_URL;
   
   // 1. AKTIFKAN ANIMASI THINKING
   if(tbody) {
@@ -1707,8 +1707,8 @@ async function loadJad() {
   
   // Debounce 400ms agar tidak spam request saat user mengetik
   timerPencarian = setTimeout(async function() {
-    const iframe = document.getElementById('iframeGAS');
-    const urlGAS = iframe.src;
+    //const iframe = document.getElementById('iframeGAS');
+    const urlGAS = APPSCRIPT_URL;
     
     // 1. Ambil Nilai Filter dari UI GitHub
     const fType = document.getElementById('filterType')?.value || "";   
@@ -1814,8 +1814,8 @@ async function loadKel() {
   const tbody = document.getElementById('kelolaBody');
   if (!tbody) return;
 
-  const iframe = document.getElementById('iframeGAS');
-  const urlGAS = iframe.src;
+  //const iframe = document.getElementById('iframeGAS');
+  const urlGAS = APPSCRIPT_URL;
 
   // Berikan loading indicator sederhana
   tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'><i class='fas fa-spinner fa-spin'></i> Memuat panel kelola...</td></tr>";
@@ -1913,7 +1913,7 @@ function renderKelolaIncremental(data) {
 async function openMaintModal(row = "") {
   const modal = document.getElementById('modalMaint');
   const btnSubmit = document.getElementById('btnCreateMaint'); 
-  const urlGAS = document.getElementById('iframeGAS').src; // URL Web App Anda
+  const urlGAS = APPSCRIPT_ID; // URL Web App Anda
   
   if (!modal) return console.error("Gawat! Modal tidak ditemukan.");
 
@@ -2135,7 +2135,7 @@ function renderJadwalViewIncremental(data) {
  * ===================================================================
  */
 async function goMaint(rowIdx) {
-  const urlGAS = document.getElementById('iframeGAS').src;
+  const urlGAS = APPSCRIPT_ID;
   console.log("baris pada goMaint :", rowIdx);
   console.table({activeRowData,rowIdx});
   // 1. VALIDASI DATA AWAL
@@ -2270,8 +2270,8 @@ function openMaintDetailView(row) {
  * ==========================================================================
  */
 async function loadMaintDetail(row) {
-  const iframe = document.getElementById('iframeGAS');
-  const urlGAS = iframe.src;
+  //const iframe = document.getElementById('iframeGAS');
+  const urlGAS = APPSCRIPT_URL;
 
   if (typeof speakSenor === "function") speakSenor("Mencari data, Señor...");
 
@@ -2335,8 +2335,8 @@ async function loadMaintDetail(row) {
  * ==========================================================================
  */
 async function loadAssetTypes() {
-  const iframe = document.getElementById('iframeGAS');
-  const urlGAS = iframe.src;
+  //const iframe = document.getElementById('iframeGAS');
+  const urlGAS = APPSCRIPT_URL;
 
   // 1. Jika cache sudah ada di memori browser GitHub, langsung pakai
   if (window.cachedAssetTypes) {
@@ -2399,8 +2399,8 @@ function renderAllTypeDropdowns(types) {
 async function loadAssetData(sheetName) {
   if (!sheetName) return;
   
-  const iframe = document.getElementById('iframeGAS');
-  const urlGAS = iframe.src;
+  //const iframe = document.getElementById('iframeGAS');
+  const urlGAS = APPSCRIPT_URL;
   const masterCheck = document.getElementById('checkAllAsset');
 
   try {
@@ -2511,8 +2511,8 @@ function toggleAllAssets() {
 async function loadAssetDataView(sheetName) {
   if (!sheetName) return;
   
-  const iframe = document.getElementById('iframeGAS');
-  const urlGAS = iframe.src;
+  //const iframe = document.getElementById('iframeGAS');
+  const urlGAS = APPSCRIPT_URL;
 
   try {
     // 1. PANGGIL SERVER (GET) - Menggunakan action yang sama dengan Kelola Aset
@@ -2587,8 +2587,8 @@ function renderAssetTableIncrementalView(sheetName, data) {
  */
 async function loadAssetTypesView() {
   const sel = document.getElementById('viewAssetTypeSelect');
-  const iframe = document.getElementById('iframeGAS');
-  const urlGAS = iframe.src;
+  //const iframe = document.getElementById('iframeGAS');
+  const urlGAS = APPSCRIPT_URL;
   
   // 1. Jika cache sudah ada di memori GitHub, langsung pakai (Instan!)
   if (window.cachedAssetTypes) {
@@ -2668,11 +2668,13 @@ async function openAssetDetail(sheetName, row) {
   document.getElementById('as_type').value = sheetName;
 
   // --- 2. AMBIL DATA DARI DATABASE (GOOGLE APPS SCRIPT) ---
-  const iframe = document.getElementById('iframeGAS');
-  if (!iframe || !iframe.src) return alert("Error: URL Script (GAS) tidak ditemukan!");
+  // Pastikan variabel global APPSCRIPT_URL sudah ada
+  if (typeof APPSCRIPT_URL === 'undefined' || !APPSCRIPT_URL) {
+      return alert("Error: URL Script (GAS) tidak ditemukan!");
+  }
 
-  // Ambil URL dasar dari iframe (menghilangkan fragment jika ada)
-  const baseUrl = iframe.src.split('?')[0];
+  // Kita tidak perlu baseUrl dari iframe lagi, langsung pakai variabel global
+  const urlGAS = APPSCRIPT_URL;
   
   // Susun Query Parameter untuk doGet
   const params = new URLSearchParams({
@@ -2681,7 +2683,7 @@ async function openAssetDetail(sheetName, row) {
     row: row
   });
 
-  const finalUrl = `${baseUrl}?${params.toString()}`;
+  const finalUrl = `${urlGAS}?${params.toString()}`;
   console.log("Fetching Data (GET):", finalUrl);
 
   // Indikator loading pada input nama
@@ -2854,8 +2856,8 @@ function takeAssetPhoto() {
  * ==========================================================================
  */
 async function deleteAssetPhoto() {
-  const iframe = document.getElementById('iframeGAS');
-  const urlGAS = iframe.src;
+  //const iframe = document.getElementById('iframeGAS');
+  const urlGAS = APPSCRIPT_URL;
 
   // 1. VALIDASI AWAL
   if (window.assetImages.length === 0) {
@@ -2980,8 +2982,8 @@ async function saveAssetEdit() {
   const type = document.getElementById('as_type').value;
   const row = document.getElementById('assetRowIdx').value;
   const btn = document.getElementById('btnSaveAsset');
-  const iframe = document.getElementById('iframeGAS');
-  const urlGAS = iframe.src;
+  //const iframe = document.getElementById('iframeGAS');
+  const urlGAS = APPSCRIPT_URL;
 
   // 1. VALIDASI INPUT
   if (!asId) { 
@@ -3094,8 +3096,8 @@ async function saveAssetEdit() {
  */
 async function doBulkDeleteAsset() {
   const type = document.getElementById('assetTypeSelect').value; 
-  const iframe = document.getElementById('iframeGAS');
-  const urlGAS = iframe.src;
+  //const iframe = document.getElementById('iframeGAS');
+  const urlGAS = APPSCRIPT_URL;
   
   let selected = [];
   document.querySelectorAll('.asetCheck:checked').forEach(cb => selected.push(parseInt(cb.value)));
@@ -3175,8 +3177,8 @@ async function doBulkDeleteAsset() {
  */
 async function bulkUpdateQR() {
   const type = document.getElementById('assetTypeSelect').value;
-  const iframe = document.getElementById('iframeGAS');
-  const urlGAS = iframe.src;
+  //const iframe = document.getElementById('iframeGAS');
+  const urlGAS = APPSCRIPT_URL;
   let selected = [];
   
   // 1. AMBIL ASET YANG DICENTANG
@@ -3398,7 +3400,7 @@ function closeAssetModal() {
  */
 async function loadUserList() {
   const tbody = document.getElementById('userListBody');
-  const urlGAS = document.getElementById('iframeGAS').src;
+  const urlGAS = APPSCRIPT_URL;
 
   // Tampilkan loading sebentar
   if (tbody) tbody.innerHTML = "<tr><td colspan='4' style='text-align:center;'><i class='fas fa-spinner fa-spin'></i> Menghubungi Server...</td></tr>";
@@ -3479,7 +3481,7 @@ async function loadUserList() {
  * = =========================================================================
  */  
 async function openEditModal(row) {
-  const urlGAS = document.getElementById('iframeGAS').src;
+  const urlGAS = APPSCRIPT_URL;
   
   try {
     // 1. Ambil data user spesifik berdasarkan baris (row)
@@ -3569,7 +3571,7 @@ function openAddUserModal() {
 
 
 async function loadProf() {
-  const urlGAS = document.getElementById('iframeGAS').src;
+  const urlGAS = APPSCRIPT_URL;
   
   // Pastikan variabel 'loggedInUser' tersedia (biasanya dari session/global)
   if (!window.loggedInUser) {
@@ -3635,8 +3637,8 @@ async function loadProf() {
  */
 async function saveProf() {
   const displayPhoto = document.getElementById('set_display_photo');
-  const iframe = document.getElementById('iframeGAS');
-  const urlGAS = iframe ? iframe.src : "";
+  //const iframe = document.getElementById('iframeGAS');
+  const urlGAS = APPSCRIPT_URL;
   
   if (!urlGAS) return alert("URL Server tidak ditemukan!");
 
@@ -3792,8 +3794,8 @@ async function saveAdminEdit() {
   const rowIdx = document.getElementById('m_row_idx').value;
   const username = document.getElementById('m_user').value;
   const displayPhoto = document.getElementById('admin_edit_photo');
-  const iframe = document.getElementById('iframeGAS');
-  const urlGAS = iframe ? iframe.src : "";
+  //const iframe = document.getElementById('iframeGAS');
+  const urlGAS = APPSCRIPT_URL;
 
   if (!username) return alert("Username harus diisi!");
   if (!urlGAS) return alert("URL Server tidak ditemukan!");

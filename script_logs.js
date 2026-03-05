@@ -4,12 +4,12 @@
  */
 async function loadAuditLogs() {
   const logContainer = document.getElementById('logTableBody'); 
-  const iframe = document.getElementById('iframeGAS');
+  //const iframe = document.getElementById('iframeGAS');
   
   if (!logContainer) return;
-  if (!iframe || !iframe.src) return console.error("URL GAS tidak ditemukan!");
+  //if (!iframe || !iframe.src) return console.error("URL GAS tidak ditemukan!");
 
-  const urlGAS = iframe.src;
+  const urlGAS = APPSCRIPT_URL;
 
   // 1. Tampilkan loading spinner
   logContainer.innerHTML = `<tr><td colspan="3" class="text-center">
@@ -62,7 +62,7 @@ async function loadAuditLogs() {
 
 // --- FUNGSI BACKUP & ARCHIVE LOGS ---
 async function backupLogSekarang() {
-  const urlGAS = document.getElementById('iframeGAS').src;
+  const urlGAS = APPSCRIPT_URL;
 
   const result = await Swal.fire({
     title: "Backup Logs!",
@@ -105,7 +105,7 @@ async function backupLogSekarang() {
 
 // --- FUNGSI HAPUS LOGS ---
 async function hapusLog() {
-  const urlGAS = document.getElementById('iframeGAS').src;
+  const urlGAS = APPSCRIPT_URL;
 
   const result = await Swal.fire({
     title: "Kosongkan Logs?",
