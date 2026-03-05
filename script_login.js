@@ -138,14 +138,21 @@ async function initAssetDropdowns() {
     renderOptions(elements.elJadwal, data.statusMaint, "Status Jadwal"); // Mengisi filterStateJadwal
     renderOptions(elements.elAsset, data.statusAsset, "Status Aset");
 
-    console.log("data dari fetch untuk dropdown filtertgl;"+ elements.filterTgl);
+    console.log("data dari fetch untuk dropdown "+ elements.elTgl.id);
     console.table(data.filterTgl);
+    console.table(delements.elTgl);
 
-    console.log("data dari fetch untuk dropdown status log dan jadwal maint;"+elements.statusMaint );
+    console.log("data dari fetch untuk dropdown "+elements.elLog.id);
     console.table(data.statusMaint);
+    console.table(delements.elTgl);
 
-     console.log("data dari fetch untuk dropdown status asset;" + elements.statusAsset);
+    console.log("data dari fetch untuk dropdown "+elements.elJadwal.id);
+    console.table(data.statusMaint);
+    console.table(elements.elJadwal);
+
+    console.log("data dari fetch untuk dropdown " + elements.elAsset.id);
     console.table(data.statusAsset);
+    console.table(elements.elAsset);
 
     console.log("✅ Asset Dropdowns Synchronized via single fetch.");
 
