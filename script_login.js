@@ -4,8 +4,7 @@
             // UI Reset
         //document.getElementById('loginOverlay').style.display = 'none';
 
-        document.getElementById('leftbar').classList.remove('collapsed');
-        document.getElementById('headerUser').innerText = u + " (" + userRole + ")";
+
         initAllJadwalDropdowns();
         initAssetDropdowns();
         loadAssetTypes();
@@ -13,6 +12,9 @@
         showPage('history');
         let loggedInUser = "ujicoba"; //sementara nanti ditentukan login
         let userRole = "admin"; //sementara nanti ditentukan login
+        document.getElementById('leftbar').classList.remove('collapsed');
+        document.getElementById('headerUser').innerText = u + " (" + userRole + ")";
+
 
 
 //}
