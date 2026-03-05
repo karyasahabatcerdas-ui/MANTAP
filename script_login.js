@@ -122,6 +122,8 @@ async function initAssetDropdowns() {
     const response = await fetch(`${urlGAS}?action=getAssetDropdowns`);
     const data = await response.json();
 
+    console.log("data dari fetch untuk dropdoen");
+    console.table(data);
     // 3. Fungsi pembantu untuk merender opsi
     const renderOptions = (el, list, defaultText) => {
       if (!el) return;
@@ -135,6 +137,7 @@ async function initAssetDropdowns() {
     // 4. Tebarkan data ke masing-masing dropdown
     renderOptions(elements.filterTgl, data.filterTgl, "Pilih Tanggal");
     renderOptions(elements.statusMaint, data.statusMaint, "Status Maintenance");
+    renderOptions(elements.statusMaint, data.statusMaint, "Status Jadwal");
     renderOptions(elements.statusAsset, data.statusAsset, "Status Aset");
 
     console.log("✅ Asset Dropdowns Synchronized via single fetch.");
