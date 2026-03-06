@@ -8,6 +8,8 @@ function toggleleftbar() {
 
   const isCollapsed = side.classList.contains("collapsed");
   btn.innerText = isCollapsed ? ">>>" : "<<<";
+
+    initAssetDropdowns();
 }
 
 /**=====================================================================================

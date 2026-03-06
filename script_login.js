@@ -96,6 +96,90 @@ async function initAllJadwalDropdowns() {
   }
 }
 
+
+async function initAssetDropdowns() {
+  const urlGAS = APPSCRIPT_URL;
+
+  // --- FUNGSI HELPER: Menunggu elemen muncul di DOM ---
+  const waitForElement = (id) => {
+    return new Promise(resolve => {
+      const el = document.getElementById(id);
+      if (el) return resolve(el); // Jika sudah ada, langsung bungkus
+
+      const observer = new MutationObserver(() => {
+        const target = document.getElementById(id);
+        if (target) {
+          observer.disconnect();
+          resolve(target);
+        }
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+    });
+  };
+
+  try {
+    console.log("⏳ Menunggu elemen DOM tersedia...");
+    
+    // 1. Tunggu semua elemen ID muncul secara paralel
+    const [elTgl, elMaint, elAsset] = await Promise.all([
+      waitForElement('sortJadwal'),
+      waitForElement('filterStatusLog'),
+      waitForElement('as_status'),
+      waitForElement('filterStateJadwal') 
+    ]);
+
+    const elements = {
+      filterTgl: elTgl,
+      statusMaint: elMaint,
+      statusAsset: elAsset,
+      filterState : elStatusJad
+    };
+
+    // 2. Set Loading Status
+    Object.values(elements).forEach(el => {
+      el.innerHTML = '<option value="">⏳ Loading...</option>';
+    });
+
+    // 3. Satu kali Fetch untuk semua data
+    console.log("📡 Mengambil data dari GAS...");
+    const response = await fetch(`${urlGAS}?action=getAssetDropdowns`);
+    const data = await response.json();
+
+    // 4. Fungsi pembantu untuk merender opsi
+    const renderOptions = (el, list, defaultText) => {
+      // Karena kita pakai waitForElement, el di sini pasti ada
+      console.log(`Populasi: ${el.id} (${list ? list.length : 0} data)`);
+
+      let html = `<option value="">-- ${defaultText} --</option>`;
+      if (list && list.length > 0) {
+        html += list.map(item => `<option value="${item.id}">${item.nama}</option>`).join('');
+      }
+      el.innerHTML = html;
+    };
+
+    // 5. Tebarkan data ke masing-masing dropdown
+    renderOptions(elements.filterTgl, data.filterTgl, "Pilih Tanggal");
+    renderOptions(elements.statusMaint, data.statusMaint, "Status Maintenance");
+    renderOptions(elements.statusAsset, data.statusAsset, "Status Aset");
+    renderOptions(elements.filterState, data.statusMaint, "Status Jadwal");
+
+    console.log("✅ Asset Dropdowns Synchronized!");
+
+  } catch (err) {
+    console.error("❌ Gagal Fetch Dropdown Asset:", err);
+    // Jika terjadi error fetch, beri tanda di UI yang tersedia
+    ['sortJadwal', 'filterStatusLog', 'as_status'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = '<option value="">⚠️ Error Load</option>';
+    });
+  }
+}
+
+
+
+
+
+
 /**========================================================================
  * Mengambil data dari 3 sheet db_asset dan mengisi dropdown masing-masing
  * ========================================================================
@@ -103,6 +187,7 @@ async function initAllJadwalDropdowns() {
 /**
  * Mengambil data dari 3 sheet db_asset dan mengisi dropdown masing-masing
  */
+/*
 async function initAssetDropdowns() {
   const urlGAS =APPSCRIPT_URL;
   
@@ -154,4 +239,4 @@ async function initAssetDropdowns() {
       if (el) el.innerHTML = '<option value="">⚠️ Error Load</option>';
     });
   }
-}
+}*/

@@ -1260,7 +1260,7 @@ async function loadHist() {
       </tr>`;
   }
 
-  setTimeout(initAssetDropdowns(),200);
+
   try {
     // 2. FETCH DATA DARI SERVER (GET)
     const response = await fetch(`${urlGAS}?action=getHistoryLogDataRaw`);
@@ -1648,7 +1648,6 @@ let timerPencarian;
 
 async function loadJad() {
   clearTimeout(timerPencarian);
-  initAssetDropdowns();
   // Debounce 400ms agar tidak spam request saat user mengetik
   timerPencarian = setTimeout(async function() {
     //const iframe = document.getElementById('iframeGAS');
