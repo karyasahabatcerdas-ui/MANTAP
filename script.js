@@ -563,37 +563,22 @@ function renderPhotoPreview(cat) {
     wrapper.className = "thumb-wrapper";
 
     const image = document.createElement('img');
-    // AMBIL NILAI ASLINYA: Apakah dia string murni atau di dalam objek .data? ==>Perbaikan
-    const rawData = (typeof img === 'object') ? img.data : img;
-    const isOld = (typeof img === 'object') ? img.isOld : false;
-
-    if (typeof rawData === 'string' && rawData.startsWith('http')) {
-        // Jika URL (Foto dari Drive)
-        image.src = driveLinkToDirect(rawData);
-    } else {
-        // Jika Base64 (Foto Baru dari Kamera)
-        const mime = img.mimeType || "image/jpeg";
-        const base64Data = (typeof img === 'object') ? img.data : img;
-        image.src = "data:" + mime + ";base64," + base64Data;
-    }
-
-    /*
     image.src = (typeof img === 'string' && img.startsWith('http')) 
                 ? driveLinkToDirect(img) 
                 : "data:" + img.mimeType + ";base64," + img.data;
-    */
+    
     image.onclick = (e) => {
       e.stopPropagation();
       Swal.fire({ imageUrl: image.src, background: '#0f172a', showConfirmButton: false });
     };
 
     const delBtn = document.createElement('div');
-          delBtn.className = "btn-delete-float";
-          delBtn.innerHTML = "&times;";
-          delBtn.onclick = (e) => {
-            e.stopPropagation(); // Biar kamera gak kebuka pas mau hapus
-            removeSinglePhoto(cat, index);
-          };
+    delBtn.className = "btn-delete-float";
+    delBtn.innerHTML = "&times;";
+    delBtn.onclick = (e) => {
+      e.stopPropagation(); // Biar kamera gak kebuka pas mau hapus
+      removeSinglePhoto(cat, index);
+    };
 
     wrapper.appendChild(image);
     wrapper.appendChild(delBtn);
@@ -812,6 +797,7 @@ function startMaintenanceMode() {
  * Mengambil data baris Pending dan memuatnya ke form via Fetch
  * ===================================================================
  */
+
  async function startMaintenanceModeUpdate() {
   const urlGAS = APPSCRIPT_URL;
 
@@ -870,17 +856,31 @@ function startMaintenanceMode() {
       if (sEl) sEl.value = data[7];
 
       // --- LOGIKA FOTO ---
-      tempPhotos.PB = data[9]  ? [{ data: data[9], isOld: true }]  : []; // jika ada pasang kembali, jika tidak ada kosongkan
-      tempPhotos.PO = data[10] ? [{ data: data[10], isOld: true }] : [];
-      tempPhotos.PA = data[11] ? [{ data: data[11], isOld: true }] : [];
-      tempPhotos.PC = data[12] ? [{ data: data[12], isOld: true }] : [];
+        //tempPhotos.PB = data[8]  ? [data[8]]  : []; 
+        //tempPhotos.PO = data[9]  ? [data[9]]  : [];
+        //tempPhotos.PA = data[10] ? [data[10]] : [];
+        //tempPhotos.PC = data[11] ? [data[11]] : [];
 
-      // Panggil fungsi render yang sudah "OK" untuk masing-masing kategori
-        renderPhotoPreview('PB');
-        renderPhotoPreview('PO');
-        renderPhotoPreview('PA');
-        renderPhotoPreview('PC');
+        // --- SOLUSI AMAN: TETAP ARRAY 1 DIMENSI ---
+        const categories = ['PB', 'PO', 'PA', 'PC'];
+        const dataIndices = [9, 10, 11, 12]; 
 
+        categories.forEach((cat, i) => {
+          const rawLinks = data[dataIndices[i]]; 
+
+          if (rawLinks && typeof rawLinks === 'string') {
+            // KITA PECH JADI ARRAY STRING MURNI
+            // Contoh: "link1, link2" -> ["link1", "link2"]
+            tempPhotos[cat] = rawLinks.split(',')
+              .map(link => link.trim())
+              .filter(link => link !== "");
+          } else {
+            tempPhotos[cat] = [];
+          }
+        });
+
+        // Jalankan render
+        categories.forEach(cat => renderPhotoPreview(cat));
       //['PB', 'PO', 'PA', 'PC'].forEach(cat => renderPhotoPreview(cat));
 
       // --- FINALISASI ---
