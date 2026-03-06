@@ -278,7 +278,7 @@ async function fetchAssetDetailForLog(unitID) {
         if(typeof speakSenor === "function") speakSenor("Jadwal terencana ditemukan Señor, silakan lanjut.");
       } else {
         logMaintId.value = ""; 
-        dropdownJadwal.value = ""; 
+        //dropdownJadwal.value = ""; 
         if(typeof speakSenor === "function") speakSenor("Tidak ada jadwal, silakan input manual.");
       }
 
@@ -954,7 +954,8 @@ function resetLogModalTotal() {
     // 3. Reset Dropdown Select (Jadwal)
     const selJadwal = document.getElementById('jenis_id_jadwal');
     if (selJadwal) {
-      selJadwal.innerHTML = '<option value="">Memuat...</option>';
+      //selJadwal.innerHTML = '<option value="">Memuat...</option>';
+      selJadwal.value="";
     }
 
     // 4. Bersihkan Metadata & Foto
@@ -1455,9 +1456,9 @@ function openDetailLog(logId) {
   setEl('det_selesai',   data[4]); // E: selesai
   setEl('det_petugas',   data[5]); // F: Petugas
   setEl('det_asset_id',  data[6]); // G: Asset_ID
-  setEl('det_id_jadwal', data[7]); // H: ID_Jadwal
   setEl('det_note',      data[8]); // I: Note
 
+  document.getElementById('det_id_jadwal').value = data[7]; // H: ID_Jadwal //select id_jadwal
   // ISI THUMBNAIL FOTO (J, K, L, M)
   updateThumbnail('gal_before', data[9]);  // J: P_Before
   updateThumbnail('gal_on',     data[10]); // K: P_On
