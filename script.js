@@ -1214,7 +1214,10 @@ async function saveLog(status) {
             },
             photoData: tempPhotos // Bundle foto base64
         };
-        console.table(payload);
+        console.log("--- Cek Data Sebelum Kirim ---");
+        console.table(bodyPayload.payload); // Menampilkan isi data teks
+        console.log("Jumlah Foto:", bodyPayload.photoData.length); // Cek jumlah foto
+
         // --- EKSEKUSI FETCH POST ---
         try {
             // Kita pakai mode 'no-cors' karena pengiriman foto base64 sangat besar
