@@ -196,6 +196,30 @@ async function navigateAsset() {
   }
 }
 
+function executeHighlight(row, bodyId, isView) {
+  setTimeout(() => {
+    const tbody = document.getElementById(bodyId);
+    const targetRow = tbody.rows[parseInt(row) - 2]; 
+    
+    if (targetRow) {
+      // 1. Geser layar sampai baris target ada di tengah (Smooth)
+      targetRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      
+      // 2. Kasih efek kedip kuning (Highlight)
+      targetRow.classList.add('highlight-flash');
+      
+      // 3. OKE GAS! Langsung buka modal detilnya
+      const type = isView ? document.getElementById('viewAssetTypeSelect').value : document.getElementById('assetTypeSelect').value;
+      
+      if (isView) {
+        openAssetDetailView(type, row); // Mode Read-Only
+      } else {
+        openAssetDetail(type, row); // Mode Admin Edit
+      }
+    }
+  }, 600); // Delay 600ms biar tabel sempet ngerender dulu
+}
+
 
 function closeGlobalSearch() {
   document.getElementById('globalSearchModal').style.display = 'none';
@@ -763,6 +787,7 @@ function startMaintenanceMode() {
 
     // 2. --- SISTEM GEMBOK (LOCKDOWN) ---
     // Daftar ID yang harus dikunci di awal
+    initAllJadwalDropdowns();
     const elementsToLock = [
         'log_pekerjaan', 'btn_PB', 'btn_PO', 'btn_PA', 'btn_PC', 
         'btnLogPending', 'btnLogSelesai', 'jenis_id_jadwal'
@@ -4409,6 +4434,8 @@ async function loadProf() {
     if (!response.ok) throw new Error("Gagal mengambil profil dari server.");
 
     const d = await response.json(); 
+
+    console.table(d);
     // Struktur: [User, Pass, Role, Phone, Email, Photo, Status, LastLogin, Attempts]
 
     // 2. Mapping Data ke Input Profil
