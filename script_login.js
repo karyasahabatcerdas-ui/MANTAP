@@ -7,9 +7,9 @@ function login() {
         if (overlay) overlay.style.display = 'none';
 
         // 2. Load Data dari Server (GitHub to GAS)
-        initAllJadwalDropdowns();
-        initAssetDropdowns();
+        setTimeout(initAllJadwalDropdowns(),1000);
         loadAssetTypes();
+        setTimeout(initAssetDropdowns(),500);
 
         // 3. Navigasi
         //showPage('history');
@@ -73,8 +73,7 @@ async function initAllJadwalDropdowns() {
     let optionsHtml = "";
     if (list && list.length > 0) {
       optionsHtml = list.map(item => 
-        `<option value="${item.id}">${item.id} - ${item.nama}</option>`
-      ).join('');
+        `<option value="${item.id}">${item.id} - ${item.nama}</option>` ).join('');
     }
 
     // 4. Update Dropdowns
@@ -102,73 +101,42 @@ async function initAllJadwalDropdowns() {
  * ========================================================================
  */
 async function initAssetDropdowns() {
-  const urlGAS = APPSCRIPT_URL;
   
-  // 1. Set Loading Status (Ini akan bekerja karena semua key unik)
-  // Pastikan elements ada dan merupakan object
-if (elements && typeof elements === 'object') {
-  Object.values(elements).forEach(el => {
-    // Pastikan el ada, bukan null, dan punya properti innerHTML
-    if (el && el.nodeType === 1) { 
-      el.innerHTML = '<option value="">⏳ Loading...</option>';
-    }
+   const ids = ["sortJadwal", "filterStatusLog", "filterStateJadwal", "as_status"];
+   const urlGAS = APPSCRIPT_URL;
+
+    // 1. Loading State
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = '<option value="" disabled selected>⏳ Syncing...</option>';
   });
-} else {
-  console.error("Variabel 'elements' tidak valid atau kosong!");
-}
 
   try {
-      // GUNAKAN NAMA KEY YANG BERBEDA
-      const elements = {
-        elTgl: document.getElementById('sortJadwal'), 
-        elLog: document.getElementById('filterStatusLog'),   // Nama unik
-        elJadwal: document.getElementById('filterStateJadwal'), // Nama unik
-        elAsset: document.getElementById('as_status')
-      };
     const response = await fetch(`${urlGAS}?action=getAssetDropdowns`);
-    const data = await response.json();
+    const list = await response.json();
 
-    const renderOptions = (el, list, defaultText) => {
-      
-      if (!el) {
-        console.warn(`⚠️ Elemen untuk "${defaultText}" tidak ditemukan di DOM. Melewati...`);
-        return;
-        }
 
-      let html = `<option value="">-- ${defaultText} --</option>`;
-      if (list && list.length > 0) {
-        html += list.map(item => `<option value="${item.id}">${item.nama}</option>`).join('');
-      }
-      
-      el.innerHTML = html;
-      console.log("Mengisi elemen ID : " + el.innerHTML);
+    // 3. Mapping Teks Default
+    const defaults = {
+      "sortJadwal": "Semua Jadwal",
+      "filterStatusLog": "Pilih Semua",
+      "filterStateJadwal": "Pilih Semua",
+      "as_status": "Semua Status"
     };
 
-    // 4. Tebarkan data menggunakan KEY yang sudah unik tadi
-    renderOptions(elements.elTgl, data.filterTgl, "Pilih Tanggal");
-    renderOptions(elements.elLog, data.statusMaint, "Status Log");    // Mengisi filterStatusLog
-    renderOptions(elements.elJadwal, data.statusMaint, "Status Jadwal"); // Mengisi filterStateJadwal
-    renderOptions(elements.elAsset, data.statusAsset, "Status Aset");
+    let optionsHtml = "";
+    if (list && list.length > 0) {
+      optionsHtml = list.map(item => 
+        `<option value="${item.id}">${item.nama}</option>` ).join('');
+    }
 
-
-    console.table(data.filterTgl);
-    console.log(elements.elTgl.id);
-    //console.log("Isi Opsi di dalam Dropdown:", elements.elTgl.innerHTML);
-
-    //console.log("data dari fetch untuk dropdown "+elements.elLog.id);
-    console.table(data.statusMaint);
-    console.log(elements.elTgl.id);
-    //console.log("Isi Opsi di dalam Dropdown:", elements.elLog.innerHTML);
-
-   // console.log("data dari fetch untuk dropdown "+elements.elJadwal.id);
-    console.table(data.statusMaint);
-    console.log(elements.elJadwal.id);
-    //console.log("Isi Opsi di dalam Dropdown:", elements.elJadwal.innerHTML);
-
-    //console.log("data dari fetch untuk dropdown " + elements.elAsset.id);
-    console.table(data.statusAsset);
-    console.log(elements.elAsset.id);
-    //console.log("Isi Opsi di dalam Dropdown:", elements.elAsset.innerHTML);
+    
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (list && list.length > 0) {
+        el.innerHTML += list.map(item => `<option value="${item.id}">${item.nama}</option>`).join('');
+      }      
+    });
 
     console.log("✅ Asset Dropdowns Synchronized via single fetch hore.");
 
