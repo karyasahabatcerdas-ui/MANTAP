@@ -122,7 +122,7 @@ async function initAssetDropdowns() {
 
     const renderOptions = (el, list, defaultText) => {
       
-      if (!el) return{
+      if (!el) {
         console.warn(`⚠️ Elemen untuk "${defaultText}" tidak ditemukan di DOM. Melewati...`);
         return;
         }
@@ -142,24 +142,24 @@ async function initAssetDropdowns() {
     renderOptions(elements.elJadwal, data.statusMaint, "Status Jadwal"); // Mengisi filterStateJadwal
     renderOptions(elements.elAsset, data.statusAsset, "Status Aset");
 
-    //console.log("data dari fetch untuk dropdown "+ elements.elTgl.id);
+
     console.table(data.filterTgl);
-    console.log(elements.elTgl);
+    console.log(elements.elTgl.id);
     //console.log("Isi Opsi di dalam Dropdown:", elements.elTgl.innerHTML);
 
     //console.log("data dari fetch untuk dropdown "+elements.elLog.id);
     console.table(data.statusMaint);
-    console.log(elements.elTgl);
+    console.log(elements.elTgl.id);
     //console.log("Isi Opsi di dalam Dropdown:", elements.elLog.innerHTML);
 
    // console.log("data dari fetch untuk dropdown "+elements.elJadwal.id);
     console.table(data.statusMaint);
-    console.log(elements.elJadwal);
+    console.log(elements.elJadwal.id);
     //console.log("Isi Opsi di dalam Dropdown:", elements.elJadwal.innerHTML);
 
     //console.log("data dari fetch untuk dropdown " + elements.elAsset.id);
     console.table(data.statusAsset);
-    console.log(elements.elAsset);
+    console.log(elements.elAsset.id);
     //console.log("Isi Opsi di dalam Dropdown:", elements.elAsset.innerHTML);
 
     console.log("✅ Asset Dropdowns Synchronized via single fetch hore.");
