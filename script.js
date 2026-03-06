@@ -25,14 +25,14 @@ async function loadComponent(elementId, filePath) {
 document.addEventListener("DOMContentLoaded", () => {    
     loadComponent('leftbar-placeholder', 'leftbar.html');
     loadComponent('rightbar-placeholder', 'rightbar.html');
-    loadComponent('modalMaintenanceLog-placeholder', 'modalMaintenanceLog.html');
-    loadComponent('modalGlobalSearch-placeholder', 'modalGlobalSearch.html');
+    loadComponent('modalMaintenanceLog-placeholder', 'modalMaintenanceLog.html');    
     loadComponent('modalMaint-placeholder', 'modalMaint.html');
     loadComponent('modalDetailHist-placeholder', 'modalDetailHist.html');
     loadComponent('modalAssetDetail-placeholder', 'modalAssetDetail.html');
     loadComponent('modalPhotoSlider-placeholder','modalPhotoSlider.html'); 
     loadComponent('modalImport-placeholder','modalImport.html');
     loadComponent('modalEditUser-placeholder','modalImport.html');
+    loadComponent('modalGlobalSearch-placeholder', 'modalGlobalSearch.html');
 });
 
 // Simpan URL Iframe GAS untuk referensi di fungsi lain (opsional, tergantung kebutuhan navigasi)
@@ -2079,7 +2079,7 @@ async function goMaint(rowIdx) {
   try {
     // 3. PANGGIL SERVER (GET) - Menggunakan action searchAllAssets
     // data[5] adalah Asset_ID dari kolom tabel Anda
-    const response = await fetch(`${urlGAS}?action=searchAllAssets&keyword=${encodeURIComponent(data[6])}`);
+    const response = await fetch(`${urlGAS}?action=searchAllAssetsGo&keyword=${encodeURIComponent(data[6])}`);
     const results = await response.json();
 
     if (results && results.length > 0) {
@@ -4160,7 +4160,7 @@ async function openEditModal(row) {
         imgPreview.src = photoFromDB + (photoFromDB.includes("?") ? "&" : "?") + "t=" + Date.now();
       } else {
         // Perbaikan format URL UI-Avatars agar lebih rapi
-        const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(nameFromDB)}&background=2980b9&color=fff&size=128`;;
+        const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(nameFromDB)}&background=2980b9&color=fff&size=128`;
         imgPreview.src = avatarUrl;
       }
     }
