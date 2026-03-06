@@ -1260,6 +1260,7 @@ async function loadHist() {
       </tr>`;
   }
 
+  setTimeout(initAssetDropdowns(),200);
   try {
     // 2. FETCH DATA DARI SERVER (GET)
     const response = await fetch(`${urlGAS}?action=getHistoryLogDataRaw`);
@@ -1275,6 +1276,7 @@ async function loadHist() {
     // Simpan ke variabel global dan render tabel
     allHistoryData = res;
     applyHistoryFilter(); 
+
 
   } catch (err) {
     console.error("❌ Gagal menarik riwayat: ", err);
@@ -1646,7 +1648,7 @@ let timerPencarian;
 
 async function loadJad() {
   clearTimeout(timerPencarian);
-  
+  setTimeout(initAssetDropdowns(),200);
   // Debounce 400ms agar tidak spam request saat user mengetik
   timerPencarian = setTimeout(async function() {
     //const iframe = document.getElementById('iframeGAS');

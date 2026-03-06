@@ -105,9 +105,17 @@ async function initAssetDropdowns() {
   const urlGAS = APPSCRIPT_URL;
   
   // 1. Set Loading Status (Ini akan bekerja karena semua key unik)
+  // Pastikan elements ada dan merupakan object
+if (elements && typeof elements === 'object') {
   Object.values(elements).forEach(el => {
-    if (el) el.innerHTML = '<option value="">⏳ Loading...</option>';
+    // Pastikan el ada, bukan null, dan punya properti innerHTML
+    if (el && el.nodeType === 1) { 
+      el.innerHTML = '<option value="">⏳ Loading...</option>';
+    }
   });
+} else {
+  console.error("Variabel 'elements' tidak valid atau kosong!");
+}
 
   try {
       // GUNAKAN NAMA KEY YANG BERBEDA
