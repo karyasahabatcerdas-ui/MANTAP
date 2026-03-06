@@ -138,25 +138,25 @@ async function initAssetDropdowns() {
     renderOptions(elements.elJadwal, data.statusMaint, "Status Jadwal"); // Mengisi filterStateJadwal
     renderOptions(elements.elAsset, data.statusAsset, "Status Aset");
 
-   // console.log("data dari fetch untuk dropdown "+ elements.elTgl.id);
+    //console.log("data dari fetch untuk dropdown "+ elements.elTgl.id);
     console.table(data.filterTgl);
-    console.table(elements.elTgl);
-    console.log("Isi Opsi di dalam Dropdown:", elements.elTgl.innerHTML);
+    console.log(elements.elTgl);
+    //console.log("Isi Opsi di dalam Dropdown:", elements.elTgl.innerHTML);
 
     //console.log("data dari fetch untuk dropdown "+elements.elLog.id);
     console.table(data.statusMaint);
-    console.table(elements.elTgl);
-    console.log("Isi Opsi di dalam Dropdown:", elements.elLog.innerHTML);
+    console.log(elements.elTgl);
+    //console.log("Isi Opsi di dalam Dropdown:", elements.elLog.innerHTML);
 
    // console.log("data dari fetch untuk dropdown "+elements.elJadwal.id);
     console.table(data.statusMaint);
-    console.table(elements.elJadwal);
-    console.log("Isi Opsi di dalam Dropdown:", elements.elJadwal.innerHTML);
+    console.log(elements.elJadwal);
+    //console.log("Isi Opsi di dalam Dropdown:", elements.elJadwal.innerHTML);
 
     //console.log("data dari fetch untuk dropdown " + elements.elAsset.id);
     console.table(data.statusAsset);
-    console.table(elements.elAsset);
-    console.log("Isi Opsi di dalam Dropdown:", elements.elAsset.innerHTML);
+    console.log(elements.elAsset);
+    //console.log("Isi Opsi di dalam Dropdown:", elements.elAsset.innerHTML);
 
     console.log("✅ Asset Dropdowns Synchronized via single fetch hore.");
 

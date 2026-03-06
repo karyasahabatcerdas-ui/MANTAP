@@ -563,22 +563,37 @@ function renderPhotoPreview(cat) {
     wrapper.className = "thumb-wrapper";
 
     const image = document.createElement('img');
+    // AMBIL NILAI ASLINYA: Apakah dia string murni atau di dalam objek .data? ==>Perbaikan
+    const rawData = (typeof img === 'object') ? img.data : img;
+    const isOld = (typeof img === 'object') ? img.isOld : false;
+
+    if (typeof rawData === 'string' && rawData.startsWith('http')) {
+        // Jika URL (Foto dari Drive)
+        image.src = driveLinkToDirect(rawData);
+    } else {
+        // Jika Base64 (Foto Baru dari Kamera)
+        const mime = img.mimeType || "image/jpeg";
+        const base64Data = (typeof img === 'object') ? img.data : img;
+        image.src = "data:" + mime + ";base64," + base64Data;
+    }
+
+    /*
     image.src = (typeof img === 'string' && img.startsWith('http')) 
                 ? driveLinkToDirect(img) 
                 : "data:" + img.mimeType + ";base64," + img.data;
-    
+    */
     image.onclick = (e) => {
       e.stopPropagation();
       Swal.fire({ imageUrl: image.src, background: '#0f172a', showConfirmButton: false });
     };
 
     const delBtn = document.createElement('div');
-    delBtn.className = "btn-delete-float";
-    delBtn.innerHTML = "&times;";
-    delBtn.onclick = (e) => {
-      e.stopPropagation(); // Biar kamera gak kebuka pas mau hapus
-      removeSinglePhoto(cat, index);
-    };
+          delBtn.className = "btn-delete-float";
+          delBtn.innerHTML = "&times;";
+          delBtn.onclick = (e) => {
+            e.stopPropagation(); // Biar kamera gak kebuka pas mau hapus
+            removeSinglePhoto(cat, index);
+          };
 
     wrapper.appendChild(image);
     wrapper.appendChild(delBtn);
@@ -855,12 +870,18 @@ function startMaintenanceMode() {
       if (sEl) sEl.value = data[7];
 
       // --- LOGIKA FOTO ---
-      tempPhotos.PB = data[9]  ? [{ data: data[9], isOld: true }]  : []; 
+      tempPhotos.PB = data[9]  ? [{ data: data[9], isOld: true }]  : []; // jika ada pasang kembali, jika tidak ada kosongkan
       tempPhotos.PO = data[10] ? [{ data: data[10], isOld: true }] : [];
       tempPhotos.PA = data[11] ? [{ data: data[11], isOld: true }] : [];
       tempPhotos.PC = data[12] ? [{ data: data[12], isOld: true }] : [];
 
-      ['PB', 'PO', 'PA', 'PC'].forEach(cat => renderPhotoPreview(cat));
+      // Panggil fungsi render yang sudah "OK" untuk masing-masing kategori
+        renderPhotoPreview('PB');
+        renderPhotoPreview('PO');
+        renderPhotoPreview('PA');
+        renderPhotoPreview('PC');
+
+      //['PB', 'PO', 'PA', 'PC'].forEach(cat => renderPhotoPreview(cat));
 
       // --- FINALISASI ---
       // Tutup modal lama setelah modal baru siap
