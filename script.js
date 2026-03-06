@@ -1648,7 +1648,7 @@ let timerPencarian;
 
 async function loadJad() {
   clearTimeout(timerPencarian);
-  setTimeout(initAssetDropdowns(),200);
+  initAssetDropdowns();
   // Debounce 400ms agar tidak spam request saat user mengetik
   timerPencarian = setTimeout(async function() {
     //const iframe = document.getElementById('iframeGAS');

@@ -7,9 +7,9 @@ function login() {
         if (overlay) overlay.style.display = 'none';
 
         // 2. Load Data dari Server (GitHub to GAS)
-        setTimeout(initAllJadwalDropdowns(),1000);
+        initAllJadwalDropdowns();
         loadAssetTypes();
-        setTimeout(initAssetDropdowns(),500);
+        initAssetDropdowns();
 
         // 3. Navigasi
         //showPage('history');
@@ -100,47 +100,58 @@ async function initAllJadwalDropdowns() {
  * Mengambil data dari 3 sheet db_asset dan mengisi dropdown masing-masing
  * ========================================================================
  */
+/**
+ * Mengambil data dari 3 sheet db_asset dan mengisi dropdown masing-masing
+ */
 async function initAssetDropdowns() {
+  const urlGAS = document.getElementById('iframeGAS').src;
   
-   const ids = ["sortJadwal", "filterStatusLog", "filterStateJadwal", "as_status"];
-   const urlGAS = APPSCRIPT_URL;
+  // ID elemen dropdown di HTML Señor (sesuaikan jika namanya berbeda)
+  const elements = {
+    filterTgl: document.getElementById('sortJadwal'), 
+    statusMaint: document.getElementById('filterStatusLog'),
+    statusAsset: document.getElementById('as_status')
+  };
 
-    // 1. Loading State
-  ids.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.innerHTML = '<option value="" disabled selected>⏳ Syncing...</option>';
+  // 1. Set Loading Status
+  Object.values(elements).forEach(el => {
+    if (el) el.innerHTML = '<option value="">⏳ Loading...</option>';
   });
 
   try {
+    // 2. Satu kali Fetch untuk semua data (Efisien!)
     const response = await fetch(`${urlGAS}?action=getAssetDropdowns`);
-    const list = await response.json();
+    const data = await response.json();
 
+    // 3. Fungsi pembantu untuk merender opsi
+    const renderOptions = (el, list, defaultText) => {
+    if (!el) {
+        console.log("ini mungkin tidak kelihatan -->",el.id);
+        return;}
 
-    // 3. Mapping Teks Default
-    const defaults = {
-      "sortJadwal": "Semua Jadwal",
-      "filterStatusLog": "Pilih Semua",
-      "filterStateJadwal": "Pilih Semua",
-      "as_status": "Semua Status"
+      console.log("panjang table :", list.length);
+      console.log("tabel di bawah punyanya :", el.id);
+      console.table(list);
+      console.log("isi html terakhir :", el.innerHTML);
+
+     let html = `<option value="">-- ${defaultText} --</option>`;
+      if (list && list.length > 0) {
+        html += list.map(item => `<option value="${item.id}">${item.nama}</option>`).join('');
+      }
+      el.innerHTML=html;
     };
 
-    let optionsHtml = "";
-    if (list && list.length > 0) {
-      optionsHtml = list.map(item => 
-        `<option value="${item.id}">${item.nama}</option>` ).join('');
-    }
+    // 4. Tebarkan data ke masing-masing dropdown
+    renderOptions(elements.filterTgl, data.filterTgl, "Pilih Tanggal");
+    renderOptions(elements.statusMaint, data.statusMaint, "Status Maintenance");
+    renderOptions(elements.statusAsset, data.statusAsset, "Status Aset");
 
-    
-    ids.forEach(id => {
-      const el = document.getElementById(id);
-      if (list && list.length > 0) {
-        el.innerHTML += list.map(item => `<option value="${item.id}">${item.nama}</option>`).join('');
-      }      
-    });
-
-    console.log("✅ Asset Dropdowns Synchronized via single fetch hore.");
+    console.log("✅ Asset Dropdowns Synchronized via single fetch.");
 
   } catch (err) {
-    console.error("❌ Gagal:", err);
+    console.error("❌ Gagal Fetch Dropdown Asset:", err);
+    Object.values(elements).forEach(el => {
+      if (el) el.innerHTML = '<option value="">⚠️ Error Load</option>';
+    });
   }
 }
