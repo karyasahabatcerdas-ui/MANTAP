@@ -32,6 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadComponent('modalAssetDetail-placeholder', 'modalAssetDetail.html');
     loadComponent('modalPhotoSlider-placeholder','modalPhotoSlider.html'); 
     loadComponent('modalImport-placeholder','modalImport.html');
+    loadComponent('modalEditUser-placeholder','modalImport.html');
 });
 
 // Simpan URL Iframe GAS untuk referensi di fungsi lain (opsional, tergantung kebutuhan navigasi)
