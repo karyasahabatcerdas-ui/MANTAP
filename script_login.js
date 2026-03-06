@@ -104,7 +104,7 @@ async function initAllJadwalDropdowns() {
  * Mengambil data dari 3 sheet db_asset dan mengisi dropdown masing-masing
  */
 async function initAssetDropdowns() {
-  const urlGAS = document.getElementById('iframeGAS').src;
+  const urlGAS =APPSCRIPT_URL;
   
   // ID elemen dropdown di HTML Señor (sesuaikan jika namanya berbeda)
   const elements = {
