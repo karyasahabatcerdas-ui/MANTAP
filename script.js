@@ -797,103 +797,85 @@ function startMaintenanceMode() {
  * Mengambil data baris Pending dan memuatnya ke form via Fetch
  * ===================================================================
  */
-async function startMaintenanceModeUpdate() {
+ async function startMaintenanceModeUpdate() {
   const urlGAS = APPSCRIPT_URL;
 
   // 1. VALIDASI DATA AWAL
   if (!activeRowData || activeRowData.length === 0) {
-    await Swal.fire({
-      title: "Data Tidak Ditemukan!",
-      text: "Silakan pilih baris terlebih dahulu, Señor.",
-      icon: "error",
-      width: '80%'
-    });
+    await Swal.fire({ title: "Data Tidak Ditemukan!", icon: "error" });
     return; 
   }
 
   const data = activeRowData; 
-  console.log("catatan data dari opendetaillog sebelum fetch:");
-  console.table(data);
-  console.log("data index 6 ID_Asset :", data[6])
-  // 2. TAMPILKAN LOADING
   Swal.fire({
     title: 'Mencari Detail Aset...',
-    text: 'SMembaca dari Database...',
+    text: 'Membaca dari Database...',
     allowOutsideClick: false,
     didOpen: () => { Swal.showLoading(); }
   });
 
   try {
-    // 3. PANGGIL SERVER (GET) - Menggunakan action searchAllAssets
-    // data[6] adalah Asset_ID dari kolom tabel Anda diambil dari database db_mainte sheet Maintenance
     const response = await fetch(`${urlGAS}?action=searchAllAssets&keyword=${encodeURIComponent(data[6])}`);
     const results = await response.json();
-
-    console.log("catatan data dari opendetaillog setelah fetch:");
-    console.table(results);
-    //console.log("data index 6 ID_Asset :", data[6])
 
     if (results && results.length > 0) {
       const res = results[0]; 
       Swal.close();
 
-      console.log("catatan data dari opendetaillog setelah fetch di dalam if:");
-      console.table(results);
-      console.log("data index 0 ID_Log :", data[0])
-      // --- PENGISIAN DATA KE UI MODAL ---
-      document.getElementById('log_maint_id').value = data[0];
+      // --- TRANSISI UI DULU (PENTING!) ---
+      // Kita buka modal target dulu agar elemen-elemennya "bangun" di DOM
+      update_man_status = true; 
+      startMaintenanceMode(); 
+
+      // --- PENGISIAN DATA (SETELAH MODAL DIBUKA) ---
+      // Gunakan helper untuk menghindari crash jika elemen null
+      const setVal = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.value = val;
+      };
+      
+      const setTxt = (id, txt) => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = txt;
+      };
+
+      // Sekarang kita isi datanya dengan aman
+      setVal('log_maint_id', data[0]);
       
       let pend_sebelum = `Pending [tgl: ${data[3]}] [by: ${data[5]}] [Note: ${data[8]}] - Updated[next]`;
-      document.getElementById('log_as_id_label').value = pend_sebelum; // Sesuaikan ID elemen catatan Anda
+      setVal('log_as_id_label', pend_sebelum);
 
-      // Injeksi Detail Aset dari hasil fetch
-      document.getElementById('log_as_id').innerText = res.type + "-" + res.id;
-      document.getElementById('log_ui_type').innerText = res.type;
-      document.getElementById('log_ui_asid').innerText = res.id;
-      document.getElementById('log_ui_nama').innerText = res.nama;
-      document.getElementById('log_ui_lokasi').innerText = res.lokasi;
+      setTxt('log_as_id', res.type + "-" + res.id);
+      setTxt('log_ui_type', res.type);
+      setTxt('log_ui_asid', res.id);
+      setTxt('log_ui_nama', res.nama);
+      setTxt('log_ui_lokasi', res.lokasi);
 
-      // Set dropdown jadwal (data[6] adalah ID_Jadwal dari tabel)
       const sEl = document.getElementById('jenis_id_jadwal');
       if (sEl) sEl.value = data[7];
 
-      // --- LOGIKA SINKRONISASI FOTO (MENGGUNAKAN URL LAMA) ---
-      // Kita masukkan URL (String) ke dalam array tempPhotos
-      // Fungsi renderPhotoPreview Anda harus bisa menangani string URL
-      tempPhotos.PB = data[8]  ? [{ data: data[9], isOld: true }]  : []; 
-      tempPhotos.PO = data[9]  ? [{ data: data[10], isOld: true }]  : [];
-      tempPhotos.PA = data[10] ? [{ data: data[11], isOld: true }] : [];
-      tempPhotos.PC = data[11] ? [{ data: data[12], isOld: true }] : [];
+      // --- LOGIKA FOTO ---
+      tempPhotos.PB = data[9]  ? [{ data: data[9], isOld: true }]  : []; 
+      tempPhotos.PO = data[10] ? [{ data: data[10], isOld: true }] : [];
+      tempPhotos.PA = data[11] ? [{ data: data[11], isOld: true }] : [];
+      tempPhotos.PC = data[12] ? [{ data: data[12], isOld: true }] : [];
 
       ['PB', 'PO', 'PA', 'PC'].forEach(cat => renderPhotoPreview(cat));
 
-      // --- TRANSISI UI ---
+      // --- FINALISASI ---
+      // Tutup modal lama setelah modal baru siap
       const modalDetail = document.getElementById('modalDetailHist');
       if (modalDetail) modalDetail.style.display = 'none';
 
-      // Buka modal maintenance log dengan data yang sudah terisi
-      update_man_status = true; // Tandai bahwa kita sedang dalam mode UPDATE (Pending)
-      startMaintenanceMode(); 
       unlockMaintenanceForm(); 
 
     } else {
-      await Swal.fire({
-        title: "Unit Tidak Ada!",
-        text: `ID Aset [${data[6]}] tidak ditemukan, Señor!`,
-        icon: "error",
-        width: '80%'
-      });
+      Swal.fire("Unit Tidak Ada!", `ID Aset [${data[6]}] tidak ditemukan.`, "error");
     }
   } catch (err) {
-    await Swal.fire({
-      title: "Server Error",
-      text: "Gagal memuat detail aset: " + err.toString(),
-      icon: "error",
-      width: '80%'
-    });
+    Swal.fire("Server Error", err.toString(), "error");
   }
 }
-
 
 /**=====================================================================================================================================
  * [FUNGSI: RESET TOTAL INPUT MODAL LOG]
