@@ -787,7 +787,7 @@ function startMaintenanceMode() {
 
     // 2. --- SISTEM GEMBOK (LOCKDOWN) ---
     // Daftar ID yang harus dikunci di awal
-    initAllJadwalDropdowns();
+    //initAllJadwalDropdowns();
     const elementsToLock = [
         'log_pekerjaan', 'btn_PB', 'btn_PO', 'btn_PA', 'btn_PC', 
         'btnLogPending', 'btnLogSelesai', 'jenis_id_jadwal'
@@ -1214,7 +1214,7 @@ async function saveLog(status) {
             },
             photoData: tempPhotos // Bundle foto base64
         };
-
+        console.table(payload);
         // --- EKSEKUSI FETCH POST ---
         try {
             // Kita pakai mode 'no-cors' karena pengiriman foto base64 sangat besar
