@@ -3697,60 +3697,155 @@ async function bulkUpdateQR() {
       didOpen: () => { Swal.showLoading(); }
     });
 
-    try {
-      const bulkData = [];
-      for (let i = 0; i < selected.length; i++) {
-        // Update teks progres di modal (Real-time)
-        const progressVal = Math.round(((i + 1) / selected.length) * 100);
-        document.getElementById('progress-text').innerText = `Konversi QR: ${progressVal}% (${i+1}/${selected.length})`;
-        
-        const item = selected[i];
-        const code = type + "-" + item.asId;
-        const qrApiUrl = `https://api.qrserver.com{encodeURIComponent(code)}&size=150x150`;
-        
-        // Konversi ke Base64 (Fungsi virtual QR Anda)
-        const qrBase64 = await generateVirtualQR(qrApiUrl);
-        
-        bulkData.push({
-          asId: item.asId,
-          row: item.rowIdx,
-          qrBase64: qrBase64
-        });
-      }
+  try {
+  document.getElementById('progress-text').innerText = "Memulai Konversi Paralel...";
 
-      // 3. KIRIM BORONGAN KE SERVER (POST)
-      document.getElementById('progress-text').innerText = "Mengirim ke Database...";
-      
-      const bodyPayload = {
-        action: "saveBulkQR_Optimized",
-        payload: {
-          bulkData: bulkData,
-          admin: window.loggedInUser || "Admin",
-          type: type
-        }
-      };
+  // 1. PROSES SEMUA QR SEKALIGUS (PARALEL)
+  // Kita buat array berisi "Janji" (Promises)
+  const promises = selected.map(async (item, index) => {
+    const code = type + "-" + item.asId;
+    
+    // Panggil mesin lokal (Custom QR dengan teks)
+    const fullImageBase64 = await generateCustomQR(code);
 
-      const response = await fetch(urlGAS, {
-        method: 'POST',
-        headers: { "Content-Type": "text/plain" },
-        body: JSON.stringify(bodyPayload)
-      });
-      
-      const res = await response.text();
+    // Update progres secara visual (karena cepat, ini akan melompat-lompat)
+    // Update progress UI
+        const progressVal = Math.round(((index + 1) / selected.length) * 100);
+        const progEl = document.getElementById('progress-text');
+        if (progEl) progEl.innerText = `Konversi QR: ${progressVal}% (${index + 1}/${selected.length})`;
 
-      await Swal.fire({ title: "Sukses", text: res, icon: "success", width: '80%' });
-      loadAssetData(type); 
+    // Return data yang dibutuhkan server
+    return {
+      asId: item.asId,
+      row: item.rowIdx,
+      qrBase64: fullImageBase64.split(',')[1] // Ambil murni datanya saja (tanpa header data:image)
+    };
+  });
 
-    } catch (err) {
+  // 2. TUNGGU SEMUA SELESAI
+  const bulkData = await Promise.all(promises);
+
+  // 3. KIRIM BORONGAN KE SERVER (POST)
+  document.getElementById('progress-text').innerText = "Mengirim ke Database (Google Sheets)...";
+  
+  const bodyPayload = {
+    action: "saveBulkQR_Optimized",
+    payload: {
+      bulkData: bulkData,
+      admin: window.loggedInUser || "Admin",
+      type: type
+    }
+  };
+
+  const response = await fetch(urlGAS, {
+    method: 'POST',
+    headers: { "Content-Type": "text/plain" },
+    body: JSON.stringify(bodyPayload)
+  });
+  
+  const res = await response.text();
+
+  await Swal.fire({ title: "Sukses", text: res, icon: "success", width: '80%' });
+  loadAssetData(type); 
+
+} catch (err) {
       console.error("Gagal Bulk Update QR:", err);
       Swal.fire({ title: "Error", text: "Gagal memproses QR: " + err.toString(), icon: "error" });
     }
   }
 }
 
+/**=========================================================================
+ * HELPER: GENERATE QR BASE64 (Safe for CORS)
+ * dengan logo dan tulisan
+ * ==========================================================================
+ */
+
+async function generateCustomQR(textCode, options = {}) {
+    return new Promise((resolve, reject) => {
+        const {
+            width = 150,
+            height = 150,
+            colorDark = "#000000",
+            colorLight = "#ffffff",
+            labelColor = "#1e293b",
+            // Path logo sesuai struktur folder Anda
+            logoUrl = "../asset/logo/PT-KSC.png" 
+        } = options;
+
+        const tempDiv = document.createElement("div");
+        
+        // PENTING: Gunakan CorrectLevel.H agar QR tetap terbaca meski ada logo di tengah
+        new QRCode(tempDiv, {
+            text: textCode,
+            width: width,
+            height: height,
+            colorDark: colorDark,
+            colorLight: colorLight,
+            correctLevel: QRCode.CorrectLevel.H 
+        });
+
+        setTimeout(() => {
+            const qrCanvas = tempDiv.querySelector('canvas');
+            if (!qrCanvas) return reject("Gagal merender QR Lokal");
+
+            const finalCanvas = document.createElement("canvas");
+            const ctx = finalCanvas.getContext("2d");
+            
+            // Layout: QR 150px + Padding 10px kiri/kanan + Area Teks 40px bawah
+            finalCanvas.width = width + 20; 
+            finalCanvas.height = height + 50; 
+            
+            // 1. Fill Background Putih
+            ctx.fillStyle = colorLight;
+            ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+            
+            // 2. Gambar QR Utama (Offset 10,10 untuk padding)
+            ctx.drawImage(qrCanvas, 10, 10);
+            
+            // 3. Proses Logo PT-KSC
+            const img = new Image();
+            img.src = logoUrl;
+            
+            img.onload = () => {
+                // Ukuran logo ideal adalah 20-22% dari lebar QR
+                const logoSize = width * 0.22; 
+                const centerX = (finalCanvas.width / 2) - (logoSize / 2);
+                const centerY = (10 + height / 2) - (logoSize / 2);
+                
+                // Gambar "Safe Zone" (kotak putih kecil) agar logo tidak menyatu dengan dot QR
+                ctx.fillStyle = colorLight;
+                ctx.fillRect(centerX - 2, centerY - 2, logoSize + 4, logoSize + 4);
+                
+                // Tempel Logo
+                ctx.drawImage(img, centerX, centerY, logoSize, logoSize);
+                finishRender();
+            };
+
+            img.onerror = () => {
+                console.error("❌ Logo PT-KSC gagal dimuat di: " + logoUrl);
+                finishRender(); // Tetap lanjut tanpa logo agar sistem tidak macet
+            };
+
+            function finishRender() {
+                // 4. Tambahkan Teks ID Aset di bagian bawah
+                ctx.fillStyle = labelColor;
+                ctx.font = "bold 15px Arial, sans-serif";
+                ctx.textAlign = "center";
+                // Koordinat teks: Tengah horizontal, 15px dari dasar canvas
+                ctx.fillText(textCode, finalCanvas.width / 2, finalCanvas.height - 12);
+                
+                // 5. Output Base64 Murni untuk Database
+                const base64Raw = finalCanvas.toDataURL("image/png");
+                resolve(base64Raw.split(',')[1]); 
+            }
+        }, 150); // Jeda 150ms agar render QRCode.js sempurna
+    });
+}
 
 /**=========================================================================
  * HELPER: GENERATE QR BASE64 (Safe for CORS)
+ * SEMENTARA DEPRECATED BELUM DIGUNAKAN 
  * ==========================================================================
  */
 function generateVirtualQR(url) {

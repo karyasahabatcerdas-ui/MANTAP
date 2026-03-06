@@ -104,25 +104,29 @@ async function initAllJadwalDropdowns() {
 async function initAssetDropdowns() {
   const urlGAS = APPSCRIPT_URL;
   
-  // GUNAKAN NAMA KEY YANG BERBEDA
-  const elements = {
-    elTgl: document.getElementById('sortJadwal'), 
-    elLog: document.getElementById('filterStatusLog'),   // Nama unik
-    elJadwal: document.getElementById('filterStateJadwal'), // Nama unik
-    elAsset: document.getElementById('as_status')
-  };
-
   // 1. Set Loading Status (Ini akan bekerja karena semua key unik)
   Object.values(elements).forEach(el => {
     if (el) el.innerHTML = '<option value="">⏳ Loading...</option>';
   });
 
   try {
+      // GUNAKAN NAMA KEY YANG BERBEDA
+      const elements = {
+        elTgl: document.getElementById('sortJadwal'), 
+        elLog: document.getElementById('filterStatusLog'),   // Nama unik
+        elJadwal: document.getElementById('filterStateJadwal'), // Nama unik
+        elAsset: document.getElementById('as_status')
+      };
     const response = await fetch(`${urlGAS}?action=getAssetDropdowns`);
     const data = await response.json();
 
     const renderOptions = (el, list, defaultText) => {
-      if (!el) return;
+      
+      if (!el) return{
+        console.warn(`⚠️ Elemen untuk "${defaultText}" tidak ditemukan di DOM. Melewati...`);
+        return;
+        }
+
       let html = `<option value="">-- ${defaultText} --</option>`;
       if (list && list.length > 0) {
         html += list.map(item => `<option value="${item.id}">${item.nama}</option>`).join('');
