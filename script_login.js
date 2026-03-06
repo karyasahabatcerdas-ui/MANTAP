@@ -121,7 +121,7 @@ async function initAssetDropdowns() {
     console.log("⏳ Menunggu elemen DOM tersedia...");
     
     // 1. Tunggu semua elemen ID muncul secara paralel
-    const [elTgl, elMaint, elAsset] = await Promise.all([
+    const [elTgl, elMaint, elAsset,elStatusJad] = await Promise.all([
       waitForElement('sortJadwal'),
       waitForElement('filterStatusLog'),
       waitForElement('as_status'),

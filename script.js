@@ -2238,10 +2238,66 @@ async function loadMaintDetail(row) {
 //=======================================================================================
 //                    FUNGSI EXPORT JADWAL KE CSV
 //==========================================================================================
+
+async function exportToExcel() {
+  const konfirmasi = await Swal.fire({
+    title: "Export Laporan?",
+    text: "Semua tanda petik akan dibersihkan agar format aman untuk Import.",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Ya, Export",
+    cancelButtonText: "Batal",
+    width: '80%'
+  });
+
+  if (konfirmasi.isConfirmed) {
+    // 1. Tampilkan loading sebentar
+    Swal.fire({ 
+      title: 'Menyiapkan Data...', 
+      text: 'Server sedang menyusun CSV bersih, Señor.',
+      allowOutsideClick: false, 
+      didOpen: () => Swal.showLoading() 
+    });
+
+    try {
+      // 2. Susun URL langsung ke Google Apps Script
+      const params = new URLSearchParams({
+        action: 'exportJadwal',
+        user: loggedInUser // Pastikan variabel ini ada (user yang login)
+      });
+      
+      const finalUrl = `${APPSCRIPT_URL}?${params.toString()}`;
+
+      // 3. BYPASS CORS: Gunakan window.location untuk download langsung
+      // Cara ini tidak akan terblokir oleh kebijakan CORS browser
+      window.location.href = finalUrl;
+
+      // 4. Berikan feedback suara/visual
+      setTimeout(() => {
+        Swal.close();
+        speakSenor("Laporan bersih berhasil diekspor, Señor.");
+        
+        Swal.fire({
+          title: "Berhasil!",
+          text: "File sedang dikirim ke folder download Anda.",
+          icon: "success",
+          timer: 2000
+        });
+      }, 1500);
+
+    } catch (err) {
+      console.error("Export Error:", err);
+      Swal.fire("Gagal!", "Ada kendala teknis: " + err.message, "error");
+    }
+  }
+}
+
+
 /**
  * [FUNGSI UI: EXPORT JADWAL - CLEAN VERSION]
  * Menghapus semua tanda petik agar data siap di-Import kembali
  */
+/*
 async function exportToExcel() {
   const konfirmasi = await Swal.fire({
     title: "Export Laporan?",
@@ -2268,7 +2324,7 @@ async function exportToExcel() {
         action: 'exportJadwal',
         user: loggedInUser // Audit user yang melakukan export
       });
-
+      console.log("parameter di exporttoexce :",params.toString());
       const finalUrl = `${urlGAS}?${params.toString()}`;
 
       // Ambil data CSV dari server
@@ -2306,7 +2362,7 @@ async function exportToExcel() {
     }
   }
 }
-
+*/
 
 //=======================================================================================
 //                    FUNGSI IMPORT JADWAL
