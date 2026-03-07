@@ -2193,7 +2193,7 @@ function renderJadwalViewIncremental(data) {
         <td style="padding:5px;">${d[7]}<br><small>${d[10]}</small></td> <!-- Plan Date -->
         <td style="padding:5px; text-align:center;">
           <!-- TOMBOL AKSI: Mengarah ke Mode Read-Only -->
-          <button onclick="openMaintDetailView(${i+1})"style="background:#7f8c8d; color:white; border:none; padding:6px; border-radius:4px; cursor:pointer;">
+          <button onclick="openMaintDetailView(${i})"style="background:#7f8c8d; color:white; border:none; padding:6px; border-radius:4px; cursor:pointer;">
             <i class="fas fa-search"></i>
           </button>
         </td>
