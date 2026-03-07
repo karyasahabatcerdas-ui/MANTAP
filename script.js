@@ -2329,7 +2329,7 @@ async function loadMaintDetail(row) {
     //const data = await response.json();
     //coba pakai daftar chace yg sdh ada saja
     const data =historyJadwal[row];
-    await initAssetDropdowns();
+    //await initAssetDropdowns();
     if (!data || data.length === 0) {
       if (typeof speakSenor === "function") speakSenor("Data ghoib Señor!");
       return;
