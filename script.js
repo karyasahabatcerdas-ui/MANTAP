@@ -779,10 +779,10 @@ function startMaintenanceMode() {
         console.error("❌ Modal Maintenance tidak ditemukan!");
         return;
     }
-    
+    update_man_status = false ;
     // 1. Bersihkan sisa data & reset state
-    if (typeof resetLogModalTotal === 'function') {
-        resetLogModalTotal();
+    if (typeof prepareMaintenanceLogic === 'function') {
+        prepareMaintenanceLogic();
     }
 
     // 2. --- SISTEM GEMBOK (LOCKDOWN) ---
@@ -828,6 +828,7 @@ function startMaintenanceMode() {
   const urlGAS = APPSCRIPT_URL;
 
   // 1. VALIDASI DATA AWAL
+  
   if (!activeRowData || activeRowData.length === 0) {
     await Swal.fire({ title: "Data Tidak Ditemukan!", icon: "error" });
     return; 
@@ -842,7 +843,8 @@ function startMaintenanceMode() {
   });
 
   try {
-    const response = await fetch(`${urlGAS}?action=searchAllAssets&keyword=${encodeURIComponent(data[6])}`);
+    //mencari informasi asset berdasakan variable ID_Asset dari huruf depannya
+    const response = await fetch(`${urlGAS}?action=searchAllAssetsGo&keyword=${encodeURIComponent(data[6])}`);
     const results = await response.json();
 
     if (results && results.length > 0) {
@@ -867,27 +869,21 @@ function startMaintenanceMode() {
       };
 
       // Sekarang kita isi datanya dengan aman
-      setVal('log_maint_id', data[0]);
-      
+      setVal('log_keg_id', data[0]);  //log_id kode log kegiatan
+      setVal('Maint_id', data[1]);  //Maint_id kode jadwal maintenance
       let pend_sebelum = `Pending [tgl: ${data[3]}] [by: ${data[5]}] [Note: ${data[8]}] - Updated[next]`;
-      setVal('log_as_id_label', pend_sebelum);
+      document.getElementById('log_pekerjaan').placeholder= pend_sebelum; // sebagai placeholder note sekarang agar orang tahu itu catatan terdahulu tapi tidak bisa diubah
+      setTxt('log_pekerjaan', ""); // kosongkan isinya
+      setTxt('log_as_id', res.type + "-" + res.id); // UNIT ID
+      setTxt('log_ui_type', res.type);      //Type_Asset
+      setTxt('log_ui_asid', res.id);      //ID_Asset
+      setTxt('log_ui_nama', res.nama);    //nama_asset
+      setTxt('log_ui_lokasi', res.lokasi); //lokasi_asset
 
-      setTxt('log_as_id', res.type + "-" + res.id);
-      setTxt('log_ui_type', res.type);
-      setTxt('log_ui_asid', res.id);
-      setTxt('log_ui_nama', res.nama);
-      setTxt('log_ui_lokasi', res.lokasi);
-
-      const sEl = document.getElementById('jenis_id_jadwal');
-      if (sEl) sEl.value = data[7];
-
-      // --- LOGIKA FOTO ---
-        //tempPhotos.PB = data[8]  ? [data[8]]  : []; 
-        //tempPhotos.PO = data[9]  ? [data[9]]  : [];
-        //tempPhotos.PA = data[10] ? [data[10]] : [];
-        //tempPhotos.PC = data[11] ? [data[11]] : [];
-
+      setVal('jenis_id_jadwal', data[7]) ;
+    
         // --- SOLUSI AMAN: TETAP ARRAY 1 DIMENSI ---
+        // -- DIMASUKAN KE IMAGE HOLDERNYA MAINTENANCELOG SEBAGAI ARRAY DATAR 1 DIMENSI
         const categories = ['PB', 'PO', 'PA', 'PC'];
         const dataIndices = [9, 10, 11, 12]; 
 
@@ -923,12 +919,120 @@ function startMaintenanceMode() {
     Swal.fire("Server Error", err.toString(), "error");
   }
 }
+/**=====================================================================================================================================
+ * [FUNGSI: RESET PENGGANTI MODAL LOG]
+ * Membersihkan semua data sisa agar tidak menumpuk di sesi berikutnya
+ * ======================================================================================================================================
+ */
+function prepareMaintenanceLogic() {
+  const v1 = document.getElementById('maint_id').value;     // var1 (M-xxxxx)
+  const v2 = document.getElementById('log_keg_id').value;   // var2 (L-xxxxx)
+  const isUpdateMode = (typeof update_man_status !== 'undefined' && update_man_status === true);
+
+  let mode = 0;
+  let notif = "";
+
+  switch (true) {
+    // --- KONDISI 3: Update Jadwal & Kegiatan Lama (Full Update) ---
+    case (isUpdateMode && v1.startsWith("M-") && v2.startsWith("L-")):
+      mode = 3;
+      notif = "🔄 Update Jadwal & Kegiatan Lama";
+      // Data, Waktu, & Foto DIPERTAHANKAN (Tidak ada reset)
+      break;
+
+    // --- KONDISI 2: Ambil Jadwal & Kegiatan Baru (Pending -> New Log) ---
+    case (isUpdateMode && v1.startsWith("M-")):
+      mode = 2;
+      notif = "📅 Ambil Jadwal & Kegiatan Baru";
+      applyPartialReset(); // Reset Waktu & Input Kerja, tapi simpan Maint_ID
+      break;
+
+    // --- KONDISI 1 / DEFAULT: Buat Jadwal & Kegiatan Baru (Sapu Bersih) ---
+    default:
+      mode = 1;
+      notif = "🆕 Buat Jadwal & Kegiatan Baru";
+      applyFullReset(); // Sapu bersih semua elemen UI & Metadata
+      break;
+  }
+
+  // --- FINAL TOUCH: Kembalikan tombol ke warna/teks standar (Hanya jika mode 1 atau 2) ---
+  if (mode !== 3) {
+    const btnSelesai = document.getElementById('btnLogSelesai');
+    if (btnSelesai) btnSelesai.innerHTML = '<i class="fas fa-check-circle"></i> SELESAI';
+    console.log("✅ UI Cleaned & Metadata Reset.");
+  }
+
+  console.log(`🚀 Mode Terdeteksi: ${mode} | ${notif}`);
+  return { mode, notif };
+}
+
+/** 
+ * FUNGSI 1: RESET TOTAL (Mode 1)
+ */
+function applyFullReset() {
+  console.log("🧹 Reset Total: Memulai sesi maintenance baru.");
+  
+  // 1. Reset Values & Placeholder
+  const ids = ['maint_id', 'log_keg_id','log_time_mulai', 'log_pekerjaan',  'jenis_id_jadwal'];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = "";
+  });
+  if (document.getElementById('log_pekerjaan')) document.getElementById('log_pekerjaan').placeholder = "";
+
+  // 2. Reset Display Text (-)
+  ['log_ui_type', 'log_ui_asid', 'log_ui_nama', 'log_ui_lokasi', 'log_as_id'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerText = "-";
+  });
+
+  // 3. Reset Foto Visual & Metadata
+  resetVisualPhotos();
+  window.currentMaintData = null; 
+  if (typeof resetTempPhotos === 'function') resetTempPhotos();
+}
+
+/** 
+ * FUNGSI 2: RESET PARSIAL (Mode 2)
+ */
+function applyPartialReset() {
+  console.log("♻️ Reset Parsial: Melanjutkan data Pending.");
+  
+  // Hanya Reset Waktu & Input Kerja & LogID
+  const partialIds = ['log_time_mulai', 'log_pekerjaan', 'log_keg_id'];
+  partialIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = "";
+  });
+
+  // Reset Metadata & Foto (Karena ini log baru)
+  window.currentMaintData = null;
+  resetVisualPhotos();
+  if (typeof resetTempPhotos === 'function') resetTempPhotos();
+}
+
+/** 
+ * FUNGSI 3: RESET VISUAL FOTO (Helper)
+ */
+function resetVisualPhotos() {
+  const icons = { 'PB': 'fa-camera', 'PO': 'fa-tools', 'PA': 'fa-check-double', 'PC': 'fa-clipboard-list' };
+  const labels = { 'PB': 'BEFORE (PB)', 'PO': 'ON WORK (PO)', 'PA': 'AFTER (PA)', 'PC': 'CHECKSHEET' };
+
+  Object.keys(icons).forEach(p => {
+    const prev = document.getElementById(`prev_${p}`);
+    if (prev) {
+      prev.innerHTML = `<i class="fas ${icons[p]}"></i><br><b>${labels[p]}</b>`;
+    }
+  });
+}
+
 
 /**=====================================================================================================================================
  * [FUNGSI: RESET TOTAL INPUT MODAL LOG]
  * Membersihkan semua data sisa agar tidak menumpuk di sesi berikutnya
  * ======================================================================================================================================
  */
+/*
 function resetLogModalTotal() {
   // Gunakan pengecekan aman untuk update_man_status
   const isUpdateMode = (typeof update_man_status !== 'undefined' && update_man_status === true);
@@ -938,11 +1042,12 @@ function resetLogModalTotal() {
     console.log("🧹 Reset Total: Memulai sesi maintenance baru.");
 
     // 1. Bersihkan Hidden & Input Fields (Value)
-    const ids = ['log_maint_id', 'log_as_id', 'log_time_mulai', 'log_pekerjaan', 'log_pending', 'log_maint_row'];
+    const ids = ['maint_id', 'log_time_mulai', 'log_pekerjaan', "log_keg_id"];
     ids.forEach(id => {
       const el = document.getElementById(id);
       if (el) el.value = "";
     });
+    document.getElementById('log_pekerjaan').placeholder=""; //bersihkan placeholder
 
     // 2. Bersihkan Teks Display UI (InnerText)
     const texts = ['log_ui_type', 'log_ui_asid', 'log_ui_nama', 'log_ui_lokasi', 'log_as_id'];
@@ -952,11 +1057,7 @@ function resetLogModalTotal() {
     });
 
     // 3. Reset Dropdown Select (Jadwal)
-    const selJadwal = document.getElementById('jenis_id_jadwal');
-    if (selJadwal) {
-      //selJadwal.innerHTML = '<option value="">Memuat...</option>';
-      selJadwal.value="";
-    }
+    document.getElementById('jenis_id_jadwal').value="";
 
     // 4. Bersihkan Metadata & Foto
     window.currentMaintData = null; 
@@ -993,7 +1094,7 @@ function resetLogModalTotal() {
   
   console.log("✅ UI Cleaned & Metadata Reset.");
 }
-
+*/
 /**
  * [FUNGSI CLIENT GITHUB: BUKA GEMBOK MODAL]
  * Mengaktifkan input & sinkronisasi waktu/petugas via Fetch
@@ -1101,8 +1202,8 @@ function closeMaintenanceMode() {
     window.isSuccessSave = false; //reset status apakah ad kegiatan saving atau pending jik ay a= true
     
     
-    if (typeof resetLogModalTotal === 'function') {
-      resetLogModalTotal(); 
+    if (typeof prepareMaintenanceLogic === 'function') {
+      prepareMaintenanceLogic(); 
     }
     //reset kembali menjadi baru
     update_man_status = false; 
@@ -1200,15 +1301,18 @@ async function saveLog(status) {
         });
 
         // --- PREPARE PAYLOAD ---
-        let stack_pending = document.getElementById('log_pending').value || ""; 
+        let stack_pending = document.getElementById('log_pending').placeholder || ""; 
         
         const bodyPayload = {
             action: "processMaintLogEnterprise", // Label untuk router doPost
             payload: {
-                maintId  : document.getElementById('log_maint_id').value,
+                logKegId : document.getElementById("log_keg_id").value,
+                maintId  : document.getElementById('maint_id').value,
                 mulai    : document.getElementById('log_time_mulai').value,
                 status   : status,
+                type     : document.getElementById('log_ui_type').innerText,
                 asId     : document.getElementById('log_ui_asid').innerText,
+                nama     : document.getElementById('log_ui_nama').innerText,
                 asJadwal : document.getElementById('jenis_id_jadwal').value, 
                 petugas  : document.getElementById('log_petugas').value,
                 note     : stack_pending + " " + note    
@@ -1217,7 +1321,7 @@ async function saveLog(status) {
         };
         console.log("--- Cek Data Sebelum Kirim ---");
         console.table(bodyPayload.payload); // Menampilkan isi data teks
-        console.log("Jumlah Foto:", bodyPayload.photoData.length); // Cek jumlah foto
+       
 
         // --- EKSEKUSI FETCH POST ---
         try {
@@ -1259,6 +1363,8 @@ async function saveLog(status) {
             btnPending.innerHTML = '<i class="fas fa-pause"></i> PENDING';
         }
     }
+
+    
 }
 
 
@@ -1294,8 +1400,9 @@ async function loadHist() {
   try {
     // 2. FETCH DATA DARI SERVER (GET)
     const response = await fetch(`${urlGAS}?action=getHistoryLogDataRaw`);
+    console.log(response);
     const res = await response.json(); // Mengambil Array of Objects dari server
-
+    console.log(res);
     // 3. HANDLING DATA
     if (!res || res.length === 0) {
       allHistoryData = [];
@@ -2107,7 +2214,9 @@ async function goMaint(rowIdx) {
 
   try {
     // 3. PANGGIL SERVER (GET) - Menggunakan action searchAllAssets
-    // data[5] adalah Asset_ID dari kolom tabel Anda
+    // data[6] adalah Asset_ID dari tabel Log_Keg dengan mencari 
+    // dari sheeet type_asset kolom A untuk diambil nama sheet nya di kolom ke-2
+    // kolom A dicocokkan dengan awalan ID_Asset
     const response = await fetch(`${urlGAS}?action=searchAllAssetsGo&keyword=${encodeURIComponent(data[6])}`);
     const results = await response.json();
 
@@ -2122,7 +2231,8 @@ async function goMaint(rowIdx) {
        
 
       // --- PENGISIAN DATA KE UI MODAL ---
-      document.getElementById('log_maint_id').value = data[0]; //pengisian Maint_ID ke form maintenance log
+      document.getElementById('maint_id').value = data[0]; //pengisian Maint_ID ke form maintenance log
+       document.getElementById('log_keg_id').value = data[0]; //pengisian Maint_ID ke form maintenance log
       
       //let pend_sebelum = `Pending [tgl: ${data[3]}] [by: ${data[5]}] [Note: ${data[8]}] - Updated[next]`; 
       //document.getElementById('log_as_id_label').value = pend_sebelum; // Sesuaikan ID elemen catatan Anda
@@ -2135,12 +2245,11 @@ async function goMaint(rowIdx) {
       document.getElementById('log_ui_lokasi').innerText = res.lokasi;
 
       // Set dropdown jadwal (data[6] adalah ID_Jadwal dari tabel)
-      const sEl = document.getElementById('jenis_id_jadwal');
-      if (sEl) sEl.value = data[6];
-
-      //['PB', 'PO', 'PA', 'PC'].forEach(cat => renderPhotoPreview(cat));
-      resetTempPhotos(); // mengosongkan karena goMaint adalah jadwal baru, bukan update, jadi kita reset dulu tempPhotos agar tidak tercampur dengan data lama
-
+      document.getElementById('jenis_id_jadwal').value= data[6];;
+      
+      //reset total akan dipilih ada atau tidaknya oleh fungsi prepare
+      //dengan memanfaatkan isi 
+   
       // --- TRANSISI UI ---
       const modalDetail = document.getElementById('modalDetailHist');
       if (modalDetail) modalDetail.style.display = 'none';
