@@ -187,7 +187,7 @@ function uploadOwnPhoto(input) {
   const file =input.files[0];
   if (file) {
     // 1. Simpan file asli ke dalam array (untuk kebutuhan upload nanti)
-    Temp_Profile[0] = file; 
+    window.Temp_Profile[0] = file; 
 
     // 2. Buat URL sementara untuk pratinjau
     const pratinjauUrl = URL.createObjectURL(file);
