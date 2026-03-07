@@ -13,9 +13,7 @@
         <label class="label-neon" style="font-size: 9px;">MAINT ID (AUTO)</label>
         <input type="text" id="m_id" disabled value="AUTO" class="input-neon readonly-neon-blue">
       </div>
-    </div>
-
-    <input type="hidden" id="maintRowIdx">
+    </div>    
 
     <!-- BARIS 1: TIPE & NAMA ASSET (Grid 1:2) -->
     <div class="form-row-grid" style="grid-template-columns: 1fr 2fr;">
@@ -37,7 +35,9 @@
       </div>
       <div>
         <label class="label-neon">STATUS</label>
-        <input type="text" id="m_state" readonly class="input-neon readonly-neon">
+        <select id="m_state" class="input-pendek">
+            <option value="all">🔍 MEMUAT STATUS...</option>
+        </select>
       </div>
     </div>
 
@@ -79,7 +79,16 @@
       <button onclick="closeMaintModal()" class="btn-timbul btn-maintenance">
         <i class="fas fa-times"></i> BATAL
       </button>
+        <button id="btnGoMaint" class="btn-timbul btn-maintenance;">
+            <i class="fa-solid fa-toolbox"></i> GoTo Maintenance </span>
+        </button>
     </div>
-
+        
+        <input id="maintRowIdx" type="hidden" >
+        <input id="m_created" type="hidden" >
+        <input id="m_updated" type="hidden" >
+        <input id="m_updater" type="hidden" >
+        <input id="m_updater" type="hidden" >
+        <input id="m_lokasi" type="hidden" >
   </div>
 </div>

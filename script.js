@@ -165,7 +165,8 @@ async function navigateAsset() {
       
       document.getElementById('m_as_id').value = data[0];   
       document.getElementById('m_type').value = type;      
-      document.getElementById('m_as_nama').value = data[2]; 
+      document.getElementById('m_as_nama').value = data[2];
+      document.getElementById('m_lokasi').value = data [3];
       
       closeGlobalSearch();
     } catch (err) {
@@ -1971,7 +1972,7 @@ function renderKelolaIncremental(data) {
 async function openMaintModal(row = "") {
   const modal = document.getElementById('modalMaint');
   const btnSubmit = document.getElementById('btnCreateMaint'); 
-  const urlGAS = APPSCRIPT_URL; // URL Web App Anda
+  //const urlGAS = APPSCRIPT_URL; // URL Web App Anda
   
   if (!modal) return console.error("Gawat! Modal tidak ditemukan.");
 
@@ -1989,18 +1990,31 @@ async function openMaintModal(row = "") {
 
     try {
       // Ganti google.script.run dengan fetch GET
-      const resp = await fetch(`${urlGAS}?action=getNextMaintId`);
-      const nextId = await resp.json();
+      //const resp = await fetch(`${urlGAS}?action=getNextMaintId`);
+      //const nextId = await resp.json();
+
+      //fungsi bantu mendapat Maint ID sementara
+      const data = historyJadwal[row];       
+        if (lastRow < 2) {
+        nextId = "M-" + "1".padStart(5, '0'); //5 digit
+        } else {
+        const lastVal = data[row].getValue().toString(); 
+        const num = parseInt(lastVal.replace(prefix, "")) || 0; 
+        nextId = "M-" + (num + 1).toString().padStart(digits, '0'); 
+        }    
+
 
       // 1. Isi Data Default
       setVal('m_id', nextId);
       setVal('m_type', "");
       setVal('m_as_id', "");
       setVal('m_as_nama', "");
-      setVal('m_state', "Open");
+      setVal('m_state', "open");
       setVal('maint_id_jadwal', "PM");
       setVal('m_shift_note', "");
       setVal('m_other_note', "");
+      setVal('m_lokasi', ""); // hidden input lokasi untuk masa depan
+
 
       // 2. Set Jam Default 09:00
       let d = new Date();
@@ -2032,7 +2046,11 @@ async function openMaintModal(row = "") {
  * Menjamin Fullscreen Tetap Aktif & Notifikasi Elegan
  */
 async function saveMaintData() {
+
+
+
   try {
+    
     // 1. PENGAMBILAN DATA
     const row = document.getElementById('maintRowIdx').value || "";             
     const asId = document.getElementById('m_as_id').value || "";                
@@ -2043,7 +2061,8 @@ async function saveMaintData() {
     const mShift = document.getElementById('m_shift_note').value || "";         
     const mOther = document.getElementById('m_other_note').value || "";         
     const mstate = document.getElementById('m_state').value || "";              
-    const mIDjad = document.getElementById('maint_id_jadwal').value || "";       
+    const mIDjad = document.getElementById('maint_id_jadwal').value || "";
+    const mlokasi = document.getElementById('m_lokasi').value || "";       
 
     const user = typeof loggedInUser !== 'undefined' ? loggedInUser : "Unknown";
     const btn = document.getElementById('btnCreateMaint'); 
@@ -2083,7 +2102,7 @@ async function saveMaintData() {
     // 4. PREPARE PAYLOAD (Disesuaikan dengan urutan Array fungsi lama)
     const payload = {
       action: "saveMaintData", // Menanda agar server tahu fungsi mana yang dipanggil
-      data: [mId, mType, asId, mNama, "", "", user, mPlan, "", mstate, mIDjad, mShift, mOther],
+      data: [mId, mType, asId, mNama,mlokasi, "", "", user, mPlan, "", mstate, mIDjad, mShift, mOther],
       row: row
     };
 
@@ -2177,9 +2196,6 @@ function renderJadwalViewIncremental(data) {
           <button onclick="openMaintDetailView(${i+2})"style="background:#7f8c8d; color:white; border:none; padding:6px; border-radius:4px; cursor:pointer;">
             <i class="fas fa-search"></i>
           </button>
-          <button onclick="goMaint(${i+2})" style="background:${color}; color:white; border:none; padding:6px; border-radius:4px; cursor:pointer;">
-            <i class="fa-solid fa-toolbox"></i> <span style="padding:2px 6px; border-radius:4px; font-size:10px;">${state}</span>
-          </button>
         </td>
       `;
 
@@ -2193,11 +2209,13 @@ function renderJadwalViewIncremental(data) {
  * ===================================================================
  */
 async function goMaint(rowIdx) {
-  const urlGAS = APPSCRIPT_URL;
-  console.log("baris pada goMaint :", rowIdx);
-  console.table({historyJadwal,rowIdx});
+  //const urlGAS = APPSCRIPT_URL;
+
+  //data mentah 1 baris yang dipilih
+  const data = historyJadwal[rowIdx];
+
   // 1. VALIDASI DATA AWAL
-  if (!historyJadwal || historyJadwal.length === 0) {
+  if (!data || data[rowIdx].length === 0) {
     await Swal.fire({
       title: "Data Tidak Ditemukan!",
       text: "Silakan pilih baris terlebih dahulu, Señor.",  
@@ -2207,9 +2225,6 @@ async function goMaint(rowIdx) {
     return; 
   }
 
-  const d = historyJadwal[rowIdx]; 
-  console.table(d);
-
   // 2. TAMPILKAN LOADING
   Swal.fire({
     title: 'Mencari Detail Aset...',
@@ -2217,45 +2232,33 @@ async function goMaint(rowIdx) {
     allowOutsideClick: false,
     didOpen: () => { Swal.showLoading(); }
   });
-      
-let sheetName = d[1];
-let row = d[2];
-// Susun Query Parameter untuk doGet
-  const params = new URLSearchParams({
-        action: 'getSingleAssetData',
-        sheetName: sheetName,
-        row: row
-  });
-  const finalUrl = `${urlGAS}?${params.toString()}`;
-  console.log("Fetching Data (GET):", finalUrl);     
+ 
 
   try {
-    const response1 = await fetch(finalUrl);    
-    if (!response1.ok) throw new Error(`HTTP Error! Status: ${response1.status}`);
-    const data = await response1.json();
-    console.log("table data di openassetdetai: ");
-    console.table(data);
-    // Cek jika data kosong atau ada error dari server
-    if (!data || data.length === 0 || data.error) {
-      throw new Error(data.error || "Data tidak ditemukan di database.");
-    }
 
-    // --- 3. MAPPING DATA KE FORM ---
-    // Sesuai urutan kolom Spreadsheet: A=0(ID), B=1(Tipe), C=2(Nama), D=3(Lokasi), E=4(Status), F=5(Foto)
-      //document.getElementById('as_id').value     = data[0] || ""; 
-      //document.getElementById('as_nama').value   = data[2] || "";   
-      document.getElementById('as_lokasi').value = data[3] || ""; 
-      //document.getElementById('as_status').value = data[4] || "Baik";
+      // 2. INJEKSI DATA DASAR
 
-      document.getElementById('log_as_id').innerText = d[1]+"-"+d[2]; //unit ID
-      document.getElementById('jenis_id_jadwal').value = d[10] //unit ID JAdwal
-      document.getElementById('log_ui_type').innerText = d[1]; //Type Asset
-      document.getElementById('log_ui_asid').innerText = d[2]; //ID Asset
-      document.getElementById('log_ui_nama').innerText = d[3]; //Nama_Asset
-      //document.getElementById('log_ui_lokasi') = ""; //lokasi asset
-      document.getElementById('maint_id').value = d[0]; //MaintiD sdh ada karena baru dijalankan
-      document.getElementById('log_keg_id').value ="" ; //catatan baru
+    // Helper Fungsi untuk mengisi value elemen UI GitHub
+    const setText = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) el.innerText = val || "";
+    };   
+    setText('log_as_id',dat[1]+"-"+data[2]);  // unit ID log kegiatan
+    setText('log_ui_type', data[1]);              // input Type_Asset log kegiatan
+    setText('log_ui_asid', data[2]);             // input ID_Asset
+    setText('m_as_nama', data[3]);           // input nama_Asset
+    
+    // Helper Fungsi untuk mengisi value elemen UI GitHub
+    const setVal = (id, val) => {const el = document.getElementById(id);
+      if (el) el.value = val || ""; };
+    setVal('maintRowIdx', row); // hidden input
+    setVal('maint_id', data[0]);  //input untuk M-0000X setVal
+    setVal('jenis_id_jadwal', data[10]); //input select ID jadwal  log keg
+    setVal('log_keg_id', "");  //input hidden kosong karena ambil dari jadwal Maint
 
+    // belum di deklarisakn di database sementara di akhir dulu
+    //supaya tidak bentrok
+    setVal('log_ui_lokasi', data[13]); //label select ID jadwal  log keg
   
       // --- TRANSISI UI ---
       const modalDetail = document.getElementById('modalDetailHist');
@@ -2265,15 +2268,8 @@ let row = d[2];
       update_man_status = true; // tandai supaya tidak direset saat buka modal maintenancelog
       startMaintenanceMode(); 
       unlockMaintenanceForm(); 
-/*
-    } else {
-      await Swal.fire({
-        title: "Unit Tidak Ada!",
-        text: `ID Aset [${data[6]}] tidak ditemukan, Señor!`,
-        icon: "error",
-        width: '80%'
-      }); 
-    } */
+
+  
   } catch (err) {
     await Swal.fire({
       title: "Server Error",
@@ -2291,7 +2287,7 @@ let row = d[2];
 function openMaintDetailView(row) {
   // 1. Sembunyikan Tombol Aksi
   const btnCreate = document.getElementById('btnCreateMaint');
-  const btnSearch = document.getElementById('btnMaintSearch'); 
+  const btnSearch = document.getElementById('btnMaintSearch');
   
   if (btnCreate) btnCreate.style.display = "none";
   if (btnSearch) btnSearch.style.display = "none";
@@ -2306,11 +2302,11 @@ function openMaintDetailView(row) {
   // 3. Ubah Tombol Batal Jadi Tombol Keluar Lebar  
   const btnCancel = document.getElementById('btnCancelMaint');
   if (btnCancel) {
-    btnCancel.parentElement.style.display = "block"; // Full width
-    btnCancel.style.width = "100%";
+    btnCancel.parentElement.style.display = "grid"; // Full width
+    btnCancel.style.width = auto;
     btnCancel.innerHTML = '<i class="fas fa-times"></i> KELUAR PRATINJAU';
   }
-
+    
   loadMaintDetail(row); // Panggil load data
 }
 
@@ -2329,13 +2325,16 @@ async function loadMaintDetail(row) {
 
   try {
     // 1. PANGGIL SERVER (GET) dengan parameter action dan row
-    const response = await fetch(`${urlGAS}?action=getSingleMaint&row=${row}`);
-    const data = await response.json();
+    //const response = await fetch(`${urlGAS}?action=getSingleMaintData&row=${row}`);
+    //const data = await response.json();
+    //coba pakai daftar chace yg sdh ada saja
+    const data =historyJadwal;
 
     if (!data || data.length === 0) {
       if (typeof speakSenor === "function") speakSenor("Data ghoib Señor!");
       return;
     }
+    console.log(data);
 
     // Helper Fungsi untuk mengisi value elemen UI GitHub
     const setVal = (id, val) => {
@@ -2344,11 +2343,19 @@ async function loadMaintDetail(row) {
     };
 
     // 2. INJEKSI DATA DASAR
-    setVal('maintRowIdx', row); 
-    setVal('m_id', data[0]);  //M-0000X
-    setVal('m_type', data[1]);
-    setVal('m_as_id', data[2]);
-    setVal('m_as_nama', data[3]);
+    setVal('maintRowIdx', row); // hidden input
+    setVal('m_id', data[0]);  //input untuk M-0000X
+    setVal('m_type', data[1]); // input Type_Asset
+    setVal('m_as_id', data[2]); //input ID_Asset
+    setVal('m_as_nama', data[3]);// input nama_Asset
+    setVal('m_created', data[4]);// hidden input tanggal buat
+    setVal('m_updated', data[5]);// hidden input tanggal diupdate
+    setVal('m_updater', data[6]);//hidden input Pengupdate
+    setVal('m_actual', data[8]);// hidden input tanggal selesai jika ada
+    setVal('m_state', data[9]); // input select status
+    setVal('m_shift_note', data[11]); //input shift not
+    setVal('m_other_note', data[12]); // input other note
+    setVal('m_lokasi', data[13]); // hidden input lokasi untuk masa depan
 
     // 3. LOGIKA TANGGAL (Plan) 
     // Format dari GAS: "dd/mm/yyyy hh:mm" -> Ubah ke: "yyyy-mm-ddThh:mm"
@@ -2362,18 +2369,21 @@ async function loadMaintDetail(row) {
       }
     }
 
-    // 4. UPDATE DROPDOWN & CATATAN
-    setVal('m_state', data[9]);
-    setVal('maint_id_jadwal', data[10]); 
-    setVal('m_shift_note', data[11]);
-    setVal('m_other_note', data[12]);
-
-    // 5. TAMPILKAN MODAL
+    // 4. TAMPILKAN MODAL
     const modal = document.getElementById('modalMaint');
     if (modal) {
       modal.style.display = 'flex';
       if (typeof speakSenor === "function") speakSenor("Data dimuat.");
     }
+
+      // 5. Atur Tombol Aksi
+      const btnGoMaint = document.getElementById("btnGoMaint");
+  if (btnGoMaint) {
+      btnGoMaint.parentElement.style.display = "grid";
+      btnGoMaint.style.width = auto;
+      btnGoMaint.style.backgroundColor = color;
+      btnGoMaint.onclick = () => goMaint(row); // <--- Perbaikan di sini
+   }
 
   } catch (err) {
     console.error("Gagal load detail jadwal:", err);

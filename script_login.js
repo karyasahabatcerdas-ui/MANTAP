@@ -121,18 +121,20 @@ async function initAssetDropdowns() {
     console.log("⏳ Menunggu elemen DOM tersedia...");
     
     // 1. Tunggu semua elemen ID muncul secara paralel
-    const [elTgl, elMaint, elAsset,elStatusJad] = await Promise.all([
+    const [elTgl, elMaint, elAsset,elStatusJad,elStateMaint] = await Promise.all([
       waitForElement('sortJadwal'),
       waitForElement('filterStatusLog'),
       waitForElement('as_status'),
-      waitForElement('filterStateJadwal') 
+      waitForElement('filterStateJadwal'),
+      waitForElement('m_state') 
     ]);
 
     const elements = {
       filterTgl: elTgl,
       statusMaint: elMaint,
       statusAsset: elAsset,
-      filterState : elStatusJad
+      filterState : elStatusJad,
+      mState : elStateMaint
     };
 
     // 2. Set Loading Status
@@ -162,6 +164,7 @@ async function initAssetDropdowns() {
     renderOptions(elements.statusMaint, data.statusMaint, "Status Maintenance");
     renderOptions(elements.statusAsset, data.statusAsset, "Status Aset");
     renderOptions(elements.filterState, data.statusMaint, "Status Jadwal");
+    renderOptions(elements.mState,data.statusMaint, "Pilih Status");
 
     console.log("✅ Asset Dropdowns Synchronized!");
 
