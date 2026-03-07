@@ -3681,7 +3681,15 @@ async function saveAssetEdit() {
     btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Menyiapkan QR...";
   }
   
-  const qrBlob = await getQRCodeBase64(); // Pastikan fungsi ini sudah ada di GitHub
+  //const qrBlob = await getQRCodeBase64(); // Pastikan fungsi ini sudah ada di GitHub
+  //const qrBlob = await generateCustomQR(type+"-"+asId); 
+  // 1. Panggil fungsi generator (hasilnya string)
+    const qrTeksMurni = await generateCustomQR(type + "-" + asId); 
+    // 2. Bungkus ke dalam objek agar "menyamar" jadi hasil fungsi lama
+    const qrBlob = {
+      base64: qrTeksMurni,
+      mimeType: "image/png"
+    };
 
   // 3. SUSUN DATA UNTUK SPREADSHEET (Kolom A-E)
   const userData = [
@@ -3963,8 +3971,8 @@ async function bulkUpdateQR() {
 async function generateCustomQR(textCode, options = {}) {
     return new Promise((resolve, reject) => {
         const {
-            width = 150,
-            height = 150,
+            width = 300,
+            height = 350,
             colorDark = "#000000",
             colorLight = "#ffffff",
             labelColor = "#1e293b",
