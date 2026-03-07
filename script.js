@@ -1994,14 +1994,26 @@ async function openMaintModal(row = "") {
       //const nextId = await resp.json();
 
       //fungsi bantu mendapat Maint ID sementara
-      const data = historyJadwal[row];       
-        if (lastRow < 2) {
-        nextId = "M-" + "1".padStart(5, '0'); //5 digit
-        } else {
-        const lastVal = data[row].getValue().toString(); 
-        const num = parseInt(lastVal.replace(prefix, "")) || 0; 
-        nextId = "M-" + (num + 1).toString().padStart(digits, '0'); 
-        }    
+    // historyJadwal adalah array 2D [[A1, B1], [A2, B2], ...]
+    let nextId;
+
+    // 1. Cek jumlah baris (length)
+    if (!historyJadwal || historyJadwal.length < 2) {
+        // Jika kosong atau cuma ada Header (baris 1)
+        nextId = "M-00001";
+    } else {
+        // 2. Ambil baris TERAKHIR (index: length - 1) 
+        // dan kolom PERTAMA (index: 0)
+        const lastRowIndex = historyJadwal.length - 1;
+        const lastVal = String(historyJadwal[lastRowIndex][0]); 
+
+        // 3. Belah (Replace), Tambah 1, dan Pad 5 Digit
+        const num = parseInt(lastVal.replace("M-", "")) || 0;
+        nextId = "M-" + (num + 1).toString().padStart(5, '0');
+    }
+
+    console.log("Next ID:", nextId);
+    
 
 
       // 1. Isi Data Default
