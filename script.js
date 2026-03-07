@@ -1301,7 +1301,7 @@ async function saveLog(status) {
         });
 
         // --- PREPARE PAYLOAD ---
-        let stack_pending = document.getElementById('log_pending').placeholder || ""; 
+        let stack_pending = document.getElementById('log_pekerjaan').placeholder || ""; 
         
         const bodyPayload = {
             action: "processMaintLogEnterprise", // Label untuk router doPost
@@ -2082,7 +2082,7 @@ async function saveMaintData() {
     };
 
     // 5. EKSEKUSI FETCH
-    const response = await fetch(WEB_APP_URL, {
+    const response = await fetch(APPSCRIPT_URL, {
       method: "POST",
       mode: "no-cors", // Gunakan no-cors jika menembak langsung dari domain berbeda
       cache: "no-cache",
@@ -3966,7 +3966,7 @@ async function generateCustomQR(textCode, options = {}) {
             colorLight = "#ffffff",
             labelColor = "#1e293b",
             // Path logo sesuai struktur folder Anda
-            logoUrl = "../asset/logo/PT-KSC.png" 
+            logoUrl = "./assets/logo/PT-KSC.png" 
         } = options;
 
         const tempDiv = document.createElement("div");
@@ -4276,6 +4276,14 @@ async function openEditModal(row) {
     }
     // Debugging data di console
     console.table(d);
+    // 1. TAMPILKAN MODAL DULU (Agar elemen di dalamnya "bangun")
+    const modal = document.getElementById('editModal');
+    if (modal) {
+        modal.style.display = 'flex';
+    } else {
+        throw new Error("Elemen 'editModal' tidak ditemukan di HTML!");
+    }
+
 
     // 2. Isi Form Modal
     document.getElementById('m_row_idx').value = row;
@@ -4304,7 +4312,7 @@ async function openEditModal(row) {
     }
 
     // 4. Tampilkan Modal
-    document.getElementById('editModal').style.display = 'flex';
+    //document.getElementById('editModal').style.display = 'flex';
 
   } catch (err) {
     console.error("Gagal load detail user:", err);
