@@ -268,16 +268,16 @@ async function fetchAssetDetailForLog(unitID) {
       document.getElementById('log_time_mulai').value = res.serverTime;
 
       // 4. LOGIKA B.1.1 (AUTO-LINKING JADWAL OPEN)
-      const logMaintId = document.getElementById('log_maint_id');
+      const logKegId = document.getElementById('log_keg_id');
       const dropdownJadwal = document.getElementById('jenis_id_jadwal');
 
       if (res.openJadwal && res.openJadwal.length > 0) {
         const hit = res.openJadwal[0]; 
         dropdownJadwal.value = hit.idJadwal; 
-        logMaintId.value = hit.maintId; 
+        logKegId.value = hit.maintId; 
         if(typeof speakSenor === "function") speakSenor("Jadwal terencana ditemukan Señor, silakan lanjut.");
       } else {
-        logMaintId.value = ""; 
+        logKegId.value = ""; 
         //dropdownJadwal.value = ""; 
         if(typeof speakSenor === "function") speakSenor("Tidak ada jadwal, silakan input manual.");
       }
