@@ -15,7 +15,7 @@ function login() {
         //showPage('history');
 
         // 4. Identity Management
-        window.loggedInUser = "ujicoba"; 
+        window.loggedInUser = "admin1"; 
         window.userRole = "admin"; 
         
         const leftbar = document.getElementById('leftbar');
