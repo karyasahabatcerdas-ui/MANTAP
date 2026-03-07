@@ -1935,11 +1935,11 @@ function renderKelolaIncremental(data) {
         </div>
 
         <div style="display: flex; gap: 5px; justify-content: center;">
-          <button onclick="openMaintModal(${i+1})" style="background:#3498db; color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; flex: 1; max-width: 60px;">
+          <button onclick="openMaintModal(${i})" style="background:#3498db; color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; flex: 1; max-width: 60px;">
             <i class="fas fa-edit"></i> EDIT
           </button>
           
-          <button onclick="delJad(${i+1})" style="background:#e74c3c; color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; flex: 1; max-width: 45px;">
+          <button onclick="delJad(${i})" style="background:#e74c3c; color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; flex: 1; max-width: 45px;">
             <i class="fas fa-trash"></i>
           </button>
         </div>
@@ -2193,7 +2193,7 @@ function renderJadwalViewIncremental(data) {
         <td style="padding:5px;">${d[7]}<br><small>${d[10]}</small></td> <!-- Plan Date -->
         <td style="padding:5px; text-align:center;">
           <!-- TOMBOL AKSI: Mengarah ke Mode Read-Only -->
-          <button onclick="openMaintDetailView(${i+2})"style="background:#7f8c8d; color:white; border:none; padding:6px; border-radius:4px; cursor:pointer;">
+          <button onclick="openMaintDetailView(${i})"style="background:#7f8c8d; color:white; border:none; padding:6px; border-radius:4px; cursor:pointer;">
             <i class="fas fa-search"></i>
           </button>
         </td>
