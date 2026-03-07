@@ -2335,7 +2335,7 @@ async function loadMaintDetail(row) {
       return;
     }
     console.log(data);
-    await initAssetDropdowns();
+    //await initAssetDropdowns();
     // Helper Fungsi untuk mengisi value elemen UI GitHub
     const setVal = (id, val) => {
       const el = document.getElementById(id);
