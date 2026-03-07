@@ -178,7 +178,7 @@ async function initAssetDropdowns() {
   }
 }
 
-
+window.Temp_Profile=[];
 /**
  * [FUNGSI: UPLOAD FOTO PROFIL MANDIRI] =============================================================================================================================================
  * Memastikan opacity kembali ke 1 baik saat sukses maupun gagal.
