@@ -1781,7 +1781,7 @@ function driveLinkToDirect(url) {
  * [MENGGUNAKAN TI FORMATER KEEPER getServerTime]
  * =================================================================================
  */
-let timerPencarian; 
+let timerPencarian;
 
 async function loadJad() {
   clearTimeout(timerPencarian);
@@ -1801,6 +1801,7 @@ async function loadJad() {
       const response = await fetch(`${urlGAS}?action=getJadwal`);
       const data = await response.json();
 
+      window.historyJadwal = data ;
       if (!data || data.length < 2) return;
       
       // Ambil data tanpa header (asumsi data[0] adalah header)
@@ -2189,9 +2190,9 @@ function renderJadwalViewIncremental(data) {
 async function goMaint(rowIdx) {
   const urlGAS = APPSCRIPT_URL;
   console.log("baris pada goMaint :", rowIdx);
-  console.table({activeRowData,rowIdx});
+  console.table({historyJadwal,rowIdx});
   // 1. VALIDASI DATA AWAL
-  if (!activeRowData || activeRowData.length === 0) {
+  if (!historyJadwal || historyJadwal.length === 0) {
     await Swal.fire({
       title: "Data Tidak Ditemukan!",
       text: "Silakan pilih baris terlebih dahulu, Señor.",  
@@ -2201,7 +2202,8 @@ async function goMaint(rowIdx) {
     return; 
   }
 
-  const data = activeRowData; 
+  const d = historyJadwal[rowIdx]; 
+  console.table(d);
 
   // 2. TAMPILKAN LOADING
   Swal.fire({
@@ -2210,13 +2212,47 @@ async function goMaint(rowIdx) {
     allowOutsideClick: false,
     didOpen: () => { Swal.showLoading(); }
   });
-
+      
+let sheetName = d[1];
+let row = d[2];
+// Susun Query Parameter untuk doGet
+  const params = new URLSearchParams({
+        action: 'getSingleAssetData',
+        sheetName: sheetName,
+        row: row
+  });
+  const finalUrl = `${urlGAS}?${params.toString()}`;
+  console.log("Fetching Data (GET):", finalUrl);     
 
   try {
+    const response1 = await fetch(finalUrl);    
+    if (!response1.ok) throw new Error(`HTTP Error! Status: ${response1.status}`);
+    const data = await response1.json();
+    console.log("table data di openassetdetai: ");
+    console.table(data);
+    // Cek jika data kosong atau ada error dari server
+    if (!data || data.length === 0 || data.error) {
+      throw new Error(data.error || "Data tidak ditemukan di database.");
+    }
+
+    // --- 3. MAPPING DATA KE FORM ---
+    // Sesuai urutan kolom Spreadsheet: A=0(ID), B=1(Tipe), C=2(Nama), D=3(Lokasi), E=4(Status), F=5(Foto)
+      //document.getElementById('as_id').value     = data[0] || ""; 
+      //document.getElementById('as_nama').value   = data[2] || "";   
+      document.getElementById('as_lokasi').value = data[3] || ""; 
+      //document.getElementById('as_status').value = data[4] || "Baik";
+
+      document.getElementById('log_as_id').innerText = d[1]+"-"+d[2]; //unit ID
+      document.getElementById('jenis_id_jadwal').value = d[10] //unit ID JAdwal
+      document.getElementById('log_ui_type').innerText = d[1]; //Type Asset
+      document.getElementById('log_ui_asid').innerText = d[2]; //ID Asset
+      document.getElementById('log_ui_nama').innerText = d[3]; //Nama_Asset
+      //document.getElementById('log_ui_lokasi') = ""; //lokasi asset
+      document.getElementById('maint_id').value = d[0]; //MaintiD
+
+/*
+
     // 3. PANGGIL SERVER (GET) - Menggunakan action searchAllAssets
-    // data[6] adalah Asset_ID dari tabel Log_Keg dengan mencari 
-    // dari sheeet type_asset kolom A untuk diambil nama sheet nya di kolom ke-2
-    // kolom A dicocokkan dengan awalan ID_Asset
     const response = await fetch(`${urlGAS}?action=searchAllAssetsGo&keyword=${encodeURIComponent(data[6])}`);
     const results = await response.json();
 
@@ -2233,9 +2269,7 @@ async function goMaint(rowIdx) {
       // --- PENGISIAN DATA KE UI MODAL ---
       document.getElementById('maint_id').value = data[0]; //pengisian Maint_ID ke form maintenance log
        document.getElementById('log_keg_id').value = data[0]; //pengisian Maint_ID ke form maintenance log
-      
-      //let pend_sebelum = `Pending [tgl: ${data[3]}] [by: ${data[5]}] [Note: ${data[8]}] - Updated[next]`; 
-      //document.getElementById('log_as_id_label').value = pend_sebelum; // Sesuaikan ID elemen catatan Anda
+
 
       // Injeksi Detail Aset dari hasil fetch
       document.getElementById('log_as_id').innerText = res.type + "-" + res.id;
@@ -2245,10 +2279,9 @@ async function goMaint(rowIdx) {
       document.getElementById('log_ui_lokasi').innerText = res.lokasi;
 
       // Set dropdown jadwal (data[6] adalah ID_Jadwal dari tabel)
-      document.getElementById('jenis_id_jadwal').value= data[6];;
-      
-      //reset total akan dipilih ada atau tidaknya oleh fungsi prepare
-      //dengan memanfaatkan isi 
+      document.getElementById('jenis_id_jadwal').value= data[7];;
+      */
+
    
       // --- TRANSISI UI ---
       const modalDetail = document.getElementById('modalDetailHist');
@@ -2258,15 +2291,15 @@ async function goMaint(rowIdx) {
       update_man_status = true; // tandai supaya tidak direset saat buka modal maintenancelog
       startMaintenanceMode(); 
       unlockMaintenanceForm(); 
-
+/*
     } else {
       await Swal.fire({
         title: "Unit Tidak Ada!",
         text: `ID Aset [${data[6]}] tidak ditemukan, Señor!`,
         icon: "error",
         width: '80%'
-      });
-    }
+      }); 
+    } */
   } catch (err) {
     await Swal.fire({
       title: "Server Error",
