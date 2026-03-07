@@ -1313,6 +1313,7 @@ async function saveLog(status) {
                 type     : document.getElementById('log_ui_type').innerText,
                 asId     : document.getElementById('log_ui_asid').innerText,
                 nama     : document.getElementById('log_ui_nama').innerText,
+                lokasi   : document.getElementById('log_ui_lokasi').innerText,
                 asJadwal : document.getElementById('jenis_id_jadwal').value, 
                 petugas  : loggedInUser,
                 note     : stack_pending + " " + note    
