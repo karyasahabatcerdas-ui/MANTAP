@@ -1405,9 +1405,9 @@ async function loadHist() {
   try {
     // 2. FETCH DATA DARI SERVER (GET)
     const response = await fetch(`${urlGAS}?action=getHistoryLogDataRaw`);
-    console.log(response);
+    //console.log(response);
     const res = await response.json(); // Mengambil Array of Objects dari server
-    console.log(res);
+    //console.log(res);
     // 3. HANDLING DATA
     if (!res || res.length === 0) {
       allHistoryData = [];
