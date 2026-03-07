@@ -2328,7 +2328,7 @@ async function loadMaintDetail(row) {
     //const response = await fetch(`${urlGAS}?action=getSingleMaintData&row=${row}`);
     //const data = await response.json();
     //coba pakai daftar chace yg sdh ada saja
-    const data =historyJadwal;
+    const data =historyJadwal[row];
 
     if (!data || data.length === 0) {
       if (typeof speakSenor === "function") speakSenor("Data ghoib Señor!");
