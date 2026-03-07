@@ -2382,7 +2382,7 @@ async function loadMaintDetail(row) {
 
       // 5. Atur Tombol Aksi
     // Warna Badge Status (J)
-    let cstate = data[9] || "Open";
+    let cstate = data[9] || "open";
     let badgeColor = (cstate === "close") ? "#27ae60" : (cstate === "pending") ? "#f39c12" : "#2980b9";
 
       const btnGoMaint = document.getElementById("btnGoMaint");
@@ -2390,7 +2390,7 @@ async function loadMaintDetail(row) {
       btnGoMaint.parentElement.style.display = "grid";
       btnGoMaint.style.width = "auto";
       //btnGoMaint.style.backgroundColor = "${badgeColor} !important";
-      btnGoMaint.style.setProperty('background-color', badgeColor, 'important');
+      btnGoMaint.style.setProperty('background', badgeColor, 'important');
       btnGoMaint.onclick = () => goMaint(row); // <--- Perbaikan di sini
    }
 
