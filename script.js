@@ -2248,7 +2248,8 @@ let row = d[2];
       document.getElementById('log_ui_asid').innerText = d[2]; //ID Asset
       document.getElementById('log_ui_nama').innerText = d[3]; //Nama_Asset
       //document.getElementById('log_ui_lokasi') = ""; //lokasi asset
-      document.getElementById('maint_id').value = d[0]; //MaintiD
+      document.getElementById('maint_id').value = d[0]; //MaintiD sdh ada karena baru dijalankan
+      document.getElementById('log_keg_id').value ="" ; //catatan baru
 
 /*
 
@@ -2310,8 +2311,9 @@ let row = d[2];
   }
 }
 
-/**
- * [FUNGSI UI: LIHAT JADWAL - MODE LOCK]
+/**==================================================================
+ * [FUNGSI UI: LIHAT JADWAL - MODE LOCK]=
+ * =================================================================
  */
 function openMaintDetailView(row) {
   // 1. Sembunyikan Tombol Aksi
