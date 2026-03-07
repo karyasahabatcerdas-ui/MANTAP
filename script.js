@@ -2193,7 +2193,7 @@ function renderJadwalViewIncremental(data) {
         <td style="padding:5px;">${d[7]}<br><small>${d[10]}</small></td> <!-- Plan Date -->
         <td style="padding:5px; text-align:center;">
           <!-- TOMBOL AKSI: Mengarah ke Mode Read-Only -->
-          <button onclick="openMaintDetailView(${i})"style="background:#7f8c8d; color:white; border:none; padding:6px; border-radius:4px; cursor:pointer;">
+          <button onclick="openMaintDetailView(${i+1})"style="background:#7f8c8d; color:white; border:none; padding:6px; border-radius:4px; cursor:pointer;">
             <i class="fas fa-search"></i>
           </button>
         </td>
@@ -2329,13 +2329,13 @@ async function loadMaintDetail(row) {
     //const data = await response.json();
     //coba pakai daftar chace yg sdh ada saja
     const data =historyJadwal[row];
-
+    await initAssetDropdowns();
     if (!data || data.length === 0) {
       if (typeof speakSenor === "function") speakSenor("Data ghoib Señor!");
       return;
     }
     console.log(data);
-
+    await initAssetDropdowns();
     // Helper Fungsi untuk mengisi value elemen UI GitHub
     const setVal = (id, val) => {
       const el = document.getElementById(id);
@@ -2352,10 +2352,14 @@ async function loadMaintDetail(row) {
     setVal('m_updated', data[5]);// hidden input tanggal diupdate
     setVal('m_updater', data[6]);//hidden input Pengupdate
     setVal('m_actual', data[8]);// hidden input tanggal selesai jika ada
-    setVal('m_state', data[9]); // input select status
+    //setVal('m_state', data[9]); // input select status
     setVal('m_shift_note', data[11]); //input shift not
     setVal('m_other_note', data[12]); // input other note
     setVal('m_lokasi', data[13]); // hidden input lokasi untuk masa depan
+    //document.getElementById('m_state').value = String(data[9]).toLowerCase().trim();
+    
+    
+
 
     // 3. LOGIKA TANGGAL (Plan) 
     // Format dari GAS: "dd/mm/yyyy hh:mm" -> Ubah ke: "yyyy-mm-ddThh:mm"
@@ -2379,14 +2383,14 @@ async function loadMaintDetail(row) {
       // 5. Atur Tombol Aksi
     // Warna Badge Status (J)
     let cstate = data[9] || "Open";
-    let badgeColor = (cstate === "Close") ? "#27ae60" : (cstate === "Pending") ? "#f39c12" : "#2980b9";
+    let badgeColor = (cstate === "close") ? "#27ae60" : (cstate === "pending") ? "#f39c12" : "#2980b9";
 
       const btnGoMaint = document.getElementById("btnGoMaint");
   if (btnGoMaint) {
       btnGoMaint.parentElement.style.display = "grid";
       btnGoMaint.style.width = "auto";
-      btnGoMaint.style.backgroundColor = "${badgeColor} !important";
-       // btnGoMaint.style.setProperty('background-color', badgeColor, 'important');
+      //btnGoMaint.style.backgroundColor = "${badgeColor} !important";
+      btnGoMaint.style.setProperty('background-color', badgeColor, 'important');
       btnGoMaint.onclick = () => goMaint(row); // <--- Perbaikan di sini
    }
 
