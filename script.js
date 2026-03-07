@@ -1322,6 +1322,10 @@ async function saveLog(status) {
         };
         console.log("--- Cek Data Sebelum Kirim ---");
         console.table(bodyPayload.payload); // Menampilkan isi data teks
+        console.log(bodyPayload.photoData);// aray photo
+        console.log("Jumlah Foto PB:", bodyPayload.photoData.PB.length);
+        console.log("Ukuran Payload (Estimasi):", JSON.stringify(bodyPayload).length / 1024, "KB");
+
        
 
         // --- EKSEKUSI FETCH POST ---
