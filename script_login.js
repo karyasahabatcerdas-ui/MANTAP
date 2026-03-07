@@ -179,7 +179,29 @@ async function initAssetDropdowns() {
 }
 
 
+/**
+ * [FUNGSI: UPLOAD FOTO PROFIL MANDIRI] =============================================================================================================================================
+ * Memastikan opacity kembali ke 1 baik saat sukses maupun gagal.
+ */
+function uploadOwnPhoto(input) {
+  const file =input.files[0];
+  if (file) {
+    // 1. Simpan file asli ke dalam array (untuk kebutuhan upload nanti)
+    Temp_Profile[0] = file; 
 
+    // 2. Buat URL sementara untuk pratinjau
+    const pratinjauUrl = URL.createObjectURL(file);
+
+    // 3. Tampilkan langsung di elemen <img> yang memicu fungsi ini
+    // Catatan: Jika inputElemen adalah <input type="file">, 
+    // kita perlu mencari elemen <img> yang terkait.
+    document.getElementById("set_display_photo").src = pratinjauUrl;
+
+    //console.log("File tersimpan sementara -name :", file.name);
+    //console.log("File tersimpan sementara - temp profile :", Temp_Profile[0]);
+  }
+
+}
 
 
 
