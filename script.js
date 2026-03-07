@@ -2377,11 +2377,16 @@ async function loadMaintDetail(row) {
     }
 
       // 5. Atur Tombol Aksi
+    // Warna Badge Status (J)
+    let cstate = d[9] || "Open";
+    let badgeColor = (cstate === "Close") ? "#27ae60" : (cstate === "Pending") ? "#f39c12" : "#2980b9";
+
       const btnGoMaint = document.getElementById("btnGoMaint");
   if (btnGoMaint) {
       btnGoMaint.parentElement.style.display = "grid";
-      btnGoMaint.style.width = auto;
-      btnGoMaint.style.backgroundColor = color;
+      btnGoMaint.style.width = "auto";
+      btnGoMaint.style.backgroundColor = "${badgeColor} !important";
+       // btnGoMaint.style.setProperty('background-color', badgeColor, 'important');
       btnGoMaint.onclick = () => goMaint(row); // <--- Perbaikan di sini
    }
 
