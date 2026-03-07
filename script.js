@@ -1328,8 +1328,8 @@ async function saveLog(status) {
             // Kita pakai mode 'no-cors' karena pengiriman foto base64 sangat besar
             await fetch(urlGAS, {
                 method: 'POST',
-                mode: 'no-cors', 
-                headers: { "Content-Type": "text/plain" },
+                //mode: 'no-cors', 
+                //headers: { "Content-Type": "text/plain" },
                 body: JSON.stringify(bodyPayload)
             });
 
@@ -1347,7 +1347,7 @@ async function saveLog(status) {
             modal.style.pointerEvents = "auto";
             
             // Jeda 2 detik sebelum refresh history agar server selesai menulis
-            setTimeout(loadHist, 200);
+            setTimeout(loadHist, 2000);
 
         } catch (err) {
             await Swal.fire({
@@ -2251,39 +2251,7 @@ let row = d[2];
       document.getElementById('maint_id').value = d[0]; //MaintiD sdh ada karena baru dijalankan
       document.getElementById('log_keg_id').value ="" ; //catatan baru
 
-/*
-
-    // 3. PANGGIL SERVER (GET) - Menggunakan action searchAllAssets
-    const response = await fetch(`${urlGAS}?action=searchAllAssetsGo&keyword=${encodeURIComponent(data[6])}`);
-    const results = await response.json();
-
-    if (results && results.length > 0) {
-      const res = results[0]; 
-      Swal.close();
-
-        console.log("console di bawah dari fungsi goMaint dari dalam json");
-        console.log("isi dari data[] :", data);
-        console.log("isi data[",rowIdx,"6] :", data[rowIdx]);
-        console.table(res);
-       
-
-      // --- PENGISIAN DATA KE UI MODAL ---
-      document.getElementById('maint_id').value = data[0]; //pengisian Maint_ID ke form maintenance log
-       document.getElementById('log_keg_id').value = data[0]; //pengisian Maint_ID ke form maintenance log
-
-
-      // Injeksi Detail Aset dari hasil fetch
-      document.getElementById('log_as_id').innerText = res.type + "-" + res.id;
-      document.getElementById('log_ui_type').innerText = res.type;
-      document.getElementById('log_ui_asid').innerText = res.id;
-      document.getElementById('log_ui_nama').innerText = res.nama;
-      document.getElementById('log_ui_lokasi').innerText = res.lokasi;
-
-      // Set dropdown jadwal (data[6] adalah ID_Jadwal dari tabel)
-      document.getElementById('jenis_id_jadwal').value= data[7];;
-      */
-
-   
+  
       // --- TRANSISI UI ---
       const modalDetail = document.getElementById('modalDetailHist');
       if (modalDetail) modalDetail.style.display = 'none';
@@ -2937,8 +2905,6 @@ function downloadTemplate() {
 
 
 
-
-
 /**=========================================================================
  * [FUNGSI CLIENT GITHUB: LOAD TIPE ASET]
  * Sekali ambil dari server (fetch), semua dropdown tipe aset langsung sinkron via Cache.
@@ -3121,9 +3087,10 @@ function updateQRCode(type, id) {
   const code = cleanType + "-" + cleanId;
   
   // 3. Format URL API stabil Anda
-  const qrUrl = "https://api.qrserver.com/v1/create-qr-code/?data=" + encodeURIComponent(code) + "&size=150x150";
+  //const qrUrl = "https://api.qrserver.com/v1/create-qr-code/?data=" + encodeURIComponent(code) + "&size=150x150";
   
-  const imgQr = document.getElementById('assetQRCode');
+  //const imgQr = document.getElementById('assetQRCode');
+  const imgQr = generateCustomQR(code);
   const txtQr = document.getElementById('qrText');
   
   if (imgQr) imgQr.src = qrUrl;
