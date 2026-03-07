@@ -2043,7 +2043,7 @@ async function saveMaintData() {
     const btn = document.getElementById('btnCreateMaint'); 
 
     // URL Web App Señor (Pastikan ini sudah benar)
-    const WEB_APP_URL = "URL_WEB_APP_SENOR_DI_SINI";
+    //const WEB_APP_URL = "URL_WEB_APP_SENOR_DI_SINI";
 
     if (!asId || !mPlan) {
       speakSenor("Señor, data belum lengkap!");
@@ -2077,8 +2077,8 @@ async function saveMaintData() {
     // 4. PREPARE PAYLOAD (Disesuaikan dengan urutan Array fungsi lama)
     const payload = {
       action: "saveMaintData", // Menanda agar server tahu fungsi mana yang dipanggil
-      row: row,
-      data: [mId, mType, asId, mNama, "", "", user, mPlan, "", mstate, mIDjad, mShift, mOther]
+      data: [mId, mType, asId, mNama, "", "", user, mPlan, "", mstate, mIDjad, mShift, mOther],
+      row: row
     };
 
     // 5. EKSEKUSI FETCH
