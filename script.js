@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadComponent('modalAssetDetail-placeholder', 'modalAssetDetail.html');
     loadComponent('modalPhotoSlider-placeholder','modalPhotoSlider.html'); 
     loadComponent('modalImport-placeholder','modalImport.html');
-    loadComponent('modalEditUser-placeholder','modalImport.html');
+    loadComponent('modalEditUser-placeholder','modalEditUser.html');
     loadComponent('modalGlobalSearch-placeholder', 'modalGlobalSearch.html');
 });
 
@@ -1125,7 +1125,7 @@ async function unlockMaintenanceForm() {
     const fullTimestamp = await response.json(); // Hasil: "dd/MM/yyyy HH:mm:ss"
 
     const timeInput = document.getElementById('log_time_mulai');
-    const picInput = document.getElementById('log_petugas');
+    const picInput = loggedInUser;
     
     if(timeInput) timeInput.value = fullTimestamp;
     
@@ -1314,7 +1314,7 @@ async function saveLog(status) {
                 asId     : document.getElementById('log_ui_asid').innerText,
                 nama     : document.getElementById('log_ui_nama').innerText,
                 asJadwal : document.getElementById('jenis_id_jadwal').value, 
-                petugas  : document.getElementById('log_petugas').value,
+                petugas  : loggedInUser,
                 note     : stack_pending + " " + note    
             },
             photoData: tempPhotos // Bundle foto base64
@@ -2084,9 +2084,9 @@ async function saveMaintData() {
     // 5. EKSEKUSI FETCH
     const response = await fetch(APPSCRIPT_URL, {
       method: "POST",
-      mode: "no-cors", // Gunakan no-cors jika menembak langsung dari domain berbeda
+      //mode: "cors", 
       cache: "no-cache",
-      headers: { "Content-Type": "application/json" },
+      //headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     });
 
@@ -4333,6 +4333,7 @@ async function openEditModal(row) {
  */
 function openAddUserModal() {
   // Gunakan helper function sederhana agar kode lebih bersih
+  const id = "modalMaint";
   const setVal = (id, val) => {
     const el = document.getElementById(id);
     if (el) {
