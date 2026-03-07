@@ -3078,7 +3078,7 @@ function toggleAllAssets() {
  * [FUNGSI: UPDATE GAMBAR QR]
  * =========================================================================
 */
-function updateQRCode(type, id) {
+async function updateQRCode(type, id) {
   // 1. Sanitasi: Ambil bagian pertama saja jika ada tanda "-" (Mencegah Tipe-ID-Tipe-ID)
   let cleanType = type.split('-')[0].trim();
   let cleanId = id.toString().split('-')[0].trim();
@@ -3089,11 +3089,12 @@ function updateQRCode(type, id) {
   // 3. Format URL API stabil Anda
   //const qrUrl = "https://api.qrserver.com/v1/create-qr-code/?data=" + encodeURIComponent(code) + "&size=150x150";
   
-  //const imgQr = document.getElementById('assetQRCode');
-  const imgQr = generateCustomQR(code);
+  const imgQr = document.getElementById('assetQRCode');  
   const txtQr = document.getElementById('qrText');
+  const qrBase64M =  await generateCustomQR(code);
   
-  if (imgQr) imgQr.src = qrUrl;
+ //if (imgQr) imgQr.src = qrUrl;
+  if (imgQr) imgQr.src = "data:image/png;base64," + qrBase64M;
   if (txtQr) txtQr.innerText = code;
   
   console.log("✅ QR Clean Generated: " + code);
