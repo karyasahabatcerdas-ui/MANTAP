@@ -2193,7 +2193,7 @@ function renderJadwalViewIncremental(data) {
         <td style="padding:5px;">${d[7]}<br><small>${d[10]}</small></td> <!-- Plan Date -->
         <td style="padding:5px; text-align:center;">
           <!-- TOMBOL AKSI: Mengarah ke Mode Read-Only -->
-          <button onclick="openMaintDetailView(${i})"style="background:#7f8c8d; color:white; border:none; padding:6px; border-radius:4px; cursor:pointer;">
+          <button onclick="openMaintDetailView(${i+1})"style="background:#7f8c8d; color:white; border:none; padding:6px; border-radius:4px; cursor:pointer;">
             <i class="fas fa-search"></i>
           </button>
         </td>
@@ -2352,7 +2352,8 @@ async function loadMaintDetail(row) {
     setVal('m_updated', data[5]);// hidden input tanggal diupdate
     setVal('m_updater', data[6]);//hidden input Pengupdate
     setVal('m_actual', data[8]);// hidden input tanggal selesai jika ada
-    //setVal('m_state', data[9]); // input select status
+    setVal('m_state', data[9]); // input select status
+    setVal('maint_id_jadwal', data[10])
     setVal('m_shift_note', data[11]); //input shift not
     setVal('m_other_note', data[12]); // input other note
     setVal('m_lokasi', data[13]); // hidden input lokasi untuk masa depan
