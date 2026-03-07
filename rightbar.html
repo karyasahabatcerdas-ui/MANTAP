@@ -348,9 +348,9 @@
                 <h3><i class="fa-solid fa-user-cog"></i> Pengaturan Profil</h3>
                 
                 <div class="profile-photo-wrapper">
-                    <img id="set_display_photo" src="https://ui-avatars.com" class="avatar-neon">
+                    <img id="set_display_photo" src="https://ui-avatars.com" class="avatar-neon" onclick="document.getElementById('user_profile_upload').click()" style="cursor: pointer;">
                     <input type="file" id="user_profile_upload" accept="image/*" style="display:none" onchange="uploadOwnPhoto(this)">
-                    <p class="label-neon-small" onclick="document.getElementById('user_profile_upload').click()">
+                    <p class="label-neon-small" onclick="document.getElementById('user_profile_upload').click()" style="cursor: pointer;">
                         <i class="fa-solid fa-camera"></i> KLIK FOTO UNTUK UBAH
                     </p>
                 </div>
