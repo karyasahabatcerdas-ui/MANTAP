@@ -780,7 +780,7 @@ function startMaintenanceMode() {
         console.error("❌ Modal Maintenance tidak ditemukan!");
         return;
     }
-    update_man_status = false ;
+    
     // 1. Bersihkan sisa data & reset state
     if (typeof prepareMaintenanceLogic === 'function') {
         prepareMaintenanceLogic();
@@ -817,6 +817,7 @@ function startMaintenanceMode() {
     document.getElementById("btnCekMan").disabled = false ; // kunci klo sudah dibuka
     // Optional: Auto-scroll ke atas jika modal sangat panjang
     modal.scrollTop = 0;
+    
 }
 
 /**=================================================================
