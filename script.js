@@ -1241,6 +1241,7 @@ function closeMaintenanceMode() {
   }
 }
 
+let isSuccessSave = false; // Status global untuk menandai apakah log berhasil disimpan atau pending
 
 /**=================================================================
  * [FUNGSI CLIENT GITHUB: SAVE LOG ENTERPRISE]
@@ -2239,7 +2240,7 @@ async function goMaint(rowIdx) {
   const data = historyJadwal[rowIdx];
 
   // 1. VALIDASI DATA AWAL
-  if (!data || data[rowIdx].length === 0) {
+  if (!data || data.length === 0) {
     await Swal.fire({
       title: "Data Tidak Ditemukan!",
       text: "Silakan pilih baris terlebih dahulu, Señor.",  
