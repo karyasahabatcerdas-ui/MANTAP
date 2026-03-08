@@ -2072,8 +2072,6 @@ async function openMaintModal(row = "") {
  */
 async function saveMaintData() {
 
-
-
   try {
     
     // 1. PENGAMBILAN DATA
@@ -2127,7 +2125,7 @@ async function saveMaintData() {
     // 4. PREPARE PAYLOAD (Disesuaikan dengan urutan Array fungsi lama)
     const payload = {
       action: "saveMaintData", // Menanda agar server tahu fungsi mana yang dipanggil
-      data: [mId, mType, asId, mNama,mlokasi, "", "", user, mPlan, "", mstate, mIDjad, mShift, mOther],
+      data: [mId, mType, asId, mNama, "", "", user, mPlan, "", mstate, mIDjad, mShift, mOther, mlokasi],
       row: row
     };
 
@@ -2238,6 +2236,8 @@ async function goMaint(rowIdx) {
 
   //data mentah 1 baris yang dipilih
   const data = historyJadwal[rowIdx];
+  console.log("Data rowIdx:", rowIdx);
+  console.log("Data yang akan dimuat ke Maintenance Log:", data);
 
   // 1. VALIDASI DATA AWAL
   if (!data || data.length === 0) {
@@ -2276,7 +2276,7 @@ async function goMaint(rowIdx) {
     // Helper Fungsi untuk mengisi value elemen UI GitHub
     const setVal = (id, val) => {const el = document.getElementById(id);
       if (el) el.value = val || ""; };
-    setVal('maintRowIdx', row); // hidden input
+    setVal('maintRowIdx', rowIdx); // hidden input
     setVal('maint_id', data[0]);  //input untuk M-0000X setVal
     setVal('jenis_id_jadwal', data[10]); //input select ID jadwal  log keg
     setVal('log_keg_id', "");  //input hidden kosong karena ambil dari jadwal Maint
