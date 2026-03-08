@@ -875,7 +875,7 @@ function startMaintenanceMode() {
 
       // Sekarang kita isi datanya dengan aman
       setVal('log_keg_id', data[0]);  //log_id kode log kegiatan
-      setVal('Maint_id', data[1]);  //Maint_id kode jadwal maintenance
+      setVal('maint_id', data[1]);  //Maint_id kode jadwal maintenance
       let pend_sebelum = `Pending [tgl: ${data[3]}] [by: ${data[5]}] [Note: ${data[8]}] - Updated[next]`;
       document.getElementById('log_pekerjaan').placeholder= pend_sebelum; // sebagai placeholder note sekarang agar orang tahu itu catatan terdahulu tapi tidak bisa diubah
       setTxt('log_pekerjaan', ""); // kosongkan isinya
