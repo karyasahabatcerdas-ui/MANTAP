@@ -782,9 +782,12 @@ function startMaintenanceMode() {
     }
     
     // 1. Bersihkan sisa data & reset state
+    //kita taruh luar biar pemanggil yg tentukan urutan
+    /*
     if (typeof prepareMaintenanceLogic === 'function') {
         prepareMaintenanceLogic();
     }
+        */
 
     // 2. --- SISTEM GEMBOK (LOCKDOWN) ---
     // Daftar ID yang harus dikunci di awal
@@ -911,7 +914,7 @@ function startMaintenanceMode() {
       // Tutup modal lama setelah modal baru siap
       const modalDetail = document.getElementById('modalDetailHist');
       if (modalDetail) modalDetail.style.display = 'none';
-
+      prepareMaintenanceLogic(); // Reset logika & UI sesuai mode UPDATE
       unlockMaintenanceForm(); 
 
     } else {
@@ -933,6 +936,8 @@ function prepareMaintenanceLogic() {
 
   let mode = 0;
   let notif = "";
+
+
 
   switch (true) {
     // --- KONDISI 3: Update Jadwal & Kegiatan Lama (Full Update) ---
@@ -2293,7 +2298,7 @@ async function goMaint(rowIdx) {
       if (modalDetail) modalDetail.style.display = 'none';
 
       // Buka modal maintenance log dengan data yang sudah terisi
-
+      prepareMaintenanceLogic()
       unlockMaintenanceForm(); 
 
   
