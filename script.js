@@ -1126,11 +1126,12 @@ async function unlockMaintenanceForm() {
     const fullTimestamp = await response.json(); // Hasil: "dd/MM/yyyy HH:mm:ss"
 
     const timeInput = document.getElementById('log_time_mulai');
-    const picInput = loggedInUser;
+    //const picInput = loggedInUser;
     
     if(timeInput) timeInput.value = fullTimestamp;
     
     // Gunakan variabel global 'loggedInUser' yang ada di GitHub
+    /*
     if(picInput) {
       picInput.value = (typeof loggedInUser !== 'undefined') ? loggedInUser : "Admin"; 
 
@@ -1139,7 +1140,7 @@ async function unlockMaintenanceForm() {
       picInput.style.boxShadow = "0 0 10px rgba(5, 150, 105, 0.4)";
       setTimeout(() => picInput.style.boxShadow = "none", 1000);
     }
-    
+    */
     document.getElementById("btnCekQR").disabled = true ; // kunci klo sudah dibuka
     document.getElementById("btnCekMan").disabled = true ; // kunci klo sudah dibuka
 
