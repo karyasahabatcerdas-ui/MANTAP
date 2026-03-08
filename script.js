@@ -2309,7 +2309,9 @@ async function goMaint(rowIdx) {
       // Buka modal maintenance log dengan data yang sudah terisi
       prepareMaintenanceLogic()
       unlockMaintenanceForm(); 
-
+      // --- TAMBAHKAN INI UNTUK MENUTUP LOADING ---
+    Swal.close(); 
+    console.log("✅ Swal Closed, Form Ready.");
   
   } catch (err) {
     await Swal.fire({
