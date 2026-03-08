@@ -2324,6 +2324,66 @@ async function goMaint(rowIdx) {
   }
 }
 
+
+/** MENGHAPUS JADWAL DAN MENAMBAHKANNYA DALAM CATATAN LOG (VERSI 11) */
+async function delJad(row) {
+  // 1. KONFIRMASI DULU
+  const result = await Swal.fire({
+    title: "Konfirmasi Hapus",
+    text: `Apakah Anda yakin ingin menghapus baris ${row}?`,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Ya, Hapus!",
+    cancelButtonText: "Batal",
+    width: '80%' // Pas buat HP Sultan
+  });
+
+  if (!result.isConfirmed) return;
+
+  // 2. LOADING PEMICU
+  Swal.fire({
+    title: 'Menghapus Data...',
+    didOpen: () => { Swal.showLoading(); },
+    allowOutsideClick: false
+  });
+
+  try {
+    // 3. SUSUN PAYLOAD
+    const payload = {
+      action: "deleteRowData",
+      sheetName: 'Maintenance',
+      row: row,
+      user: typeof loggedInUser !== 'undefined' ? loggedInUser : "Admin"
+    };
+
+    // 4. TEMBAK FETCH
+    const response = await fetch(APPSCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify(payload)
+    });
+
+    const resText = await response.text();
+
+    // 5. BERHASIL
+    await Swal.fire({
+      title: "Terhapus!",
+      text: resText,
+      icon: "success",
+      timer: 1500,
+      showConfirmButton: false
+    });
+
+    // Refresh tabel jadwal
+    if (typeof loadKel === 'function') loadKel();
+
+  } catch (err) {
+    console.error("Gagal hapus:", err);
+    Swal.fire("Gagal", "Error: " + err.message, "error");
+  }
+}
+
 /**==================================================================
  * [FUNGSI UI: LIHAT JADWAL - MODE LOCK]=
  * =================================================================
