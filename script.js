@@ -1788,6 +1788,7 @@ function driveLinkToDirect(url) {
  * =================================================================================
  */
 let timerPencarian;
+let historyJadwal = []; // Variabel global untuk menyimpan data jadwal mentah dari server
 
 async function loadJad() {
   clearTimeout(timerPencarian);
@@ -2351,7 +2352,7 @@ async function loadMaintDetail(row) {
     //const response = await fetch(`${urlGAS}?action=getSingleMaintData&row=${row}`);
     //const data = await response.json();
     //coba pakai daftar chace yg sdh ada saja
-    const data =historyJadwal[row];
+    const data = historyJadwal[row];
     //await initAssetDropdowns();
     if (!data || data.length === 0) {
       if (typeof speakSenor === "function") speakSenor("Data ghoib Señor!");
