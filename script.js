@@ -937,13 +937,16 @@ function prepareMaintenanceLogic() {
   let mode = 0;
   let notif = "";
 
-
+ 
 
   switch (true) {
     // --- KONDISI 3: Update Jadwal & Kegiatan Lama (Full Update) ---
     case (isUpdateMode && v1.startsWith("M-") && v2.startsWith("L-")):
       mode = 3;
       notif = "🔄 Update Jadwal & Kegiatan Lama";
+       console.log(isUpdateMode);
+        console.log(v1);
+        console.log(v2);
       // Data, Waktu, & Foto DIPERTAHANKAN (Tidak ada reset)
       break;
 
@@ -951,6 +954,9 @@ function prepareMaintenanceLogic() {
     case (isUpdateMode && v1.startsWith("M-")):
       mode = 2;
       notif = "📅 Ambil Jadwal & Kegiatan Baru";
+        console.log(isUpdateMode);
+        console.log(v1);
+        console.log(v2);
       applyPartialReset(); // Reset Waktu & Input Kerja, tapi simpan Maint_ID
       break;
 
@@ -958,6 +964,9 @@ function prepareMaintenanceLogic() {
     default:
       mode = 1;
       notif = "🆕 Buat Jadwal & Kegiatan Baru";
+      console.log(isUpdateMode);
+      console.log(v1);
+      console.log(v2);
       applyFullReset(); // Sapu bersih semua elemen UI & Metadata
       break;
   }
