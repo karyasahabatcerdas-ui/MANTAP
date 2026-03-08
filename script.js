@@ -2251,19 +2251,20 @@ async function goMaint(rowIdx) {
     return; 
   }
 
-  // 2. TAMPILKAN LOADING
+  try {
+
+      // 2. TAMPILKAN LOADING
   Swal.fire({
     title: 'Mencari Detail Aset...',
     text: 'Sik Tak Wocone Dilit...',
     allowOutsideClick: false,
     didOpen: () => { Swal.showLoading(); }
   });
- 
-
-  try {
+      
+      update_man_status = true; // tandai supaya tidak direset saat buka modal maintenancelog
+      startMaintenanceMode(); 
 
       // 2. INJEKSI DATA DASAR
-
     // Helper Fungsi untuk mengisi value elemen UI GitHub
     const setText = (id, val) => {
       const el = document.getElementById(id);
@@ -2291,8 +2292,7 @@ async function goMaint(rowIdx) {
       if (modalDetail) modalDetail.style.display = 'none';
 
       // Buka modal maintenance log dengan data yang sudah terisi
-      update_man_status = true; // tandai supaya tidak direset saat buka modal maintenancelog
-      startMaintenanceMode(); 
+
       unlockMaintenanceForm(); 
 
   
