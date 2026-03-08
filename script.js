@@ -1921,7 +1921,7 @@ function renderKelolaIncremental(data) {
     
     // Warna Badge Status (J)
       // 1. Ambil data, bersihkan spasi, dan paksa ke huruf kecil
-      const cstate = (d[9] || "open").toLowerCase().trim();
+      const state = (d[9] || "open").toLowerCase().trim();
 
       // 2. Daftar warna sesuai status (Gak perlu if bertingkat)
       const statusColors = {
@@ -1932,7 +1932,7 @@ function renderKelolaIncremental(data) {
       };
 
       // 3. Ambil warna, atau default ke abu-abu (#7f8c8d) jika tidak dikenal
-      let badgeColor = statusColors[cstate] || "#7f8c8d";
+      let badgeColor = statusColors[state] || "#7f8c8d";
 
     // Susun isi baris: MaintID, Unit Aset, Plan, State, Aksi
     const rowHtml = `
@@ -4786,50 +4786,44 @@ async function saveProf() {
  * Mengunduh daftar pengguna dalam format CSV melalui browser.
  */
 async function downloadCSV() {
-  // Beri feedback loading kecil agar user tahu proses dimulai
-  speakSenor("Menyiapkan data user, Señor.");
-
   try {
-    const urlGAS = APPSCRIPT_URL;
-    const params = new URLSearchParams({
-      action: 'exportUsersToCSV' // Sesuaikan dengan action di doGet GAS
-    });
+    // 1. Indikator Loading (Opsional pakai Swal)
+    Swal.fire({ title: 'Menyiapkan CSV...', didOpen: () => Swal.showLoading(), allowOutsideClick: false });
 
-    const response = await fetch(`${urlGAS}?${params.toString()}`);
+    // 2. Tembak URL Deployment dengan parameter action
+    const response = await fetch(`${APPSCRIPT_URL}?action=exportUsersToCSV`);
     
-    if (!response.ok) throw new Error("Gagal mengambil data user.");
+    if (!response.ok) throw new Error("Gagal terhubung ke server Google.");
+    
+    const csvData = await response.text(); // Ambil teks CSV langsung
 
-    // Kita asumsikan server mengirim teks CSV murni (lebih efisien daripada Base64)
-    const csvData = await response.text();
+    if (csvData.startsWith("Error")) throw new Error(csvData);
 
-    // Proses Download
+    // 3. Proses Pembuatan File (Blob)
     const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
+    
+    // 4. Trigger Download Otomatis
     const link = document.createElement("a");
+    const tgl = new Date().toLocaleDateString().replace(/\//g, '-');
     
-    // Penamaan file yang rapi
-    const tgl = new Date().toLocaleDateString('id-ID').replace(/\//g, '-');
-    const fileName = `Data_User_Maintenance_${tgl}.csv`;
-
-    link.setAttribute("href", url);
-    link.setAttribute("download", fileName);
-    link.style.visibility = 'hidden';
-    
+    link.href = url;
+    link.download = `Data_User_MANTAP_${tgl}.csv`;
     document.body.appendChild(link);
     link.click();
     
-    // Cleanup
-    setTimeout(() => {
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-      speakSenor("Data user berhasil diunduh.");
-    }, 1000);
+    // 5. Bersihkan Sampah
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    Swal.fire({ title: "Berhasil!", text: "Data berhasil diunduh.", icon: "success", timer: 2000 });
 
   } catch (err) {
     console.error("Download Error:", err);
-    Swal.fire("Gagal!", "Tidak bisa mengunduh data user: " + err.message, "error");
+    Swal.fire("Gagal Download", err.message, "error");
   }
 }
+
 
 
 /**=============================================================================================
