@@ -49,7 +49,7 @@ const urlGAS = APPSCRIPT_URL;
 function speakSenor(pesan) {
   if ('speechSynthesis' in window) {
     // Batalkan suara yang sedang berjalan agar tidak tumpang tindih
-    window.speechSynthesis.cancel();
+    speechSynthesis.cancel();
 
     const msg = new SpeechSynthesisUtterance();
     msg.text = pesan;
@@ -57,7 +57,7 @@ function speakSenor(pesan) {
     msg.rate = 0.9;     // default 1.1 Sedikit lebih cepat agar terdengar profesional
     msg.pitch = 0.9;  // defaul 1.0
     
-    window.speechSynthesis.speak(msg);
+    speechSynthesis.speak(msg);
   }
 }
 
@@ -302,7 +302,7 @@ async function fetchAssetDetailForLog(unitID) {
 // Variabel Global
 currentCategory = '';  // deteksi kamera QR atau QR
 html5QrCode = null; // Instance Html5Qrcode untuk scan file QR
-window.currentMaintData = null; // { maint_id, as_id, nama_aset, lokasi, jenis_jadwal }
+currentMaintData = null; // { maint_id, as_id, nama_aset, lokasi, jenis_jadwal }
 tempPhotos = { PB: [], PO: [], PA: [], PC: [] }; // Menyimpan foto sementara sebelum submit
 update_man_status = false; // Menandakan apakah sedang dalam mode UPDATE (Pending) atau INPUT Baru
 
@@ -319,7 +319,7 @@ update_man_status = false; // Menandakan apakah sedang dalam mode UPDATE (Pendin
 
 // --- A. LOGIKA SCANNER QR RESPONSIF ---
 async function openCustomScanner() {
-    window.currentCategory = 'SCAN';
+    currentCategory = 'SCAN';
     const modal = document.getElementById('qrModal');
     modal.style.display = 'flex';
 
@@ -387,18 +387,18 @@ function openGalleryForQR() {
     // Tutup kamera dulu jika sedang aktif
     if (html5QrCode && html5QrCode.isScanning) {
         html5QrCode.stop().then(() => {
-            window.currentCategory = 'SCAN';
+            currentCategory = 'SCAN';
             document.getElementById('logPhotoInput').click();
         });
     } else {
-        window.currentCategory = 'SCAN';
+        currentCategory = 'SCAN';
         document.getElementById('logPhotoInput').click();
     }
 }
 
 // --- B. LOGIKA KAMERA / GALERI UNTUK FOTO DOKUMENTASI ---
 function capturePhoto(category) {
-    window.currentCategory = category;
+    currentCategory = category;
     // Di Mobile, 'click' pada input file akan otomatis membuka opsi:
     // "Ambil Foto" (Kamera Langsung) atau "Pilih File" (Galeri)
     document.getElementById('logPhotoInput').click();
@@ -413,7 +413,7 @@ function capturePhoto(category) {
 
 // --- 1. BUKA KAMERA DOKUMENTASI ---
 async function capturePhoto(category) {
-    window.currentCategory = category;
+    currentCategory = category;
     document.getElementById('camLabel').innerText = category;
     const modal = document.getElementById('camModal');
     const video = document.getElementById('videoFeed');
@@ -449,7 +449,7 @@ async function takeSnapshot() {
     const video = document.getElementById('videoFeed');
     const canvas = document.getElementById('photoCanvas');
     const context = canvas.getContext('2d');
-    const cat = window.currentCategory;
+    const cat = currentCategory;
 
     // Set ukuran canvas sesuai video feed
     canvas.width = video.videoWidth;
@@ -501,7 +501,7 @@ async function handleLogPhotoSelect(input) {
     const imageFile = input.files[0];
 
     // JALUR 1: SCAN QR DARI GALERI
-    if (window.currentCategory === 'SCAN') {        
+    if (currentCategory === 'SCAN') {        
         speakSenor("Lagi baca QR dari galeri Señor.");
 
         const scannerFile = new Html5Qrcode("reader"); 
@@ -525,7 +525,7 @@ async function handleLogPhotoSelect(input) {
     }
 
     // JALUR 2: FOTO DOKUMENTASI (PB, PO, PA, PC)
-    const cat = window.currentCategory;
+    const cat = currentCategory;
     const asId = document.getElementById('log_ui_asid').innerText.trim();
     const dateTag = await getMMDDYY(); // Fungsi yang baru kita konversi
 
@@ -989,7 +989,7 @@ function applyFullReset() {
 
   // 3. Reset Foto Visual & Metadata
   resetVisualPhotos();
-  window.currentMaintData = null; 
+  currentMaintData = null; 
   if (typeof resetTempPhotos === 'function') resetTempPhotos();
 }
 
@@ -1007,7 +1007,7 @@ function applyPartialReset() {
   });
 
   // Reset Metadata & Foto (Karena ini log baru)
-  window.currentMaintData = null;
+  currentMaintData = null;
   resetVisualPhotos();
   if (typeof resetTempPhotos === 'function') resetTempPhotos();
 }
@@ -1200,7 +1200,7 @@ function closeMaintenanceMode() {
     
     modal.style.pointerEvents = "auto";
     modal.style.opacity = "1"; 
-    window.isSuccessSave = false; //reset status apakah ad kegiatan saving atau pending jik ay a= true
+    isSuccessSave = false; //reset status apakah ad kegiatan saving atau pending jik ay a= true
     
     
     if (typeof prepareMaintenanceLogic === 'function') {
@@ -1213,7 +1213,7 @@ function closeMaintenanceMode() {
     console.log("🚪 Maintenance Mode Closed & Cleaned (A11y Fixed).");
   };
 
-  if (window.isSuccessSave) {    //jika true artinnya tutup dari tombol savelog()
+  if (isSuccessSave) {    //jika true artinnya tutup dari tombol savelog()
       actionClose();
   } else {
     Swal.fire({
@@ -1348,7 +1348,7 @@ async function saveLog(status) {
                 width: '80%'
             });
 
-            window.isSuccessSave = true;  // memanggol closemaintenancemode tanpa peringatan
+            isSuccessSave = true;  // memanggol closemaintenancemode tanpa peringatan
             closeMaintenanceMode(); 
             modal.style.pointerEvents = "auto";
             
@@ -1807,7 +1807,7 @@ async function loadJad() {
       const response = await fetch(`${urlGAS}?action=getJadwal`);
       const data = await response.json();
 
-      window.historyJadwal = data ;
+      historyJadwal = data ;
       if (!data || data.length < 2) return;
       
       // Ambil data tanpa header (asumsi data[0] adalah header)
@@ -1919,8 +1919,19 @@ function renderKelolaIncremental(data) {
     let planDate = d[7] || "-"; 
     
     // Warna Badge Status (J)
-    let state = d[9] || "Open";
-    let badgeColor = (state === "Close") ? "#27ae60" : (state === "Pending") ? "#f39c12" : "#2980b9";
+      // 1. Ambil data, bersihkan spasi, dan paksa ke huruf kecil
+      const cstate = (d[9] || "open").toLowerCase().trim();
+
+      // 2. Daftar warna sesuai status (Gak perlu if bertingkat)
+      const statusColors = {
+        "close":   "#27ae60", // Hijau
+        "pending": "#f39c12", // Oranye
+        "open":    "#2980b9", // Biru
+        "cancel":  "#e74c3c"  // Merah
+      };
+
+      // 3. Ambil warna, atau default ke abu-abu (#7f8c8d) jika tidak dikenal
+      let badgeColor = statusColors[cstate] || "#7f8c8d";
 
     // Susun isi baris: MaintID, Unit Aset, Plan, State, Aksi
     const rowHtml = `
@@ -2393,10 +2404,20 @@ async function loadMaintDetail(row) {
       if (typeof speakSenor === "function") speakSenor("Data dimuat.");
     }
 
-      // 5. Atur Tombol Aksi
-    // Warna Badge Status (J)
-    let cstate = data[9] || "open";
-    let badgeColor = (cstate === "close") ? "#27ae60" : (cstate === "pending") ? "#f39c12" : "#2980b9";
+      // 5. Atur Tombol Aksi dan Warna Badge Status (J)
+      // 1. Ambil data, bersihkan spasi, dan paksa ke huruf kecil
+      const cstate = (data[9] || "open").toLowerCase().trim();
+
+      // 2. Daftar warna sesuai status (Gak perlu if bertingkat)
+      const statusColors = {
+        "close":   "#27ae60", // Hijau
+        "pending": "#f39c12", // Oranye
+        "open":    "#2980b9", // Biru
+        "cancel":  "#e74c3c"  // Merah
+      };
+
+      // 3. Ambil warna, atau default ke abu-abu (#7f8c8d) jika tidak dikenal
+      let badgeColor = statusColors[cstate] || "#7f8c8d";
 
       const btnGoMaint = document.getElementById("btnGoMaint");
   if (btnGoMaint) {
@@ -2909,7 +2930,7 @@ function downloadTemplate() {
 
   // 3. Bungkus jadi Blob (File Bayangan)
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-  const url = window.URL.createObjectURL(blob);
+  const url = URL.createObjectURL(blob);
 
   // 4. Buat Link "Siluman"
   const link = document.createElement("a");
@@ -2923,7 +2944,7 @@ function downloadTemplate() {
   // Kasih waktu 500ms (setengah detik) baru dibuang dari halaman
   setTimeout(() => {
     document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
+    URL.revokeObjectURL(url);
   }, 500);
 
   // 6. Notifikasi SweetAlert
@@ -2952,8 +2973,8 @@ async function loadAssetTypes() {
   const urlGAS = APPSCRIPT_URL;
 
   // 1. Jika cache sudah ada di memori browser GitHub, langsung pakai
-  if (window.cachedAssetTypes) {
-    renderAllTypeDropdowns(window.cachedAssetTypes);
+  if (cachedAssetTypes) {
+    renderAllTypeDropdowns(cachedAssetTypes);
     return;
   }
 
@@ -2963,7 +2984,7 @@ async function loadAssetTypes() {
     const types = await response.json(); // Mengambil array tipe aset
 
     if (types && types.length > 0) {
-      window.cachedAssetTypes = types; // Simpan ke cache global GitHub
+      cachedAssetTypes = types; // Simpan ke cache global GitHub
       renderAllTypeDropdowns(types); // Sebar ke semua dropdown (filter, modal, dll)
       console.log("📥 Data Tipe Aset Baru Diterima & Disinkronkan.");
     }
@@ -3062,7 +3083,19 @@ function renderAssetTableIncremental(sheetName, data) {
   for (let i = 1; i < data.length; i++) {
     const rowData = data[i];
     const rowIdx = i - 1;
-    let badgeColor = (rowData[4] === "Baik") ? "#27ae60" : (rowData[4] === "Rusak") ?  "#2980b9" : "#f39c12";
+    
+    // 1. Ambil data dan paksa jadi huruf kecil + buang spasi ghaib
+    const status = (rowData[4] || "").toLowerCase().trim();
+    // 2. Mapping Warna (Definisikan 4 kondisimu di sini)
+    const colors = {
+      "baik":      "#27ae60", // Hijau
+      "rusak":     "#e74c3c", // Merah (Saran: Rusak biasanya merah, bukan biru)
+      "treatment": "#f39c12", // Oranye
+      "baru":      "#2980b9"  // Biru
+    };
+    // 3. Tentukan warna (Default ke abu-abu jika status tidak dikenal)
+    let badgeColor = colors[status] || "#7f8c8d";
+
     // B. PASTIKAN CLASS SAMA (Gunakan 'assetCheck' sesuai fungsi toggle kita)
     const rowHtml = `
       <td style="padding:5px; text-align:center;"><input type="checkbox" class="asetCheck" value="${i+1}"></td>
@@ -3312,9 +3345,9 @@ async function loadAssetTypesView() {
   const urlGAS = APPSCRIPT_URL;
   
   // 1. Jika cache sudah ada di memori GitHub, langsung pakai (Instan!)
-  if (window.cachedAssetTypes) {
+  if (cachedAssetTypes) {
     console.log("🚀 Menggunakan Cache untuk Dropdown View Asset.");
-    renderViewDropdown(window.cachedAssetTypes);
+    renderViewDropdown(cachedAssetTypes);
     return;
   }
 
@@ -3324,7 +3357,7 @@ async function loadAssetTypesView() {
     const types = await response.json();
 
     if (types && types.length > 0) {
-      window.cachedAssetTypes = types; // Simpan ke cache global
+      cachedAssetTypes = types; // Simpan ke cache global
       renderViewDropdown(types);
     }
   } catch (err) {
@@ -3581,7 +3614,7 @@ async function deleteAssetPhoto() {
   const urlGAS = APPSCRIPT_URL;
 
   // 1. VALIDASI AWAL
-  if (window.assetImages.length === 0) {
+  if (assetImages.length === 0) {
     Swal.fire({ title: "Kosong!", text: "Tidak ada foto untuk dihapus!", icon: "warning", width: '80%' });
     return;
   }
@@ -3600,16 +3633,16 @@ async function deleteAssetPhoto() {
 
   if (!confirmHapus.isConfirmed) return;
 
-  const currentUrl = window.assetImages[window.currentImgIdx];
+  const currentUrl = assetImages[currentImgIdx];
 
   // --- JALUR A: FOTO BARU (BLOB / LOKAL GITHUB) ---
   if (currentUrl.startsWith("blob:") || currentUrl.startsWith("data:")) {
     // Hapus dari laci temp_Asset_Files
-    const offset = window.assetImages.length - window.temp_Asset_Files.length;
-    window.temp_Asset_Files.splice(window.currentImgIdx - offset, 1);
-    window.assetImages.splice(window.currentImgIdx, 1);
+    const offset = assetImages.length - temp_Asset_Files.length;
+    temp_Asset_Files.splice(currentImgIdx - offset, 1);
+    assetImages.splice(currentImgIdx, 1);
     
-    window.currentImgIdx = 0;
+    currentImgIdx = 0;
     updateImageSlider();
     
     Swal.fire({ title: "Sukses", text: "Pratinjau foto lokal dihapus", icon: "success", width: '80%' });
@@ -3642,8 +3675,8 @@ async function deleteAssetPhoto() {
       const res = await response.json(); // Mengharapkan {success: true, all: [...]}
 
       if (res.success) {
-        window.assetImages = res.all;
-        window.currentImgIdx = 0;
+        assetImages = res.all;
+        currentImgIdx = 0;
         updateImageSlider();
         Swal.fire({ title: "Sukses", text: "Foto permanen berhasil dihapus dari Drive", icon: "success", width: '80%' });
       }
@@ -3748,10 +3781,10 @@ async function saveAssetEdit() {
   };
 
   // 5. PROSES FOTO DARI LACI (temp_Asset_Files)
-  if (window.temp_Asset_Files && window.temp_Asset_Files.length > 0) {
+  if (temp_Asset_Files && temp_Asset_Files.length > 0) {
     if (btn) btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Memproses Foto...";
     try {
-      const filePromises = window.temp_Asset_Files.map(file => getBase64(file));
+      const filePromises = temp_Asset_Files.map(file => getBase64(file));
       payload.allFiles = await Promise.all(filePromises);
     } catch (e) {
       if (btn) {
@@ -3789,7 +3822,7 @@ async function saveAssetEdit() {
       width: '80%'
     });
 
-    window.temp_Asset_Files = []; 
+    temp_Asset_Files = []; 
     if (btn) {
       btn.disabled = false;
       btn.innerHTML = "SIMPAN PERUBAHAN";
@@ -4599,7 +4632,7 @@ async function loadProf() {
 
   try {
     // 1. Fetch ke doGet dengan parameter action & username
-    const response = await fetch(`${urlGAS}?action=getUserDataByUsername&username=${encodeURIComponent(window.loggedInUser)}`);
+    const response = await fetch(`${urlGAS}?action=getUserDataByUsername&username=${encodeURIComponent(loggedInUser)}`);
     
     if (!response.ok) throw new Error("Gagal mengambil profil dari server.");
 
@@ -4675,9 +4708,9 @@ async function saveProf() {
   };
 
   // 2. Proses Foto jika ada di laci Temp_Profile
-  if (window.Temp_Profile && window.Temp_Profile[0]) {
+  if (Temp_Profile && Temp_Profile[0]) {
     try {
-      const file = window.Temp_Profile[0];
+      const file = Temp_Profile[0];
       const fileInfo = await getBase64(file); 
       payload.photoData = fileInfo.base64; 
       payload.mimeType  = fileInfo.mimeType;
@@ -4720,7 +4753,7 @@ async function saveProf() {
       width: '80%'
     });
 
-    window.Temp_Profile = [null, null]; 
+    Temp_Profile = [null, null]; 
     if (typeof syncProfileUI === 'function') syncProfileUI(displayPhoto.src, true); 
     
     loadProf(); // Refresh data profil
@@ -4770,7 +4803,7 @@ async function downloadCSV() {
 
     // Proses Download
     const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
-    const url = window.URL.createObjectURL(blob);
+    const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     
     // Penamaan file yang rapi
@@ -4787,7 +4820,7 @@ async function downloadCSV() {
     // Cleanup
     setTimeout(() => {
       document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
+      URL.revokeObjectURL(url);
       speakSenor("Data user berhasil diunduh.");
     }, 1000);
 
@@ -4823,9 +4856,9 @@ function uploadPhotoFromAdmin(input) {
 
   if (file) {    
     // Pastikan variabelnya ada sebelum diisi
-    if (!window.Temp_Profile) window.Temp_Profile = [null, null];
+    if (!Temp_Profile) Temp_Profile = [null, null];
     
-    window.Temp_Profile[1] = file; // Simpan di indeks 1 sesuai kode Save Anda
+    Temp_Profile[1] = file; // Simpan di indeks 1 sesuai kode Save Anda
     
     // Preview
     document.getElementById("admin_edit_photo").src = URL.createObjectURL(file);
@@ -4866,9 +4899,9 @@ async function saveAdminEdit() {
   };
 
   // 2. Cek jika ada foto baru di Temp_Profile[1] (Gunakan async/await)
-  if (window.Temp_Profile && window.Temp_Profile[1]) {
+  if (Temp_Profile && Temp_Profile[1]) {
     try {
-      const fileInfo = await getBase64(window.Temp_Profile[1]);
+      const fileInfo = await getBase64(Temp_Profile[1]);
       payload.photoData = fileInfo.base64;
       payload.mimeType = fileInfo.mimeType;
       payload.fileName = "Profile_" + username;
@@ -4914,7 +4947,7 @@ async function saveAdminEdit() {
       width: '80%'
     });
 
-    if (window.Temp_Profile) window.Temp_Profile[1] = null; 
+    if (Temp_Profile) Temp_Profile[1] = null; 
     
     closeModal();    // Tutup modal edit
     loadUserList();  // Refresh tabel user
