@@ -2274,7 +2274,7 @@ async function goMaint(rowIdx) {
     setText('log_as_id',data[1]+"-"+data[2]);  // unit ID log kegiatan
     setText('log_ui_type', data[1]);              // input Type_Asset log kegiatan
     setText('log_ui_asid', data[2]);             // input ID_Asset
-    setText('m_as_nama', data[3]);           // input nama_Asset
+    setText('log_ui_nama', data[3]);           // input nama_Asset
     
     // Helper Fungsi untuk mengisi value elemen UI GitHub
     const setVal = (id, val) => {const el = document.getElementById(id);
