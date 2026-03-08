@@ -2289,6 +2289,8 @@ async function goMaint(rowIdx) {
     setText('log_ui_type', data[1]);              // input Type_Asset log kegiatan
     setText('log_ui_asid', data[2]);             // input ID_Asset
     setText('log_ui_nama', data[3]);           // input nama_Asset
+    //supaya tidak bentrok
+    setText('log_ui_lokasi', data[13]); //label select ID jadwal  log keg
     
     // Helper Fungsi untuk mengisi value elemen UI GitHub
     const setVal = (id, val) => {const el = document.getElementById(id);
@@ -2299,8 +2301,7 @@ async function goMaint(rowIdx) {
     setVal('log_keg_id', "");  //input hidden kosong karena ambil dari jadwal Maint
 
     // belum di deklarisakn di database sementara di akhir dulu
-    //supaya tidak bentrok
-    setVal('log_ui_lokasi', data[13]); //label select ID jadwal  log keg
+    
   
       // --- TRANSISI UI ---
       const modalDetail = document.getElementById('modalDetailHist');
